@@ -104,7 +104,7 @@ void Example::Render()
 {
 	if (bSetupThingies && DoomAPI::GetFramebufferEnabled())
 	{
-		CheckMouseEvents();
+		//CheckMouseEvents();
 		UpdateD3D11Buffer();
 
 
