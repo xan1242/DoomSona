@@ -6,18 +6,6 @@ using namespace OF;
 ID3D11Texture2D* pStagingTexture = nullptr;
 bool bSetupThingies = false;
 
-uint32_t testBuf[424 * 240];
-
-void LoadTextureFromFile()
-{
-	FILE* f = fopen("test.dds", "rb");
-
-	fseek(f, 0x80, SEEK_SET);
-	fread(testBuf, sizeof(uint32_t), 424 * 240, f);
-
-	fclose(f);
-}
-
 void Example::UpdateD3D11Buffer()
 {
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
