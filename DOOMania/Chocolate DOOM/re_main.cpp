@@ -37,22 +37,21 @@ extern "C" {
 // #include <d3d11.h>
 // #pragma comment(lib, "d3d11.lib")
 
-// ----------------------------------------------------------------------------
-// Leaving the DOOM engine state and returning to Mania
-// ----------------------------------------------------------------------------
-void RE_Doom_Exit() {
-	// SonicMania::ChangeScene(SonicMania::Scene_MainMenu);
-	// SonicMania::Engine_ClearSoundFXData();
+boolean bFramebufferEnabled;
+extern "C" __declspec(dllexport) boolean GetFramebufferEnabled()
+{
+	return bFramebufferEnabled;
 }
 
-
+extern "C" __declspec(dllexport) void SetFramebufferEnabled(boolean val)
+{
+	bFramebufferEnabled = val;
+}
 
 constexpr uint32_t doomScreenSizeX = 424;
 constexpr uint32_t doomScreenSizeY = 240;
 constexpr uint32_t doomScreenSize = doomScreenSizeX * doomScreenSizeY;
 uint32_t tempFB[doomScreenSize];
-
-bool bTempBool = false;
 
 uint32_t ConvToARGB(uint8_t r, uint8_t g, uint8_t b)
 {
@@ -150,6 +149,8 @@ extern "C" __declspec(dllexport) uint32_t GetScreenY()
 // ----------------------------------------------------------------------------
 void RE_Framebuffer_Dump(char* image, doomerpal* pal) {
 
+	if (!bFramebufferEnabled)
+		return;
 
 		for (int y = 0; y < doomScreenSizeY; y++) {
 			for (int x = 0; x < doomScreenSizeX; x++) {

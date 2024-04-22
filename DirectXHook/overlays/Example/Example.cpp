@@ -1,5 +1,6 @@
 #include "Example.h"
 //#include "../DoomBind.hpp"
+#include "../src/DoomAPI.hpp"
 
 using namespace OF;
 ID3D11Texture2D* pStagingTexture = nullptr;
@@ -29,10 +30,10 @@ void Example::UpdateD3D11Buffer()
 
 	if (SUCCEEDED(hr))
 	{
-		uint32_t sizeX = GetScreenX();
-		uint32_t sizeY = GetScreenY();
+		uint32_t sizeX = DoomAPI::GetScreenX();
+		uint32_t sizeY = DoomAPI::GetScreenY();
 
-		uint32_t* screen = (uint32_t*)GetScreenBuffer();
+		uint32_t* screen = DoomAPI::GetScreenBuffer();
 		int stride = mappedResource.RowPitch; // Use the row pitch for stride
 
 		for (int y = 0; y < sizeY; y++) {
@@ -98,7 +99,7 @@ void Example::Setup()
 
 void Example::Render()
 {
-	if (bSetupThingies)
+	if (bSetupThingies && DoomAPI::GetFramebufferEnabled())
 	{
 		CheckMouseEvents();
 		UpdateD3D11Buffer();

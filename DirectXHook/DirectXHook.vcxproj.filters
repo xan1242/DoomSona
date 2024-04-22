@@ -75,7 +75,7 @@
     <ClInclude Include="include\ID3DRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DoomBind.hpp">
+    <ClInclude Include="src\DoomAPI.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

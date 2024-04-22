@@ -8,7 +8,8 @@ extern "C" {
 	typedef struct doomerpal {
 		char r, g, b;
 	} doomerpal;
-	void RE_Doom_Exit();
+	__declspec(dllexport) void SetFramebufferEnabled(boolean val);
+	__declspec(dllexport) boolean GetFramebufferEnabled();
 	void RE_Framebuffer_Dump(char* image, doomerpal* pal);
 	int RE_Control_ReadIn();
 	int RE_Joy_ReadIn(char a);

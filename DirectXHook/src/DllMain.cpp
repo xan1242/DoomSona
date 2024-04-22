@@ -4,6 +4,7 @@
 #include "Logger.h"
 #include "MemoryUtils.h"
 #include "Example/Example.h"
+#include "DoomAPI.hpp"
 
 FARPROC forwardExports[6];
 static Logger logger{ "DllMain" };
@@ -64,7 +65,7 @@ void OpenDebugTerminal()
 		terminalEnableFile.close();
 	}
 }
-void(__cdecl* TheInitFunc)();
+
 DWORD WINAPI HookThread(LPVOID lpParam)
 {
 	HMODULE originalDll = LoadDllFromSystemFolder("dinput8.dll");
@@ -80,25 +81,27 @@ DWORD WINAPI HookThread(LPVOID lpParam)
 	dxHook.AddRenderCallback(&example);
 	dxHook.Hook();
 
-	HMODULE modDoom = LoadLibraryA("DOOMania.dll");
-	if (modDoom == NULL)
+	if (!DoomAPI::Init())
 	{
-		printf("oops\n");
-		return 0;
+		return 1;
 	}
-
-	TheInitFunc = reinterpret_cast<void(__cdecl*)()>(GetProcAddress(modDoom, "TheInitFunc"));
-	if (TheInitFunc == NULL)
-	{
-		printf("oops2\n");
-		return 0;
-	}
-
-	example.GetScreenBuffer = reinterpret_cast<void*(__cdecl*)()>(GetProcAddress(modDoom, "GetScreenBuffer"));
-	example.GetScreenX = reinterpret_cast<uint32_t(__cdecl*)()>(GetProcAddress(modDoom, "GetScreenX"));
-	example.GetScreenY = reinterpret_cast<uint32_t(__cdecl*)()>(GetProcAddress(modDoom, "GetScreenY"));
-
-	TheInitFunc();
+	//HMODULE modDoom = LoadLibraryA("DOOMania.dll");
+	//if (modDoom == NULL)
+	//{
+	//	printf("oops\n");
+	//	return 0;
+	//}
+	//
+	//TheInitFunc = reinterpret_cast<void(__cdecl*)()>(GetProcAddress(modDoom, "TheInitFunc"));
+	//if (TheInitFunc == NULL)
+	//{
+	//	printf("oops2\n");
+	//	return 0;
+	//}
+	//
+	//example.GetScreenBuffer = reinterpret_cast<void*(__cdecl*)()>(GetProcAddress(modDoom, "GetScreenBuffer"));
+	//example.GetScreenX = reinterpret_cast<uint32_t(__cdecl*)()>(GetProcAddress(modDoom, "GetScreenX"));
+	//example.GetScreenY = reinterpret_cast<uint32_t(__cdecl*)()>(GetProcAddress(modDoom, "GetScreenY"));
 
 	return 0;
 }

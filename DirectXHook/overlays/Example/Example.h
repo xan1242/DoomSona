@@ -12,9 +12,9 @@ public:
 	void Setup();
 	void Render();
 
-	void* (__cdecl* GetScreenBuffer)();
-	uint32_t(__cdecl* GetScreenX)();
-	uint32_t(__cdecl* GetScreenY)();
+	//void* (__cdecl* GetScreenBuffer)();
+	//uint32_t(__cdecl* GetScreenX)();
+	//uint32_t(__cdecl* GetScreenY)();
 	void UpdateD3D11Buffer();
 
 private:

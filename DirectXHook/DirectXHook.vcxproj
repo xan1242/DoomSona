@@ -210,7 +210,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DoomBind.hpp" />
     <ClInclude Include="include\DirectXHook.h" />
     <ClInclude Include="include\ID3DRenderer.h" />
     <ClInclude Include="include\IRenderCallback.h" />
@@ -222,6 +221,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="overlays\RiseDpsMeter\RiseDpsMeter.h" />
+    <ClInclude Include="src\DoomAPI.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

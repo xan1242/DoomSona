@@ -35,6 +35,7 @@ extern "C" {
 #include "Chocolate DOOM/d_main.h"
 #include "Chocolate DOOM/z_zone.h"
 #include "Chocolate DOOM/i_system.h"
+#include "Chocolate DOOM/re_main.h"
 }
 
 const char* modPath;
@@ -402,6 +403,18 @@ static void DoomMode_Init(void) {
 void DoomExited()
 {
 	doomed = false;
+	SetFramebufferEnabled(false);
+}
+
+void LaunchDoom()
+{
+	doomed = D_DoomMain();
+	if (doomed)
+	{
+		SetFramebufferEnabled(true);
+		DoomMode_Init();
+		I_AtExit(&DoomExited, false);
+	}
 }
 
 #pragma runtime_checks( "", restore )
@@ -415,8 +428,8 @@ extern "C"
 		//modPath = path;
 		modPath = ".";
 
-		mFPSLimitMode = FrameLimiter::FPSLimitMode::FPS_ACCURATE;
-		FrameLimiter::Init(mFPSLimitMode, 60.0);
+		//mFPSLimitMode = FrameLimiter::FPSLimitMode::FPS_ACCURATE;
+		//FrameLimiter::Init(mFPSLimitMode, 60.0);
 
 		// input block test
 		//uintptr_t loc_140E43469 = ConstPatternInlineGetFirst(gPatternDetector, "E9 ? ? ? ? 0F 28 C7 0F 28 7C 24 20", 0);
@@ -434,12 +447,7 @@ extern "C"
 		//injector::MakeNOP(0x1401D680C, 2);
 		//injector::MakeNOP(0x1401D680E, 7);
 
-		// Only initialize DOOM once for the entire runtime
-		doomed = D_DoomMain();
-		DoomMode_Init();
-
-		I_AtExit(&DoomExited, false);
-		
+		LaunchDoom();
 
 		struct hkGameLoop
 		{

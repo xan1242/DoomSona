@@ -252,7 +252,6 @@ void I_Quit (void)
     //SDL_Quit();
 
     //exit(0);
-    RE_Doom_Exit();
 }
 
 
