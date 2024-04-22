@@ -2,6 +2,7 @@
 
 #include "IRenderCallback.h"
 #include "OverlayFramework.h"
+#include "Renderer.h"
 
 #ifndef EXAMPLE_MOD
 #define EXAMPLE_MOD
@@ -16,6 +17,8 @@ public:
 	//uint32_t(__cdecl* GetScreenX)();
 	//uint32_t(__cdecl* GetScreenY)();
 	void UpdateD3D11Buffer();
+
+	Renderer* renderer;
 
 private:
 	OF::Box* box;

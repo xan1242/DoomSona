@@ -28,6 +28,7 @@ public:
 	void AddRenderCallback(IRenderCallback* object);
 	void SetCommandQueue(ID3D12CommandQueue* commandQueue);
 	void SetGetCommandQueueCallback(void (*callback)());
+	D3D11_VIEWPORT* GetViewport();
 
 private:
 	Logger logger{"Renderer"};
@@ -65,7 +66,8 @@ private:
 
 	// Load the shaders from disk at compile time into a string.
 	const char* shaderData = {
-		#include "Shaders.hlsl"
+		//#include "src/Shaders.hlsl"
+#include "../src/Shaders.hlsl"
 	};
 
 	Microsoft::WRL::ComPtr<ID3D11Buffer> vertexBuffer = nullptr;

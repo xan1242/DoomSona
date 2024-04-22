@@ -725,3 +725,8 @@ bool Renderer::CheckSuccess(HRESULT hr)
 	logger.Log("%s", err.ErrorMessage());
 	return false;
 }
+
+D3D11_VIEWPORT* Renderer::GetViewport()
+{
+	return &this->viewport;
+}

@@ -178,7 +178,7 @@
       <AdditionalDependencies>d3d11.lib;d3d12.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy /Y "D:\Temp\DirectXHook\x64\Release\dinput8.dll" "D:\MyNFSCode\DoomTester\x64\Debug"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\DirectXHook\x64\Release\dinput8.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>

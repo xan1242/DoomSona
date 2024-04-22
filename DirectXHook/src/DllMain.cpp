@@ -78,8 +78,11 @@ DWORD WINAPI HookThread(LPVOID lpParam)
 	static Renderer renderer;
 	static DirectXHook dxHook(&renderer);
 	static Example example;
+
 	dxHook.AddRenderCallback(&example);
 	dxHook.Hook();
+
+	example.renderer = &renderer;
 
 	if (!DoomAPI::Init())
 	{

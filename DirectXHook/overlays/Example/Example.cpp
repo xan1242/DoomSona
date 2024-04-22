@@ -60,9 +60,12 @@ void Example::UpdateD3D11Buffer()
 
 void Example::Setup()
 {
+	D3D11_VIEWPORT* vp = renderer->GetViewport();
+
 	InitFramework(device, spriteBatch, window);
 	//box = CreateBox(100, 100, 100, 100);
-	box = CreateBox(0, 0, 848, 480);
+	//box = CreateBox(0, 0, 848, 480);
+	box = CreateBox(0, 0, vp->Width, vp->Height);
 	//doomtex = LoadTexture("test.dds");
 	//LoadTextureFromFile();
 	doomtex = 0;
