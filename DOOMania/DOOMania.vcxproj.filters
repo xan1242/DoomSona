@@ -342,6 +342,9 @@
     <ClInclude Include="Win32\win_opendir.h">
       <Filter>Source Files\DOOM</Filter>
     </ClInclude>
+    <ClInclude Include="DoomWin32.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -865,6 +868,9 @@
     </ClCompile>
     <ClCompile Include="includes\asmjit\src\asmjit\arm\armformatter.cpp">
       <Filter>Source Files\external</Filter>
+    </ClCompile>
+    <ClCompile Include="DoomWin32.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

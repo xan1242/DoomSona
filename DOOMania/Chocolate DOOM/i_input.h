@@ -28,6 +28,7 @@ extern float mouse_acceleration;
 extern int mouse_threshold;
 
 void I_BindInputVariables(void);
+void I_HandleKeyboardEvent();
 void I_ReadMouse(void);
 
 // I_StartTextInput begins text input, activating the on-screen keyboard

@@ -60,7 +60,7 @@
 #define NETEND	"you can't end a netgame!\n\n"PRESSKEY
 #define ENDGAME	"are you sure you want to end the game?\n\n"PRESSYN
 
-#define DOSY		"(press A to quit to Sonic Mania.)"
+#define DOSY		"(press A on controller or Y on keyboard\nto quit to Persona.)"
 
 #define DETAILHI	"High detail"
 #define DETAILLO	"Low detail"

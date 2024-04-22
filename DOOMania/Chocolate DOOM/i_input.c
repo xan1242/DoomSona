@@ -27,6 +27,11 @@
 #include "m_argv.h"
 #include "m_config.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <stdio.h>
+#include <windows.h>
+#include "../DoomWin32.h"
+
 static const int scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
 
 // Lookup table for mapping ASCII characters to their equivalent when
@@ -99,6 +104,78 @@ int vanilla_keyboard_mapping = true;
 // by mouse_acceleration to increase the speed.
 float mouse_acceleration = 2.0;
 int mouse_threshold = 10;
+
+static int GetTypedChar(int vk)
+{
+    int result = TranslateWin32Key(vk);
+
+
+    // If shift is held down, apply the original uppercase
+    // translation table used under DOS.
+    if ((GetAsyncKeyState(VK_SHIFT) >> 15)
+        && result >= 0 && result < arrlen(shiftxform))
+    {
+        result = shiftxform[result];
+    }
+
+    return result;
+}
+
+
+boolean prevStates[256];
+void I_HandleKeyboardEvent()
+{
+    // XXX: passing pointers to event for access after this function
+    // has terminated is undefined behaviour
+    event_t event;
+
+    for (int i = 1; i < 256; ++i)
+    {
+        boolean bState = GetAsyncKeyState(i) >> 15;
+
+        // Check for key down event
+        if (bState)
+        {
+            if (!(prevStates[i]))
+            {
+                event.type = ev_keydown;
+                event.data1 = TranslateWin32Key(i);
+                event.data2 = TranslateWin32Key(i);
+                event.data3 = GetTypedChar(i);
+
+                if (event.data1 != 0)
+                {
+                    D_PostEvent(&event);
+                }
+            }
+        }
+        // Check for key up event
+        else
+        {
+            if (prevStates[i])
+            {
+                event.type = ev_keyup;
+                event.data1 = TranslateWin32Key(i);
+
+                // data2/data3 are initialized to zero for ev_keyup.
+                // For ev_keydown it's the shifted Unicode character
+                // that was typed, but if something wants to detect
+                // key releases it should do so based on data1
+                // (key ID), not the printable char.
+
+                event.data2 = 0;
+                event.data3 = 0;
+
+                if (event.data1 != 0)
+                {
+                    D_PostEvent(&event);
+                }
+            }
+        }
+
+        prevStates[i] = bState;
+    }
+}
 
 void I_StartTextInput(int x1, int y1, int x2, int y2)
 {

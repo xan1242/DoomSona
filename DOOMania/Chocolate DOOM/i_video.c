@@ -185,7 +185,7 @@ void I_ShutdownGraphics(void)
 
 void I_GetEvent(void)
 {
-
+    I_HandleKeyboardEvent();
 }
 
 //

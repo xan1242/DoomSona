@@ -283,6 +283,7 @@
     <ClInclude Include="Chocolate DOOM\w_merge.h" />
     <ClInclude Include="Chocolate DOOM\w_wad.h" />
     <ClInclude Include="Chocolate DOOM\z_zone.h" />
+    <ClInclude Include="DoomWin32.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Win32\win_opendir.h" />
   </ItemGroup>
@@ -732,6 +733,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="DoomWin32.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64assembler.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64builder.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64compiler.cpp" />
