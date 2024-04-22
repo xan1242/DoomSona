@@ -18,6 +18,14 @@
 #include "pch.h"
 #include "FrameLimiter.hpp"
 
+#include "includes/injector/injector.hpp"
+//#include "includes/injector/assembly.hpp"
+#include "includes/assembly64.hpp"
+
+#define PATTERNS_WIN32
+#define PATTERNS_CONSTEXPR
+#include "includes/patterns.hpp"
+
 //FunctionPointer(SonicMania::Controller*, Engine_ProcessInput, (), 0x1CDB40);
 //FunctionPointer(int, Engine_ProcessSceneTimer, (), 0x1F2600);
 //
@@ -26,6 +34,7 @@
 extern "C" {
 #include "Chocolate DOOM/d_main.h"
 #include "Chocolate DOOM/z_zone.h"
+#include "Chocolate DOOM/i_system.h"
 }
 
 const char* modPath;
@@ -388,28 +397,76 @@ static void DoomMode_Init(void) {
 // 	}
 // }
 
+#pragma runtime_checks( "", off )
+
+void DoomExited()
+{
+	doomed = false;
+}
+
+#pragma runtime_checks( "", restore )
+
 extern "C"
 {
 	__declspec(dllexport) void TheInitFunc()
 	{
+		//Pattern::Detector* gPatternDetector = new Pattern::Detector();
+
 		//modPath = path;
 		modPath = ".";
 
 		mFPSLimitMode = FrameLimiter::FPSLimitMode::FPS_ACCURATE;
 		FrameLimiter::Init(mFPSLimitMode, 60.0);
 
+		// input block test
+		//uintptr_t loc_140E43469 = ConstPatternInlineGetFirst(gPatternDetector, "E9 ? ? ? ? 0F 28 C7 0F 28 7C 24 20", 0);
+		//printf("loc_140E43469: 0x%llX\n", loc_140E43469);
+		////injector::MakeNOP(loc_140E43469, 5);
+		//uintptr_t sub_1418D9FF0 = static_cast<uintptr_t>(injector::GetBranchDestination(loc_140E43469));
+		//printf("sub_1418D9FF0: 0x%llX\n", sub_1418D9FF0);
+		//injector::MakeRET(sub_1418D9FF0);
+		//injector::MakeRET(0x1418D9AA0);
+		//injector::MakeJMP(0x1414F6FC4, 0x1414F7018);
+		//injector::MakeRET(0x14024FFA0);
+		//injector::MakeCALL(0x14022B70E, sub_14024FFA0_hook);
+		//injector::MakeCALL(0x1401D67FB, sub_14024FFA0_hook);
+
+		//injector::MakeNOP(0x1401D680C, 2);
+		//injector::MakeNOP(0x1401D680E, 7);
+
 		// Only initialize DOOM once for the entire runtime
 		doomed = D_DoomMain();
 		DoomMode_Init();
-		while (1)
+
+		I_AtExit(&DoomExited, false);
+		
+
+		struct hkGameLoop
 		{
-			DoomMode_Main();
-			
-			if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_REALTIME)
-				while (!FrameLimiter::Sync_RT());
-			else if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_ACCURATE)
-				while (!FrameLimiter::Sync_SLP());
-		}
+			void operator()(injector::reg_pack& regs)
+			{
+				if (doomed)
+				{
+					regs.rax = 0;
+					DoomMode_Main();
+				}
+				else
+					regs.rax = *reinterpret_cast<uintptr_t*>(0x142A0B720);
+			}
+		}; injector::MakeInline<hkGameLoop>(0x1401D6800, 0x1401D6800 + 7);
+
+		//delete gPatternDetector;
+
+
+		//while (1)
+		//{
+		//	DoomMode_Main();
+		//	
+		//	if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_REALTIME)
+		//		while (!FrameLimiter::Sync_RT());
+		//	else if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_ACCURATE)
+		//		while (!FrameLimiter::Sync_SLP());
+		//}
 		
 
 		// If DOOM successfully initialized and is ready to go...

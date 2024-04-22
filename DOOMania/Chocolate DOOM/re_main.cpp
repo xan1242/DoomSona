@@ -158,11 +158,11 @@ void RE_Framebuffer_Dump(char* image, doomerpal* pal) {
 			}
 		}
 
-		if (!bTempBool)
-		{
-			WriteImage("test.dds", tempFB, doomScreenSizeX, doomScreenSizeY);
-			bTempBool = true;
-		}
+		//if (!bTempBool)
+		//{
+		//	WriteImage("test.dds", tempFB, doomScreenSizeX, doomScreenSizeY);
+		//	bTempBool = true;
+		//}
 }
 constexpr int controllerIndex = 0;
 // ----------------------------------------------------------------------------
