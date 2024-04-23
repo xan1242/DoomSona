@@ -319,7 +319,7 @@ namespace DoomBASS
 
 static boolean DoomBASS_InitMidi(void)
 {
-    return DoomBASS::MidiMusic::LoadSoundFont("CT4MGM.SF2"); // #TODO: configurable filename maybe?
+    return DoomBASS::MidiMusic::LoadSoundFont("DOOMSona.sf2"); // #TODO: configurable filename maybe?
 }
 
 static void DoomBASS_ShutdownMidi(void)
