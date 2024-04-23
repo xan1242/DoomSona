@@ -99,20 +99,20 @@ namespace DoomBASS
             BASS_MIDI_FontFree(soundfont);
         }
 
-        static int WriteMemFile(std::filesystem::path filePath, void* buf, size_t len)
-        {
-            std::ofstream ofile;
-            ofile.open(filePath, std::ios::binary);
-            if (!ofile.is_open())
-                return -1;
-        
-            ofile.write((const char*)buf, len);
-        
-            ofile.flush();
-            ofile.close();
-        
-            return 0;
-        }
+        //static int WriteMemFile(std::filesystem::path filePath, void* buf, size_t len)
+        //{
+        //    std::ofstream ofile;
+        //    ofile.open(filePath, std::ios::binary);
+        //    if (!ofile.is_open())
+        //        return -1;
+        //
+        //    ofile.write((const char*)buf, len);
+        //
+        //    ofile.flush();
+        //    ofile.close();
+        //
+        //    return 0;
+        //}
 
         // code from i_winmusic.c
         static boolean IsMid(byte* mem, int len)
@@ -367,6 +367,8 @@ static void DoomBASS_UnRegisterSong(void* handle)
         BASS_ChannelFree(*(HSTREAM*)handle);
         *(HSTREAM*)handle = 0;
     }
+
+    DoomBASS::MidiMusic::ReleaseMidBuffer();
 }
 
 static void DoomBASS_PlaySong(void* handle, boolean looping)
