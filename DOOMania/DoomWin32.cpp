@@ -4,6 +4,8 @@
 #include "DoomWin32.h"
 #include "Chocolate DOOM/doomkeys.h"
 
+HWND wndHandle;
+
 #include <map>
 std::map<int, int> sVkeyDoomMap =
 {
@@ -47,6 +49,16 @@ std::map<int, int> sVkeyDoomMap =
 	//{VK_DIVIDE, KEYP_DIVIDE},
 	{VK_DELETE, KEY_DEL},
 };
+
+void __declspec(dllexport) DoomWin32_SetHWND(HWND hWnd)
+{
+	wndHandle = hWnd;
+}
+
+HWND __declspec(dllexport) DoomWin32_GetHWND()
+{
+	return wndHandle;
+}
 
 static bool bIsMouseVkey(int vkey)
 {

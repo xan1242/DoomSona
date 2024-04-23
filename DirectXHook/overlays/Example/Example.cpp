@@ -92,11 +92,13 @@ void Example::Render()
 {
 	if (bSetupThingies && DoomAPI::GetFramebufferEnabled())
 	{
+		if (!DoomAPI::DoomWin32_GetHWND())
+		{
+			DoomAPI::DoomWin32_SetHWND(this->renderer->GetSwapChainDesc()->OutputWindow);
+		}
+
 		//CheckMouseEvents();
 		UpdateD3D11Buffer();
-
-
-
 		DrawBox(box, doomtex);
 
 		//RECT rect;

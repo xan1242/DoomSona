@@ -177,6 +177,125 @@ void I_HandleKeyboardEvent()
     }
 }
 
+static void Win32_GetWindowCenter(POINT* outPoint)
+{
+    HWND hWnd = DoomWin32_GetHWND();
+    RECT windowRect;
+    GetWindowRect(hWnd, &windowRect);
+
+    outPoint->x = ((windowRect.right - windowRect.left) / 2) + windowRect.left;
+    outPoint->y = ((windowRect.bottom - windowRect.top) / 2) + windowRect.top;
+}
+
+static void Win32_CenterMouse()
+{
+    POINT centerPos;
+    Win32_GetWindowCenter(&centerPos);
+
+    SetCursorPos(centerPos.x, centerPos.y);
+}
+
+static int Win32_GetRelativeMouseState(int* x, int* y)
+{
+    POINT currentPos;
+    POINT centerPos;
+    Win32_GetWindowCenter(&centerPos);
+    GetCursorPos(&currentPos);
+
+    int deltaX = currentPos.x - centerPos.x;
+    int deltaY = currentPos.y - centerPos.y;
+
+    *x = deltaX;
+    *y = deltaY;
+
+    return 0;
+}
+
+static int AccelerateMouse(int val)
+{
+    if (val < 0)
+        return -AccelerateMouse(-val);
+
+    if (val > mouse_threshold)
+    {
+        return (int)((val - mouse_threshold) * mouse_acceleration + mouse_threshold);
+    }
+    else
+    {
+        return val;
+    }
+}
+
+static void UpdateMouseButtonState()
+{
+    static event_t event;
+
+    mouse_button_state = 0;
+
+    if (GetAsyncKeyState(VK_LBUTTON) >> 15)
+    {
+        mouse_button_state |= (1 << 0);
+    }
+
+    if (GetAsyncKeyState(VK_RBUTTON) >> 15)
+    {
+        mouse_button_state |= (1 << 1);
+    }
+
+    if (GetAsyncKeyState(VK_MBUTTON) >> 15)
+    {
+        mouse_button_state |= (1 << 2);
+    }
+
+    // Post an event with the new button state.
+
+    if (mouse_button_state)
+    {
+        event.type = ev_mouse;
+        event.data1 = mouse_button_state;
+        event.data2 = 0;
+        event.data3 = 0;
+        D_PostEvent(&event);
+    }
+}
+
+//
+// Read the change in mouse state to generate mouse motion events
+//
+// This is to combine all mouse movement for a tic into one mouse
+// motion event.
+void I_ReadMouse(void)
+{
+    int x, y;
+    event_t ev;
+
+    UpdateMouseButtonState();
+
+    Win32_GetRelativeMouseState(&x, &y);
+    Win32_CenterMouse();
+
+    ev.data1 = mouse_button_state;
+
+    if (x != 0 || y != 0)
+    {
+        ev.type = ev_mouse;
+        ev.data2 = AccelerateMouse(x);
+
+        if (!novert)
+        {
+            ev.data3 = -AccelerateMouse(y);
+        }
+        else
+        {
+            ev.data3 = 0;
+        }
+
+        // XXX: undefined behaviour since event is scoped to
+        // this function
+        D_PostEvent(&ev);
+    }
+}
+
 void I_StartTextInput(int x1, int y1, int x2, int y2)
 {
 	// == COME BACK ==

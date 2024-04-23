@@ -730,3 +730,8 @@ D3D11_VIEWPORT* Renderer::GetViewport()
 {
 	return &this->viewport;
 }
+
+DXGI_SWAP_CHAIN_DESC* Renderer::GetSwapChainDesc()
+{
+	return &this->swapChainDesc;
+}

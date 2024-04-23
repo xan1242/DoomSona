@@ -128,7 +128,8 @@
       <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R"
+@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\MyNFSCode\DoomTester\x64\Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

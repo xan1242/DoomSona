@@ -1400,31 +1400,31 @@ boolean M_Responder (event_t* ev)
     {
         // Simulate key presses from joystick events to interact with the menu.
 
-	if (ev->data3 < 0)
-	{
-	    key = key_menu_up;
-	    joywait = I_GetTime() + 5;
-	}
-	else if (ev->data3 > 0)
-	{
-	    key = key_menu_down;
-	    joywait = I_GetTime() + 5;
-	}
-		
-	if (ev->data2 < 0)
-	{
-	    key = key_menu_left;
-	    joywait = I_GetTime() + 2;
-	}
-	else if (ev->data2 > 0)
-	{
-	    key = key_menu_right;
-	    joywait = I_GetTime() + 2;
-	}
-
-#define JOY_BUTTON_MAPPED(x) ((x) >= 0)
-#define JOY_BUTTON_PRESSED(x) (JOY_BUTTON_MAPPED(x) && (ev->data1 & (1 << (x))) != 0)
-
+    	if (ev->data3 < 0)
+    	{
+    	    key = key_menu_up;
+    	    joywait = I_GetTime() + 5;
+    	}
+    	else if (ev->data3 > 0)
+    	{
+    	    key = key_menu_down;
+    	    joywait = I_GetTime() + 5;
+    	}
+    		
+    	if (ev->data2 < 0)
+    	{
+    	    key = key_menu_left;
+    	    joywait = I_GetTime() + 2;
+    	}
+    	else if (ev->data2 > 0)
+    	{
+    	    key = key_menu_right;
+    	    joywait = I_GetTime() + 2;
+    	}
+    
+    #define JOY_BUTTON_MAPPED(x) ((x) >= 0)
+    #define JOY_BUTTON_PRESSED(x) (JOY_BUTTON_MAPPED(x) && (ev->data1 & (1 << (x))) != 0)
+    
         if (JOY_BUTTON_PRESSED(joybfire))
         {
             // Simulate a 'Y' keypress when Doom show a Y/N dialog with Fire button.
@@ -1474,56 +1474,56 @@ boolean M_Responder (event_t* ev)
     }
     else
     {
-	if (ev->type == ev_mouse && mousewait < I_GetTime())
-	{
-	    mousey += ev->data3;
-	    if (mousey < lasty-30)
+	    if (ev->type == ev_mouse && mousewait < I_GetTime())
 	    {
-		key = key_menu_down;
-		mousewait = I_GetTime() + 5;
-		mousey = lasty -= 30;
+	        mousey += ev->data3;
+	        if (mousey < lasty-30)
+	        {
+	    	    key = key_menu_down;
+	    	    mousewait = I_GetTime() + 5;
+	    	    mousey = lasty -= 30;
+	        }
+	        else if (mousey > lasty+30)
+	        {
+	    	    key = key_menu_up;
+	    	    mousewait = I_GetTime() + 5;
+	    	    mousey = lasty += 30;
+	        }
+	    	
+	        mousex += ev->data2;
+	        if (mousex < lastx-30)
+	        {
+	    	    key = key_menu_left;
+	    	    mousewait = I_GetTime() + 5;
+	    	    mousex = lastx -= 30;
+	        }
+	        else if (mousex > lastx+30)
+	        {
+	    	    key = key_menu_right;
+	    	    mousewait = I_GetTime() + 5;
+	    	    mousex = lastx += 30;
+	        }
+	    	
+	        if (ev->data1&1)
+	        {
+	    	    key = key_menu_forward;
+	    	    mousewait = I_GetTime() + 15;
+	        }
+	    		
+	        if (ev->data1&2)
+	        {
+	    	    key = key_menu_back;
+	    	    mousewait = I_GetTime() + 15;
+	        }
 	    }
-	    else if (mousey > lasty+30)
+	    else
 	    {
-		key = key_menu_up;
-		mousewait = I_GetTime() + 5;
-		mousey = lasty += 30;
+	        if (ev->type == ev_keydown)
+	        {
+	    	key = ev->data1;
+	    	ch = ev->data2;
+	        }
 	    }
-		
-	    mousex += ev->data2;
-	    if (mousex < lastx-30)
-	    {
-		key = key_menu_left;
-		mousewait = I_GetTime() + 5;
-		mousex = lastx -= 30;
-	    }
-	    else if (mousex > lastx+30)
-	    {
-		key = key_menu_right;
-		mousewait = I_GetTime() + 5;
-		mousex = lastx += 30;
-	    }
-		
-	    if (ev->data1&1)
-	    {
-		key = key_menu_forward;
-		mousewait = I_GetTime() + 15;
-	    }
-			
-	    if (ev->data1&2)
-	    {
-		key = key_menu_back;
-		mousewait = I_GetTime() + 15;
-	    }
-	}
-	else
-	{
-	    if (ev->type == ev_keydown)
-	    {
-		key = ev->data1;
-		ch = ev->data2;
-	    }
-	}
     }
     
     if (key == -1)

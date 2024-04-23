@@ -40,6 +40,18 @@ namespace DoomAPI
 		return _SetFramebufferEnabled(val);
 	}
 
+	inline void(*_DoomWin32_SetHWND)(HWND wnd);
+	inline void DoomWin32_SetHWND(HWND wnd)
+	{
+		return _DoomWin32_SetHWND(wnd);
+	}
+
+	inline HWND(*_DoomWin32_GetHWND)();
+	inline HWND DoomWin32_GetHWND()
+	{
+		return _DoomWin32_GetHWND();
+	}
+
 	inline bool Init()
 	{
 		modDoom = LoadLibraryA("DOOMania.dll");
@@ -80,8 +92,19 @@ namespace DoomAPI
 
 		_SetFramebufferEnabled = reinterpret_cast<void(*)(bool)>(pSetFramebufferEnabled);
 
-		reinterpret_cast<void(*)()>(TheInitFunc)();
+		uintptr_t pDoomWin32_SetHWND = reinterpret_cast<uintptr_t>(GetProcAddress(modDoom, "DoomWin32_SetHWND"));
+		if (!pDoomWin32_SetHWND)
+			return false;
 
+		_DoomWin32_SetHWND = reinterpret_cast<void(*)(HWND)>(pDoomWin32_SetHWND);
+
+		uintptr_t pDoomWin32_GetHWND = reinterpret_cast<uintptr_t>(GetProcAddress(modDoom, "DoomWin32_GetHWND"));
+		if (!pDoomWin32_GetHWND)
+			return false;
+
+		_DoomWin32_GetHWND = reinterpret_cast<HWND(*)()>(pDoomWin32_GetHWND);
+
+		reinterpret_cast<void(*)()>(TheInitFunc)();
 
 		return true;
 	}

@@ -28,6 +28,7 @@ public:
 	void AddRenderCallback(IRenderCallback* object);
 	void SetCommandQueue(ID3D12CommandQueue* commandQueue);
 	void SetGetCommandQueueCallback(void (*callback)());
+	DXGI_SWAP_CHAIN_DESC* GetSwapChainDesc();
 	D3D11_VIEWPORT* GetViewport();
 
 private:

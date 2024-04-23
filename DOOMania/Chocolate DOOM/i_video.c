@@ -21,6 +21,7 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 #include <windows.h>
+#include "../DoomWin32.h"
 #endif
 
 #include "config.h"
@@ -183,6 +184,12 @@ void I_ShutdownGraphics(void)
     }
 }
 
+void Win32HandleStuff()
+{
+    window_focused = GetForegroundWindow() == DoomWin32_GetHWND();
+
+}
+
 void I_GetEvent(void)
 {
     I_HandleKeyboardEvent();
@@ -198,7 +205,14 @@ void I_StartTic (void)
         return;
     }
 
+    Win32HandleStuff();
     I_GetEvent();
+
+    if (usemouse && !nomouse && window_focused)
+    {
+        I_ReadMouse();
+    }
+
 
     if (joywait < I_GetTime())
     {
