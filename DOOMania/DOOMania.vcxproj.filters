@@ -318,9 +318,6 @@
     <ClInclude Include="Chocolate DOOM\config.h">
       <Filter>Source Files\DOOM</Filter>
     </ClInclude>
-    <ClInclude Include="Chocolate DOOM\re_main.h">
-      <Filter>Source Files\DOOM</Filter>
-    </ClInclude>
     <ClInclude Include="Chocolate DOOM\net_sdl.h">
       <Filter>Source Files\DOOM</Filter>
     </ClInclude>
@@ -342,8 +339,17 @@
     <ClInclude Include="Win32\win_opendir.h">
       <Filter>Source Files\DOOM</Filter>
     </ClInclude>
+    <ClInclude Include="DoomBASS.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
     <ClInclude Include="DoomWin32.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Chocolate DOOM\mus2mid.h">
+      <Filter>Source Files\DOOM</Filter>
+    </ClInclude>
+    <ClInclude Include="Chocolate DOOM\re_main.h">
+      <Filter>Source Files\DOOM</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -674,12 +680,6 @@
     <ClCompile Include="Chocolate DOOM\z_zone.c">
       <Filter>Source Files\DOOM</Filter>
     </ClCompile>
-    <ClCompile Include="Chocolate DOOM\re_main.cpp">
-      <Filter>Source Files\DOOM</Filter>
-    </ClCompile>
-    <ClCompile Include="Chocolate DOOM\re_sound.cpp">
-      <Filter>Source Files\DOOM</Filter>
-    </ClCompile>
     <ClCompile Include="Chocolate DOOM\net_sdl.c">
       <Filter>Source Files\DOOM</Filter>
     </ClCompile>
@@ -871,6 +871,15 @@
     </ClCompile>
     <ClCompile Include="DoomWin32.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DoomBASS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Chocolate DOOM\mus2mid.c">
+      <Filter>Source Files\DOOM</Filter>
+    </ClCompile>
+    <ClCompile Include="Chocolate DOOM\re_main.cpp">
+      <Filter>Source Files\DOOM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

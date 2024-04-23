@@ -52,6 +52,12 @@ namespace DoomAPI
 		return _DoomWin32_GetHWND();
 	}
 
+	inline void(*_DoomWin32_TheInitFunc)();
+	inline void DoomWin32_TheInitFunc()
+	{
+		return _DoomWin32_TheInitFunc();
+	}
+
 	inline bool Init()
 	{
 		modDoom = LoadLibraryA("DOOMania.dll");
@@ -61,6 +67,8 @@ namespace DoomAPI
 		uintptr_t TheInitFunc = reinterpret_cast<uintptr_t>(GetProcAddress(modDoom, "TheInitFunc"));
 		if (!TheInitFunc)
 			return false;
+
+		_DoomWin32_TheInitFunc = reinterpret_cast<void(*)()>(TheInitFunc);
 
 		uintptr_t pGetScreenBuffer = reinterpret_cast<uintptr_t>(GetProcAddress(modDoom, "GetScreenBuffer"));
 		if (!pGetScreenBuffer)
@@ -103,8 +111,6 @@ namespace DoomAPI
 			return false;
 
 		_DoomWin32_GetHWND = reinterpret_cast<HWND(*)()>(pDoomWin32_GetHWND);
-
-		reinterpret_cast<void(*)()>(TheInitFunc)();
 
 		return true;
 	}

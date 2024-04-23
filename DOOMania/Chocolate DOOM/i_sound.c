@@ -29,6 +29,8 @@
 
 #include "re_main.h"
 
+#include "../DoomBASS.h"
+
 // Sound sample rate to use for digital output (Hz)
 
 int snd_samplerate = 44100;
@@ -62,7 +64,7 @@ int snd_sfxdevice = SNDDEVICE_SB;
 
 // Sound modules
 
-extern void I_InitTimidityConfig(void);
+//extern void I_InitTimidityConfig(void);
 
 // For OPL module:
 
@@ -77,6 +79,7 @@ static int snd_sbport = 0;
 static int snd_sbirq = 0;
 static int snd_sbdma = 0;
 static int snd_mport = 0;
+
 
 // Compiled-in sound modules:
 
@@ -100,70 +103,87 @@ static music_module_t *music_modules[] =
 
 void I_InitSound(boolean use_sfx_prefix)
 {  
-    //boolean nosound, nosfx, nomusic;
+    boolean nosound, nosfx, nomusic;
 
-    ////!
-    //// @vanilla
-    ////
-    //// Disable all sound output.
-    ////
+    //!
+    // @vanilla
+    //
+    // Disable all sound output.
+    //
 
-    //nosound = M_CheckParm("-nosound") > 0;
+    nosound = M_CheckParm("-nosound") > 0;
 
-    ////!
-    //// @vanilla
-    ////
-    //// Disable sound effects. 
-    ////
+    //!
+    // @vanilla
+    //
+    // Disable sound effects. 
+    //
 
-    //nosfx = M_CheckParm("-nosfx") > 0;
+    nosfx = M_CheckParm("-nosfx") > 0;
 
-    ////!
-    //// @vanilla
-    ////
-    //// Disable music.
-    ////
+    //!
+    // @vanilla
+    //
+    // Disable music.
+    //
 
-    //nomusic = M_CheckParm("-nomusic") > 0;
+    nomusic = M_CheckParm("-nomusic") > 0;
 
-    //// Initialize the sound and music subsystems.
+    // Initialize the sound and music subsystems.
 
-    //if (!nosound && !screensaver_mode)
-    //{
-    //    // This is kind of a hack. If native MIDI is enabled, set up
-    //    // the TIMIDITY_CFG environment variable here before SDL_mixer
-    //    // is opened.
+    if (!nosound && !screensaver_mode)
+    {
+        // This is kind of a hack. If native MIDI is enabled, set up
+        // the TIMIDITY_CFG environment variable here before SDL_mixer
+        // is opened.
 
-    //    if (!nomusic
-    //     && (snd_musicdevice == SNDDEVICE_GENMIDI
-    //      || snd_musicdevice == SNDDEVICE_GUS))
-    //    {
-    //        I_InitTimidityConfig();
-    //    }
+        //if (!nomusic
+        // && (snd_musicdevice == SNDDEVICE_GENMIDI
+        //  || snd_musicdevice == SNDDEVICE_GUS))
+        //{
+        //    I_InitTimidityConfig();
+        //}
 
-    //    if (!nosfx)
-    //    {
-    //        InitSfxModule(use_sfx_prefix);
-    //    }
+        if (!nosfx || !nomusic)
+        {
+            if (!DoomBASS_GetBassInited())
+                DoomBASS_Init(snd_samplerate);
+        }
 
-    //    if (!nomusic)
-    //    {
-    //        InitMusicModule();
-    //    }
-    //}
+        //if (!nosfx)
+        //{
+        //    //InitSfxModule(use_sfx_prefix);
+        //}
+        //
+        //if (!nomusic)
+        {
+            music_module = &DoomBASS_module;
+        }
+
+
+    }
 }
 
 void I_ShutdownSound(void)
 {
+    printf("shutdownsound\n");
+
+    if (music_module != NULL)
+    {
+        music_module->Shutdown();
+    }
+
+    if (DoomBASS_GetBassInited())
+    {
+        DoomBASS_Shutdown();
+    }
+
     //if (sound_module != NULL)
     //{
     //    sound_module->Shutdown();
     //}
 
-    //if (music_module != NULL)
-    //{
-    //    music_module->Shutdown();
-    //}
+
 }
 
 int I_GetSfxLumpNum(sfxinfo_t *sfxinfo)
@@ -217,7 +237,7 @@ static void CheckVolumeSeparation(int *vol, int *sep)
 void I_UpdateSoundParams(sfxinfo_t* sfxinfo, int vol, int sep)
 {
     CheckVolumeSeparation(&vol, &sep);
-    RE_Sound_Update(sfxinfo, vol, sep);
+    //RE_Sound_Update(sfxinfo, vol, sep);
 }
 
 int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
@@ -231,7 +251,10 @@ int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
     //{
     //    return 0;
     //}
-	RE_Sound_Start(sfxinfo, vol, sep);
+
+    printf("sound start, vol: %d, sep: %d\n", vol, sep);
+
+	//RE_Sound_Start(sfxinfo, vol, sep);
 	return 0;
 }
 
@@ -245,12 +268,12 @@ void I_StopSound(int channel)
 
 boolean I_SoundIsPlaying(sfxinfo_t* sfxinfo)
 {
-	return RE_Sound_IsPlaying(sfxinfo);
+	//return RE_Sound_IsPlaying(sfxinfo);
 }
 
 void I_PrecacheSounds(sfxinfo_t *sounds, int num_sounds)
 {
-	RE_Sound_Cache(sounds, num_sounds);
+	//RE_Sound_Cache(sounds, num_sounds);
 }
 
 void I_InitMusic(void)
@@ -264,17 +287,26 @@ void I_ShutdownMusic(void)
 
 void I_SetMusicVolume(int volume)
 {
-	// == COME BACK ==
+    if (music_module != NULL)
+    {
+        music_module->SetMusicVolume(volume);
+    }
 }
 
 void I_PauseSong(void)
 {
-	// == COME BACK ==
+    if (music_module != NULL)
+    {
+        music_module->PauseMusic();
+    }
 }
 
 void I_ResumeSong(void)
 {
-	// == COME BACK ==
+    if (music_module != NULL)
+    {
+        music_module->ResumeMusic();
+    }
 }
 
 void *I_RegisterSong(void *data, int len)
@@ -289,7 +321,7 @@ void *I_RegisterSong(void *data, int len)
     }
 }
 
-void I_UnRegisterSong(void *handle)
+void I_UnRegisterSong(void* handle)
 {
     if (music_module != NULL)
     {
@@ -297,15 +329,20 @@ void I_UnRegisterSong(void *handle)
     }
 }
 
-void I_PlaySong(musicinfo_t* song, boolean looping)
+void I_PlaySong(void* handle, boolean looping)
 {
-	// == COME BACK ==
-	RE_Music_Play(song);
+    if (music_module != NULL)
+    {
+        music_module->PlaySong(handle, looping);
+    }
 }
 
 void I_StopSong(void)
 {
-	// == COME BACK ==
+    if (music_module != NULL)
+    {
+        music_module->StopSong();
+    }
 }
 
 boolean I_MusicIsPlaying(void)

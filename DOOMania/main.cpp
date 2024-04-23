@@ -22,9 +22,9 @@
 //#include "includes/injector/assembly.hpp"
 #include "includes/assembly64.hpp"
 
-#define PATTERNS_WIN32
-#define PATTERNS_CONSTEXPR
-#include "includes/patterns.hpp"
+//#define PATTERNS_WIN32
+//#define PATTERNS_CONSTEXPR
+//#include "includes/patterns.hpp"
 
 //FunctionPointer(SonicMania::Controller*, Engine_ProcessInput, (), 0x1CDB40);
 //FunctionPointer(int, Engine_ProcessSceneTimer, (), 0x1F2600);

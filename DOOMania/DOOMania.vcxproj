@@ -118,14 +118,14 @@
       <PreprocessorDefinitions>_DEBUG;DOOMANIA_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\asmjit\src;D:\Temp\mania-doom\DOOMania\includes\modutils;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\asmjit\src;D:\Temp\mania-doom\DOOMania\includes\modutils;D:\Temp\mania-doom\DOOMania\includes\bass\c;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;includes\bass\c\x64\bass.lib;includes\bassmidi\c\x64\bassmidi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R"
@@ -167,7 +167,7 @@
       <PreprocessorDefinitions>NDEBUG;DOOMANIA_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Steam\steamapps\common\Sonic Mania\mods\DOOM\DOOMania\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\bass\c;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -176,7 +176,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;includes\bass\c\x64\bass.lib;includes\bassmidi\c\x64\bassmidi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -226,6 +226,7 @@
     <ClInclude Include="Chocolate DOOM\i_video.h" />
     <ClInclude Include="Chocolate DOOM\i_videohr.h" />
     <ClInclude Include="Chocolate DOOM\memio.h" />
+    <ClInclude Include="Chocolate DOOM\mus2mid.h" />
     <ClInclude Include="Chocolate DOOM\m_argv.h" />
     <ClInclude Include="Chocolate DOOM\m_bbox.h" />
     <ClInclude Include="Chocolate DOOM\m_cheat.h" />
@@ -284,6 +285,7 @@
     <ClInclude Include="Chocolate DOOM\w_merge.h" />
     <ClInclude Include="Chocolate DOOM\w_wad.h" />
     <ClInclude Include="Chocolate DOOM\z_zone.h" />
+    <ClInclude Include="DoomBASS.h" />
     <ClInclude Include="DoomWin32.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Win32\win_opendir.h" />
@@ -461,6 +463,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Chocolate DOOM\mus2mid.c" />
     <ClCompile Include="Chocolate DOOM\m_argv.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -617,14 +620,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Chocolate DOOM\re_main.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="Chocolate DOOM\re_sound.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../pch.h</PrecompiledHeaderFile>
-    </ClCompile>
+    <ClCompile Include="Chocolate DOOM\re_main.cpp" />
     <ClCompile Include="Chocolate DOOM\r_bsp.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -734,6 +730,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="DoomBASS.cpp" />
     <ClCompile Include="DoomWin32.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64assembler.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64builder.cpp" />

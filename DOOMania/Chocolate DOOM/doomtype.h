@@ -87,11 +87,22 @@
 
 #include <inttypes.h>
 
+
+
 #if defined(__cplusplus) || defined(__bool_true_false_are_defined)
 
 // Use builtin bool type with C++.
 
-typedef bool boolean;
+//typedef bool boolean;
+#define boolean bool
+
+#else
+
+#ifdef _WIN32
+
+#include <wtypes.h>
+#define true 1
+#define false 0
 
 #else
 
@@ -102,6 +113,10 @@ typedef enum
 } boolean;
 
 #endif
+
+#endif
+
+
 
 typedef uint8_t byte;
 typedef uint8_t pixel_t;

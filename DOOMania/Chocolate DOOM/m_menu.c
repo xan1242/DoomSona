@@ -17,6 +17,9 @@
 //	Sliders and icons. Kinda widget stuff.
 //
 
+#ifdef _WIN32
+#define NOMENUS
+#endif
 
 #include <stdlib.h>
 #include <ctype.h>

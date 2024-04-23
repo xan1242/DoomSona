@@ -75,6 +75,20 @@ DWORD WINAPI HookThread(LPVOID lpParam)
 		return 1;
 	}
 
+	constexpr int maxNumAttempts = 5;
+	int InitAttempts = 0;
+	while (!DoomAPI::Init())
+	{
+		if (InitAttempts == maxNumAttempts)
+			break;
+		InitAttempts++;
+	}
+
+	if (InitAttempts == maxNumAttempts)
+	{
+		return 1;
+	}
+
 	static Renderer renderer;
 	static DirectXHook dxHook(&renderer);
 	static Example example;
@@ -84,10 +98,8 @@ DWORD WINAPI HookThread(LPVOID lpParam)
 
 	example.renderer = &renderer;
 
-	if (!DoomAPI::Init())
-	{
-		return 1;
-	}
+	DoomAPI::DoomWin32_TheInitFunc();
+
 	//HMODULE modDoom = LoadLibraryA("DOOMania.dll");
 	//if (modDoom == NULL)
 	//{

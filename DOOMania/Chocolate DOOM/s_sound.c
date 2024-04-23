@@ -162,7 +162,7 @@ void S_Init(int sfxVolume, int musicVolume)
         snd_pitchshift = 0;
     }
 
-    //I_AtExit(S_Shutdown, true);       not needed anymore with RETRO ENGINE
+    I_AtExit(S_Shutdown, true);
 }
 
 void S_Shutdown(void)
@@ -692,8 +692,8 @@ void S_ChangeMusic(int musicnum, int looping)
 
     music->data = W_CacheLumpNum(music->lumpnum, PU_STATIC);
 
-    //handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
-    //music->handle = handle;
+    handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
+    music->handle = handle;
     I_PlaySong(music, looping);
 
     mus_playing = music;
