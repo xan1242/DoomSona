@@ -2,8 +2,8 @@
 
 #include <d3d11.h>
 #include <wrl/client.h>
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
+#include "../DirectXTK/Inc/SpriteBatch.h"
+//#include "../DirectXTK/Inc/SpriteFont.h"
 
 class IRenderCallback
 {

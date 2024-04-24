@@ -1,7 +1,7 @@
 #include "DirectXHook.h"
-#include "RiseDpsMeter/RiseDpsMeter.h"
-#include "Example/Example.h"
-//#include "PauseTheGame/PauseTheGame.h"
+#include "../overlays/Example.h"
+//#include "../../includes/injector/injector.hpp"
+#include "MemoryUtils.h"
 
 static DirectXHook* hookInstance = nullptr;
 
@@ -91,7 +91,7 @@ IDXGISwapChain* DirectXHook::CreateDummySwapChain()
 	wc.cbSize = sizeof(wc);
 	wc.lpfnWndProc = DefWindowProc;
 	wc.lpszClassName = TEXT("dummy class");
-	RegisterClassExA(&wc);
+	RegisterClassEx(&wc);
 	HWND hwnd = CreateWindow(wc.lpszClassName, TEXT(""), WS_DISABLED, 0, 0, 0, 0, NULL, NULL, NULL, nullptr);
 
 	DXGI_SWAP_CHAIN_DESC desc{ 0 };
@@ -258,11 +258,20 @@ void DirectXHook::HookSwapChain(
 	uintptr_t presentAddress = (*(uintptr_t*)vmtPresentIndex);
 	uintptr_t resizeBuffersAddress = (*(uintptr_t*)vmtResizeBuffersIndex);
 
+	//uintptr_t presentAddress = injector::ReadMemory<uintptr_t>(vmtPresentIndex, true);
+	//uintptr_t resizeBuffersAddress = injector::ReadMemory<uintptr_t>(vmtResizeBuffersIndex, true);
+
 	logger.Log("Present address: %p", presentAddress);
 	logger.Log("ResizeBuffers address: %p", resizeBuffersAddress);
 
 	MemoryUtils::ToggleMemoryProtection(true, vmtPresentIndex, numBytes);
 	MemoryUtils::ToggleMemoryProtection(true, vmtResizeBuffersIndex, numBytes);
+
+	//*presentReturnAddress = presentAddress;
+	//*resizeBuffersReturnAddress = resizeBuffersAddress;
+
+	//injector::WriteMemory(vmtPresentIndex, presentDetourFunction, true);
+	//injector::WriteMemory(vmtResizeBuffersIndex, resizeBuffersDetourFunction, true);
 
 	MemoryUtils::PlaceHook(presentAddress, presentDetourFunction, presentReturnAddress);
 	MemoryUtils::PlaceHook(resizeBuffersAddress, resizeBuffersDetourFunction, resizeBuffersReturnAddress);
@@ -288,7 +297,12 @@ void DirectXHook::HookCommandQueue(
 	executeCommandListsAddress = (*(uintptr_t*)vmtExecuteCommandListsIndex);
 	MemoryUtils::ToggleMemoryProtection(true, vmtExecuteCommandListsIndex, numBytes);
 
+	//executeCommandListsAddress = injector::ReadMemory<uintptr_t>(vmtExecuteCommandListsIndex, true);
+
 	logger.Log("ExecuteCommandLists address: %p", executeCommandListsAddress);
+
+	//*executeCommandListsReturnAddress = executeCommandListsAddress;
+	//injector::WriteMemory(vmtExecuteCommandListsIndex, executeCommandListsDetourFunction, true);
 
 	bool hookIsPresent = MemoryUtils::IsAddressHooked(executeCommandListsAddress);
 	if (hookIsPresent)
@@ -302,5 +316,5 @@ void DirectXHook::HookCommandQueue(
 
 void DirectXHook::UnhookCommandQueue()
 {
-	MemoryUtils::Unhook(executeCommandListsAddress);
+	//MemoryUtils::Unhook(executeCommandListsAddress);
 }

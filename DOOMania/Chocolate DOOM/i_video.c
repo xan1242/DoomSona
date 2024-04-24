@@ -42,7 +42,8 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
-#include "re_main.h"
+//#include "re_main.h"
+#include "../DoomD3DHook.h"
 
 // Window title
 
@@ -256,20 +257,21 @@ void I_FinishUpdate (void)
 	    I_VideoBuffer[ (SCREENHEIGHT-1)*SCREENWIDTH + i] = 0x0;
     }
 
-    if (palette_to_set)
-    {
-        palette_to_set = false;
+    //if (palette_to_set)
+    //{
+    //    palette_to_set = false;
+    //
+    //    if (vga_porch_flash)
+    //    {
+    //        // "flash" the pillars/letterboxes with palette changes, emulating
+    //        // VGA "porch" behaviour (GitHub issue #832)
+    //       // SDL_SetRenderDrawColor(renderer, palette[0].r, palette[0].g,
+    //        //    palette[0].b, SDL_ALPHA_OPAQUE);
+    //    }
+    //}
 
-        if (vga_porch_flash)
-        {
-            // "flash" the pillars/letterboxes with palette changes, emulating
-            // VGA "porch" behaviour (GitHub issue #832)
-           // SDL_SetRenderDrawColor(renderer, palette[0].r, palette[0].g,
-            //    palette[0].b, SDL_ALPHA_OPAQUE);
-        }
-    }
-
-	RE_Framebuffer_Dump((char*)I_VideoBuffer, palette);
+	//RE_Framebuffer_Dump((char*)I_VideoBuffer, palette);
+    DoomD3D_DumpFramebuffer((char*)I_VideoBuffer, palette);
     
 
     // Restore background and undo the disk indicator, if it was drawn.

@@ -1,6 +1,10 @@
 #include "Example.h"
-//#include "../DoomBind.hpp"
-#include "../src/DoomAPI.hpp"
+#include "../src/OverlayFramework.h"
+//#include "../../Chocolate DOOM/re_main.h"
+#include "../../DoomWin32.h"
+#include "../../DoomD3DHook.h"
+#include <d3d11.h>
+#include "../src/IRenderCallback.h"
 
 using namespace OF;
 ID3D11Texture2D* pStagingTexture = nullptr;
@@ -18,10 +22,13 @@ void Example::UpdateD3D11Buffer()
 
 	if (SUCCEEDED(hr))
 	{
-		uint32_t sizeX = DoomAPI::GetScreenX();
-		uint32_t sizeY = DoomAPI::GetScreenY();
+		//uint32_t sizeX = DoomAPI::GetScreenX();
+		//uint32_t sizeY = DoomAPI::GetScreenY();
 
-		uint32_t* screen = DoomAPI::GetScreenBuffer();
+		uint32_t sizeX = DoomD3DHook::GetScreenWidth();
+		uint32_t sizeY = DoomD3DHook::GetScreenHeight();
+
+		uint32_t* screen = DoomD3DHook::GetScreenFramebuffer();
 		int stride = mappedResource.RowPitch; // Use the row pitch for stride
 
 		for (int y = 0; y < sizeY; y++) {
@@ -90,11 +97,11 @@ void Example::Setup()
 
 void Example::Render()
 {
-	if (bSetupThingies && DoomAPI::GetFramebufferEnabled())
+	if (bSetupThingies && DoomD3DHook::GetFramebufferEnabled())
 	{
-		if (!DoomAPI::DoomWin32_GetHWND())
+		if (!DoomWin32_GetHWND())
 		{
-			DoomAPI::DoomWin32_SetHWND(this->renderer->GetSwapChainDesc()->OutputWindow);
+			DoomWin32_SetHWND(this->renderer->GetSwapChainDesc()->OutputWindow);
 		}
 
 		//CheckMouseEvents();

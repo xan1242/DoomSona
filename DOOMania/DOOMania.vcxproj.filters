@@ -22,6 +22,24 @@
     <Filter Include="Source Files\external">
       <UniqueIdentifier>{baf7b159-3e86-426a-92e6-4086f90fb9f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\dxhook">
+      <UniqueIdentifier>{a96dcb9d-e7d6-4658-9edf-702e3d160e3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook\src">
+      <UniqueIdentifier>{a073991d-a837-4fdd-9413-007fedaf3266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook\overlays">
+      <UniqueIdentifier>{663a5bcb-442e-469f-aba1-6f2552b68f10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook\DirectXTK">
+      <UniqueIdentifier>{e042e3f2-6c21-4db6-bdee-6a0afa675b32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook\DirectXTK\Src">
+      <UniqueIdentifier>{bfc558b6-1950-4a82-9fc2-e03073ffd4e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook\DirectXTK\Inc">
+      <UniqueIdentifier>{ca3cba86-5a43-4644-aca4-cc605d38d9a0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -348,8 +366,41 @@
     <ClInclude Include="Chocolate DOOM\mus2mid.h">
       <Filter>Source Files\DOOM</Filter>
     </ClInclude>
-    <ClInclude Include="Chocolate DOOM\re_main.h">
-      <Filter>Source Files\DOOM</Filter>
+    <ClInclude Include="DoomD3DHook.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\overlays\Example.h">
+      <Filter>Source Files\dxhook\overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\DoomAPI.hpp">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="DoomXInput.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\OverlayFramework.h">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\IRenderCallback.h">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\ID3DRenderer.h">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\DirectXHook.h">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\nmd_assembly.h">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\Logger.h">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\DirectXTK\Inc\SpriteBatch.h">
+      <Filter>Source Files\dxhook\DirectXTK\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\MemoryUtils.h">
+      <Filter>Source Files\dxhook\src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -878,8 +929,54 @@
     <ClCompile Include="Chocolate DOOM\mus2mid.c">
       <Filter>Source Files\DOOM</Filter>
     </ClCompile>
-    <ClCompile Include="Chocolate DOOM\re_main.cpp">
-      <Filter>Source Files\DOOM</Filter>
+    <ClCompile Include="DoomD3DHook.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="dxhook\overlays\Example.cpp">
+      <Filter>Source Files\dxhook\overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\src\DirectXHook.cpp">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\src\Renderer.cpp">
+      <Filter>Source Files\dxhook\src</Filter>
+    </ClCompile>
+    <ClCompile Include="DoomXInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\SpriteBatch.cpp">
+      <Filter>Source Files\dxhook\DirectXTK\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\BufferHelpers.cpp">
+      <Filter>Source Files\dxhook\DirectXTK\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\CommonStates.cpp">
+      <Filter>Source Files\dxhook\DirectXTK\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\DirectXHelpers.cpp">
+      <Filter>Source Files\dxhook\DirectXTK\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\VertexTypes.cpp">
+      <Filter>Source Files\dxhook\DirectXTK\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\WICTextureLoader.cpp">
+      <Filter>Source Files\dxhook\DirectXTK\Src</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\DDSTextureLoader.cpp">
+      <Filter>Source Files\dxhook\DirectXTK\Src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dxhook\src\DirectXHook.def">
+      <Filter>Source Files\dxhook\src</Filter>
+    </None>
+    <None Include="dxhook\src\Jump.asm">
+      <Filter>Source Files\dxhook\src</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="dxhook\src\Shaders.hlsl">
+      <Filter>Source Files\dxhook\src</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

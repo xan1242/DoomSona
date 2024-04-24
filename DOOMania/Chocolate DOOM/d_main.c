@@ -1154,6 +1154,9 @@ static void G_CheckDemoStatusAtExit (void)
 void D_DoomInit_Lite(void) {
     I_RebootGraphics();                             // Re-enable the graphics
 
+    I_InitSound(true);
+    I_InitMusic();
+
     DEH_printf("S_Init: Setting up sound.\n");
     S_Init(sfxVolume * 8, musicVolume * 8);         // Cache all of the needed sounds
 
@@ -1424,8 +1427,8 @@ boolean D_DoomMain (void)
     DEH_printf("I_Init: Setting up machine state.\n");
     I_InitTimer();
     I_InitJoystick();
-    I_InitSound(true);
-    I_InitMusic();
+    //I_InitSound(true);
+    //I_InitMusic();
 
     // get skill / episode / map from parms
     startskill = sk_medium;

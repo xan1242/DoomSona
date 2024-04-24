@@ -1,8 +1,8 @@
 #pragma once
 
-#include "IRenderCallback.h"
-#include "OverlayFramework.h"
-#include "Renderer.h"
+#include "../src/IRenderCallback.h"
+#include "../src/OverlayFramework.h"
+#include "../src/Renderer.h"
 
 #ifndef EXAMPLE_MOD
 #define EXAMPLE_MOD

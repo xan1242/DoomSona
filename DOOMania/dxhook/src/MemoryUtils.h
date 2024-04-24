@@ -132,7 +132,7 @@ namespace MemoryUtils
 	static void ShowErrorPopup(std::string error)
 	{
 		logger.Log("Raised error: %s", error.c_str());
-		MessageBox(NULL, error.c_str(), GetCurrentModuleName().c_str(), MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+		//MessageBox(NULL, error.c_str(), GetCurrentModuleName().c_str(), MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	}
 
 	static void PrintPattern(std::vector<uint16_t> pattern)

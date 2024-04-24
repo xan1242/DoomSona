@@ -8,6 +8,9 @@ extern "C" {
 #endif
 #include "Chocolate DOOM/i_sound.h"
 #include "Chocolate DOOM/mus2mid.h"
+#include "Chocolate DOOM/m_misc.h"
+#include "Chocolate DOOM/deh_str.h"
+#include "Chocolate DOOM/w_wad.h"
 #ifdef __cplusplus
 }
 #endif
@@ -16,6 +19,7 @@ extern "C" {
 #include "includes/bassmidi/c/bassmidi.h"
 #include <filesystem>
 #include <fstream>
+#include <vector>
 
 namespace DoomBASS
 {
@@ -315,7 +319,67 @@ namespace DoomBASS
         }
 
     }
+    
+    namespace SoundEffects
+    {
+        constexpr boolean use_sfx_prefix = true;
+        
+
+
+        static void GetSfxLumpName(sfxinfo_t* sfx, char* buf, size_t buf_len)
+        {
+            // Linked sfx lumps? Get the lump number for the sound linked to.
+
+            if (sfx->link != NULL)
+            {
+                sfx = sfx->link;
+            }
+
+            // Doom adds a DS* prefix to sound lumps; Heretic and Hexen don't
+            // do this.
+
+            //if (use_sfx_prefix)
+            {
+                M_snprintf(buf, buf_len, "ds%s", DEH_String(sfx->name));
+            }
+            //else
+            //{
+            //    M_StringCopy(buf, DEH_String(sfx->name), buf_len);
+            //}
+        }
+
+        static void Cache(sfxinfo_t* sfxinfo)
+        {
+
+        }
+
+        static void Precache(sfxinfo_t* sounds, int num_sounds)
+        {
+            char namebuf[9];
+
+            printf("DoomBASS: precaching sound effects");
+
+            for (int i = 0; i < num_sounds; i++)
+            {
+                GetSfxLumpName(&sounds[i], namebuf, sizeof(namebuf));
+                sounds[i].lumpnum = W_CheckNumForName(namebuf);
+
+
+                if (sounds[i].lumpnum != -1)
+                {
+                    Cache(&sounds[i]);
+                }
+            }
+        }
+    }
+
 }
+
+
+
+//
+// MUSIC START
+//
 
 static boolean DoomBASS_InitMidi(void)
 {
@@ -388,6 +452,10 @@ static boolean DoomBASS_MusicIsPlaying(void)
     return DoomBASS::MidiMusic::IsPlaying(&errval);
 }
 
+//
+// MUSIC END
+//
+
 static boolean bBassInited = 0;
 boolean DoomBASS_GetBassInited()
 {
@@ -431,6 +499,7 @@ int DoomBASS_Init(int samplerate)
 }
 
 
+
 static snddevice_t DoomBASS_devices[] =
 {
     SNDDEVICE_PAS,
@@ -439,6 +508,10 @@ static snddevice_t DoomBASS_devices[] =
     SNDDEVICE_GENMIDI,
     SNDDEVICE_AWE32,
 };
+
+//
+// MUSIC START
+//
 
 const music_module_t DoomBASS_module =
 {
@@ -456,3 +529,7 @@ const music_module_t DoomBASS_module =
     DoomBASS_MusicIsPlaying,
     NULL,  // Poll
 };
+
+//
+// MUSIC END
+//

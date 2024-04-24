@@ -118,18 +118,20 @@
       <PreprocessorDefinitions>_DEBUG;DOOMANIA_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\asmjit\src;D:\Temp\mania-doom\DOOMania\includes\modutils;D:\Temp\mania-doom\DOOMania\includes\bass\c;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\asmjit\src;D:\Temp\mania-doom\DOOMania\includes\modutils;D:\Temp\mania-doom\DOOMania\includes\bass\c;D:\Temp\mania-doom\DOOMania\dxhook\DirectXTK\Inc;D:\Temp\mania-doom\DOOMania\dxhook\DirectXTK\Src\Shaders\Compiled;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>winmm.lib;includes\bass\c\x64\bass.lib;includes\bassmidi\c\x64\bassmidi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;includes\bass\c\x64\bass.lib;includes\bassmidi\c\x64\bassmidi.lib;d3d11.lib;d3d12.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R"
-@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\MyNFSCode\DoomTester\x64\Debug"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R\DOOMania.asi"
+@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMania.dll" "D:\MyNFSCode\DoomTester\x64\Debug\DOOMania.asi"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -167,7 +169,7 @@
       <PreprocessorDefinitions>NDEBUG;DOOMANIA_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\bass\c;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\bass\c;D:\Temp\mania-doom\DOOMania\dxhook\DirectXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -176,7 +178,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>winmm.lib;includes\bass\c\x64\bass.lib;includes\bassmidi\c\x64\bassmidi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;includes\bass\c\x64\bass.lib;includes\bassmidi\c\x64\bassmidi.lib;d3d11.lib;d3d12.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -256,7 +260,6 @@
     <ClInclude Include="Chocolate DOOM\p_setup.h" />
     <ClInclude Include="Chocolate DOOM\p_spec.h" />
     <ClInclude Include="Chocolate DOOM\p_tick.h" />
-    <ClInclude Include="Chocolate DOOM\re_main.h" />
     <ClInclude Include="Chocolate DOOM\r_bsp.h" />
     <ClInclude Include="Chocolate DOOM\r_data.h" />
     <ClInclude Include="Chocolate DOOM\r_defs.h" />
@@ -286,7 +289,19 @@
     <ClInclude Include="Chocolate DOOM\w_wad.h" />
     <ClInclude Include="Chocolate DOOM\z_zone.h" />
     <ClInclude Include="DoomBASS.h" />
+    <ClInclude Include="DoomD3DHook.h" />
     <ClInclude Include="DoomWin32.h" />
+    <ClInclude Include="DoomXInput.h" />
+    <ClInclude Include="dxhook\DirectXTK\Inc\SpriteBatch.h" />
+    <ClInclude Include="dxhook\overlays\Example.h" />
+    <ClInclude Include="dxhook\src\DirectXHook.h" />
+    <ClInclude Include="dxhook\src\DoomAPI.hpp" />
+    <ClInclude Include="dxhook\src\ID3DRenderer.h" />
+    <ClInclude Include="dxhook\src\IRenderCallback.h" />
+    <ClInclude Include="dxhook\src\Logger.h" />
+    <ClInclude Include="dxhook\src\MemoryUtils.h" />
+    <ClInclude Include="dxhook\src\nmd_assembly.h" />
+    <ClInclude Include="dxhook\src\OverlayFramework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Win32\win_opendir.h" />
   </ItemGroup>
@@ -620,7 +635,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Chocolate DOOM\re_main.cpp" />
     <ClCompile Include="Chocolate DOOM\r_bsp.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -731,7 +745,19 @@
     </ClCompile>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DoomBASS.cpp" />
+    <ClCompile Include="DoomD3DHook.cpp" />
     <ClCompile Include="DoomWin32.cpp" />
+    <ClCompile Include="DoomXInput.cpp" />
+    <ClCompile Include="dxhook\DirectXTK\Src\BufferHelpers.cpp" />
+    <ClCompile Include="dxhook\DirectXTK\Src\CommonStates.cpp" />
+    <ClCompile Include="dxhook\DirectXTK\Src\DDSTextureLoader.cpp" />
+    <ClCompile Include="dxhook\DirectXTK\Src\DirectXHelpers.cpp" />
+    <ClCompile Include="dxhook\DirectXTK\Src\SpriteBatch.cpp" />
+    <ClCompile Include="dxhook\DirectXTK\Src\VertexTypes.cpp" />
+    <ClCompile Include="dxhook\DirectXTK\Src\WICTextureLoader.cpp" />
+    <ClCompile Include="dxhook\overlays\Example.cpp" />
+    <ClCompile Include="dxhook\src\DirectXHook.cpp" />
+    <ClCompile Include="dxhook\src\Renderer.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64assembler.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64builder.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\arm\a64compiler.cpp" />
@@ -802,6 +828,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dxhook\src\DirectXHook.def" />
+    <None Include="dxhook\src\Jump.asm" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="dxhook\src\Shaders.hlsl">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

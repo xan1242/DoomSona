@@ -9,8 +9,8 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include <wrl/client.h>
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
+#include "../DirectXTK/Inc/SpriteBatch.h"
+//#include "../DirectXTK/Inc/SpriteFont.h"
 #include <vector>
 #include <comdef.h>
 
@@ -61,7 +61,6 @@ private:
 	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain3> swapChain3 = nullptr;
 	std::shared_ptr<DirectX::SpriteBatch> spriteBatch = nullptr;
-	std::shared_ptr<DirectX::SpriteFont> exampleFont = nullptr;
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	D3D11_VIEWPORT viewport;
 
@@ -134,10 +133,10 @@ private:
 	void PostRender();
 	void CreatePipeline();
 	Microsoft::WRL::ComPtr<ID3DBlob> LoadShader(const char* shaderData, std::string targetShaderVersion, std::string shaderEntry);
-	void CreateExampleTriangle();
-	void CreateExampleFont();
-	void DrawExampleTriangle();
-	void DrawExampleText();
+	//void CreateExampleTriangle();
+	//void CreateExampleFont();
+	//void DrawExampleTriangle();
+	//void DrawExampleText();
 	void ReleaseViewsBuffersAndContext();
 	bool CheckSuccess(HRESULT hr);
 };

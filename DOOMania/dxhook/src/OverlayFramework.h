@@ -3,11 +3,13 @@
 #include <d3d11.h>
 #include <vector>
 #include <fstream>
-#include <WICTextureLoader.h>
-#include <DDSTextureLoader.h>
+//#include <WICTextureLoader.h>
+#include "../DirectXTK/Inc/WICTextureLoader.h"
+#include "../DirectXTK/Inc/DDSTextureLoader.h"
+//#include <DDSTextureLoader.h>
 #include <comdef.h>
-#include <SpriteBatch.h>
-#include <SpriteFont.h>
+#include "../DirectXTK/Inc/SpriteBatch.h"
+//#include <SpriteFont.h>
 #include <wrl/client.h>
 #include <chrono>
 #include <string>
@@ -45,8 +47,8 @@ namespace OF
 	static std::shared_ptr<DirectX::SpriteBatch> ofSpriteBatch = nullptr;
 	static std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> ofTextures = std::vector<Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>>();
 	static std::vector<ID3D11Resource*> ofTextures2 = std::vector<ID3D11Resource*>();
-	static std::vector<std::shared_ptr<DirectX::SpriteFont>> ofFonts = std::vector<std::shared_ptr<DirectX::SpriteFont>>();
-	static std::shared_ptr<DirectX::SpriteFont> ofActiveFont = nullptr;
+	//static std::vector<std::shared_ptr<DirectX::SpriteFont>> ofFonts = std::vector<std::shared_ptr<DirectX::SpriteFont>>();
+	//static std::shared_ptr<DirectX::SpriteFont> ofActiveFont = nullptr;
 
 	// Gives the framework the required DirectX objects to draw
 	static void InitFramework(
@@ -164,44 +166,6 @@ namespace OF
 		return ofTextures.size() - 1;
 	}
 
-	static int LoadFont(std::string filepath)
-	{
-		if (ofDevice.Get() == nullptr)
-		{
-			logger.Log("Could not load font, ofDevice is nullptr! Run InitFramework before attempting to load fonts!");
-			return -1;
-		}
-
-		logger.Log("Loading font: %s", filepath.c_str());
-
-		std::fstream file = std::fstream(filepath);
-		std::wstring wideString(filepath.length(), ' ');
-		std::copy(filepath.begin(), filepath.end(), wideString.begin());
-		if (file.fail())
-		{
-			logger.Log("Font loading failed: %s", filepath.c_str());
-			file.close();
-			return -1;
-		}
-
-		file.close();
-
-		logger.Log("Font was loaded successfully");
-		ofFonts.push_back(std::make_shared<DirectX::SpriteFont>(ofDevice.Get(), wideString.c_str()));
-
-		return ofFonts.size() - 1;
-	}
-
-	static void SetFont(int font)
-	{
-		if (font > ofFonts.size() - 1 || font < 0)
-		{
-			logger.Log("Attempted to set invalid font!");
-			return;
-		}
-
-		ofActiveFont = ofFonts[font];
-	}
 
 	static void PlaceOnTop(Box* box)
 	{
@@ -342,49 +306,6 @@ namespace OF
 		float _b = MapFloatToRange((float)b, 0.0f, 255.0f, 0.0f, 1.0f);
 		float _a = MapFloatToRange((float)a, 0.0f, 255.0f, 0.0f, 1.0f);
 		_DrawBox(box, { _r, _g, _b, _a }, 0);
-	}
-
-	static void DrawText(
-		Box* box, 
-		std::string text,
-		int offsetX = 0,
-		int offsetY = 0,
-		float scale = 1.0f,
-		int r = 255,
-		int g = 255,
-		int b = 255,
-		int a = 255,
-		float rotation = 0.0f)
-	{
-		if (ofActiveFont == nullptr)
-		{
-			logger.Log("Attempted to render text with an invalid font, make sure to run SetFont first!");
-			return;
-		}
-
-		POINT position = GetAbsolutePosition(box);
-
-		DirectX::XMFLOAT2 textPos = DirectX::XMFLOAT2
-		(
-			position.x + offsetX,
-			position.y + offsetY
-		);
-
-		float _r = MapFloatToRange((float)r, 0.0f, 255.0f, 0.0f, 1.0f);
-		float _g = MapFloatToRange((float)g, 0.0f, 255.0f, 0.0f, 1.0f);
-		float _b = MapFloatToRange((float)b, 0.0f, 255.0f, 0.0f, 1.0f);
-		float _a = MapFloatToRange((float)a, 0.0f, 255.0f, 0.0f, 1.0f);
-
-		ofActiveFont->DrawString(
-			ofSpriteBatch.get(), 
-			text.c_str(), 
-			textPos, 
-			{ _r, _g, _b, _a }, 
-			rotation, 
-			{ 0.0f, 0.0f },
-			scale, 
-			DirectX::SpriteEffects_None, 
-			box->z);
 	}
 
 	static bool IsCursorInsideBox(POINT cursorPos, Box* box)

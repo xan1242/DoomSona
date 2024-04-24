@@ -27,7 +27,7 @@
 #include "m_argv.h"
 #include "m_config.h"
 
-#include "re_main.h"
+//#include "re_main.h"
 
 #include "../DoomBASS.h"
 
@@ -155,7 +155,7 @@ void I_InitSound(boolean use_sfx_prefix)
         //    //InitSfxModule(use_sfx_prefix);
         //}
         //
-        //if (!nomusic)
+        if (!nomusic)
         {
             music_module = &DoomBASS_module;
         }
@@ -175,6 +175,7 @@ void I_ShutdownSound(void)
 
     if (DoomBASS_GetBassInited())
     {
+        DoomBASS_SetBassInited(0);
         DoomBASS_Shutdown();
     }
 
