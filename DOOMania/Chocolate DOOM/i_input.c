@@ -123,6 +123,12 @@ static int GetTypedChar(int vk)
 
 
 boolean prevStates[256];
+
+// #TODO: figure out why this breaks kb input - 2x inputs on cursors, weird behavior in general with GetAsyncKeyState
+
+#ifdef _MSC_VER
+__declspec(noinline)
+#endif
 void I_HandleKeyboardEvent()
 {
     // XXX: passing pointers to event for access after this function
@@ -231,23 +237,28 @@ static int AccelerateMouse(int val)
     }
 }
 
+// #TODO: figure out why this breaks input - weird behavior in general with GetAsyncKeyState
+
+#ifdef _MSC_VER
+__declspec(noinline)
+#endif
 static void UpdateMouseButtonState()
 {
     static event_t event;
 
     mouse_button_state = 0;
 
-    if (GetAsyncKeyState(VK_LBUTTON) >> 15)
+    if ((GetAsyncKeyState(VK_LBUTTON) >> 15) & 1)
     {
         mouse_button_state |= (1 << 0);
     }
 
-    if (GetAsyncKeyState(VK_RBUTTON) >> 15)
+    if ((GetAsyncKeyState(VK_RBUTTON) >> 15) & 1)
     {
         mouse_button_state |= (1 << 1);
     }
 
-    if (GetAsyncKeyState(VK_MBUTTON) >> 15)
+    if ((GetAsyncKeyState(VK_MBUTTON) >> 15) & 1)
     {
         mouse_button_state |= (1 << 2);
     }

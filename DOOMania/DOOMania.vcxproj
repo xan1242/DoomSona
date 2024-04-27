@@ -183,6 +183,9 @@
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
+    <PostBuildEvent>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\DOOMania.asi" "D:\Program Files (x86)\Steam\steamapps\common\P5R\DOOMania.asi"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Chocolate DOOM\aes_prng.h" />

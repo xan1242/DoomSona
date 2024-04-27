@@ -1,15 +1,9 @@
-AI_DEBUG_PRINT = start doom
-something1 = get is doom running
-something2 = player kills in finished levels
-something3 = player secrets found in finished levels
-
 doom game stats
 - kills
 - items
 - secrets
 - time (par being target)
 
-TODO:
-- controls
-- sounds
+DOOM TODO:
+- controls -- fix XInput <-> SDL bridging
 - doom 1 and 2 selection via script parameter
