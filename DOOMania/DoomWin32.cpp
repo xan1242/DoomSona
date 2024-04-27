@@ -6,15 +6,16 @@
 HWND wndHandle;
 
 #include <map>
+#include <vector>
 std::map<int, int> sVkeyDoomMap =
 {
 	{VK_RIGHT, KEY_RIGHTARROW},
 	{VK_LEFT, KEY_LEFTARROW},
 	{VK_UP, KEY_UPARROW},
 	{VK_DOWN, KEY_DOWNARROW},
-	//{VK_ESCAPE, KEY_ESCAPE},
-	//{VK_RETURN, KEY_ENTER},
-	//{VK_TAB, KEY_TAB},
+	{VK_ESCAPE, KEY_ESCAPE},
+	{VK_RETURN, KEY_ENTER},
+	{VK_TAB, KEY_TAB},
 	{VK_F1, KEY_F1},
 	{VK_F2, KEY_F2},
 	{VK_F3, KEY_F3},
@@ -45,8 +46,55 @@ std::map<int, int> sVkeyDoomMap =
 	{VK_NEXT, KEY_PGDN},
 	{VK_INSERT, KEY_INS},
 	{VK_DELETE, KEY_DEL},
-	//{VK_DIVIDE, KEYP_DIVIDE},
+	{VK_DIVIDE, KEYP_DIVIDE},
+	{VK_ADD, KEYP_PLUS},
+	{VK_SUBTRACT, KEY_MINUS},
+	{VK_MULTIPLY, KEYP_MULTIPLY},
 	{VK_DELETE, KEY_DEL},
+};
+
+std::vector<int> sDoomKeyCodeList =
+{
+	KEY_RIGHTARROW,
+	KEY_LEFTARROW,
+	KEY_UPARROW,
+	KEY_DOWNARROW,
+	KEY_ESCAPE,
+	KEY_ENTER,
+	KEY_TAB,
+	KEY_F1,
+	KEY_F2,
+	KEY_F3,
+	KEY_F4,
+	KEY_F5,
+	KEY_F6,
+	KEY_F7,
+	KEY_F8,
+	KEY_F9,
+	KEY_F10,
+	KEY_F11,
+	KEY_F12,
+	KEY_BACKSPACE,
+	KEY_PAUSE,
+	KEY_EQUALS,
+	KEY_MINUS,
+	KEY_RSHIFT,
+	KEY_RCTRL,
+	KEY_RALT,
+	KEY_LALT,
+	KEY_CAPSLOCK,
+	KEY_NUMLOCK,
+	KEY_SCRLCK,
+	KEY_PRTSCR,
+	KEY_HOME,
+	KEY_END,
+	KEY_PGUP,
+	KEY_PGDN,
+	KEY_INS,
+	KEY_DEL,
+	KEYP_MULTIPLY,
+	KEYP_DIVIDE,
+	KEYP_PLUS
 };
 
 void __declspec(dllexport) DoomWin32_SetHWND(HWND hWnd)
@@ -82,6 +130,9 @@ int TranslateWin32Key(int vkey)
 	auto it = sVkeyDoomMap.find(vkey);
 	if (it == sVkeyDoomMap.end())
 	{
+		if (std::find(sDoomKeyCodeList.begin(), sDoomKeyCodeList.end(), vkey) != sDoomKeyCodeList.end())
+			return 0;
+
 		if (isalpha(vkey))
 			return tolower(vkey);
 		return vkey;

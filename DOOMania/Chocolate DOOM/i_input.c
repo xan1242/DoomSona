@@ -131,7 +131,7 @@ void I_HandleKeyboardEvent()
 
     for (int i = 1; i < 256; ++i)
     {
-        boolean bState = GetAsyncKeyState(i) >> 15;
+        boolean bState = (GetAsyncKeyState(i) >> 15) & 1;
 
         // Check for key down event
         if (bState)
@@ -141,7 +141,11 @@ void I_HandleKeyboardEvent()
                 event.type = ev_keydown;
                 event.data1 = TranslateWin32Key(i);
                 event.data2 = TranslateWin32Key(i);
-                event.data3 = GetTypedChar(i);
+                //event.data3 = GetTypedChar(i);
+
+                //event.data1 = MapVirtualKeyA(i, MAPVK_VK_TO_VSC);
+                //event.data2 = MapVirtualKeyA(i, MAPVK_VK_TO_VSC);
+                event.data3 = MapVirtualKeyA(i, MAPVK_VK_TO_CHAR);
 
                 if (event.data1 != 0)
                 {
@@ -156,6 +160,7 @@ void I_HandleKeyboardEvent()
             {
                 event.type = ev_keyup;
                 event.data1 = TranslateWin32Key(i);
+                //event.data1 = MapVirtualKeyA(i, MAPVK_VK_TO_VSC);
 
                 // data2/data3 are initialized to zero for ev_keyup.
                 // For ev_keydown it's the shifted Unicode character
