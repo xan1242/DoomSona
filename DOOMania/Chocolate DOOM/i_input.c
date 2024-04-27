@@ -81,7 +81,7 @@ static const char shiftxform[] =
 static boolean text_input_enabled = true;
 
 // Bit mask of mouse button state.
-static unsigned int mouse_button_state = 0;
+//static unsigned int mouse_button_state = 0;
 
 // Disallow mouse and joystick movement to cause forward/backward
 // motion.  Specified with the '-novert' command line parameter.
@@ -105,6 +105,9 @@ int vanilla_keyboard_mapping = true;
 float mouse_acceleration = 2.0;
 int mouse_threshold = 10;
 
+#ifdef _MSC_VER
+__declspec(noinline)
+#endif
 static int GetTypedChar(int vk)
 {
     int result = TranslateWin32Key(vk);
@@ -147,11 +150,11 @@ void I_HandleKeyboardEvent()
                 event.type = ev_keydown;
                 event.data1 = TranslateWin32Key(i);
                 event.data2 = TranslateWin32Key(i);
-                //event.data3 = GetTypedChar(i);
+                event.data3 = GetTypedChar(i);
 
                 //event.data1 = MapVirtualKeyA(i, MAPVK_VK_TO_VSC);
                 //event.data2 = MapVirtualKeyA(i, MAPVK_VK_TO_VSC);
-                event.data3 = MapVirtualKeyA(i, MAPVK_VK_TO_CHAR);
+                //event.data3 = MapVirtualKeyA(i, MAPVK_VK_TO_CHAR);
 
                 if (event.data1 != 0)
                 {
@@ -239,60 +242,80 @@ static int AccelerateMouse(int val)
 
 // #TODO: figure out why this breaks input - weird behavior in general with GetAsyncKeyState
 
-#ifdef _MSC_VER
-__declspec(noinline)
-#endif
-static void UpdateMouseButtonState()
-{
-    static event_t event;
-
-    mouse_button_state = 0;
-
-    if ((GetAsyncKeyState(VK_LBUTTON) >> 15) & 1)
-    {
-        mouse_button_state |= (1 << 0);
-    }
-
-    if ((GetAsyncKeyState(VK_RBUTTON) >> 15) & 1)
-    {
-        mouse_button_state |= (1 << 1);
-    }
-
-    if ((GetAsyncKeyState(VK_MBUTTON) >> 15) & 1)
-    {
-        mouse_button_state |= (1 << 2);
-    }
-
-    // Post an event with the new button state.
-
-    if (mouse_button_state)
-    {
-        event.type = ev_mouse;
-        event.data1 = mouse_button_state;
-        event.data2 = 0;
-        event.data3 = 0;
-        D_PostEvent(&event);
-    }
-}
+//#ifdef _MSC_VER
+//__declspec(noinline)
+//#endif
+//static void UpdateMouseButtonState()
+//{
+//    static event_t event;
+//
+//    mouse_button_state = 0;
+//
+//    if ((GetAsyncKeyState(VK_LBUTTON) >> 15) & 1)
+//    {
+//        mouse_button_state |= (1 << 0);
+//    }
+//
+//    if ((GetAsyncKeyState(VK_RBUTTON) >> 15) & 1)
+//    {
+//        mouse_button_state |= (1 << 1);
+//    }
+//
+//    if ((GetAsyncKeyState(VK_MBUTTON) >> 15) & 1)
+//    {
+//        mouse_button_state |= (1 << 2);
+//    }
+//
+//    // Post an event with the new button state.
+//
+//    if (mouse_button_state)
+//    {
+//        event.type = ev_mouse;
+//        event.data1 = mouse_button_state;
+//        event.data2 = 0;
+//        event.data3 = 0;
+//        D_PostEvent(&event);
+//    }
+//}
 
 //
 // Read the change in mouse state to generate mouse motion events
 //
 // This is to combine all mouse movement for a tic into one mouse
 // motion event.
+#ifdef _MSC_VER
+__declspec(noinline)
+#endif
 void I_ReadMouse(void)
 {
     int x, y;
     event_t ev;
 
-    UpdateMouseButtonState();
+    //UpdateMouseButtonState();
+
+    int mousebuttons = 0;
+
+    if ((GetAsyncKeyState(VK_LBUTTON) >> 15) & 1)
+    {
+        mousebuttons |= (1 << 0);
+    }
+
+    if ((GetAsyncKeyState(VK_RBUTTON) >> 15) & 1)
+    {
+        mousebuttons |= (1 << 1);
+    }
+
+    if ((GetAsyncKeyState(VK_MBUTTON) >> 15) & 1)
+    {
+        mousebuttons |= (1 << 2);
+    }
 
     Win32_GetRelativeMouseState(&x, &y);
     Win32_CenterMouse();
 
-    ev.data1 = mouse_button_state;
+    ev.data1 = mousebuttons;
 
-    if (x != 0 || y != 0)
+    //if (x != 0 || y != 0)
     {
         ev.type = ev_mouse;
         ev.data2 = AccelerateMouse(x);
