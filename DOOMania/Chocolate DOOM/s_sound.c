@@ -151,10 +151,10 @@ void S_Init(int sfxVolume, int musicVolume)
     mus_paused = 0;
 
     // Note that sounds have not been cached (yet).
-    for (i=1 ; i<NUMSFX ; i++)
-    {
-        S_sfx[i].lumpnum = S_sfx[i].usefulness = -1;
-    }
+    //for (i=1 ; i<NUMSFX ; i++)
+    //{
+    //    S_sfx[i].lumpnum = S_sfx[i].usefulness = -1;
+    //}
 
     // Doom defaults to pitch-shifting off.
     if (snd_pitchshift == -1)

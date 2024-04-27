@@ -147,7 +147,10 @@ void I_InitSound(boolean use_sfx_prefix)
         if (!nosfx || !nomusic)
         {
             if (!DoomBASS_GetBassInited())
+            {
                 DoomBASS_Init(snd_samplerate);
+                DoomBASS_SFX_SetPitchShifting(snd_pitchshift);
+            }
         }
 
         if (!nosfx)

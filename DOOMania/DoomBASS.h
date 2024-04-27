@@ -15,7 +15,8 @@
 extern "C" {
 #endif
 
-
+	boolean DoomBASS_SFX_GetPitchShifting();
+	void DoomBASS_SFX_SetPitchShifting(boolean val);
 	boolean DoomBASS_GetBassInited();
 	void DoomBASS_SetBassInited(boolean val);
 	int DoomBASS_Shutdown();

@@ -23,6 +23,8 @@ extern "C" {
 #include <vector>
 #include <map>
 
+static boolean bBassInited = 0;
+
 namespace DoomBASS
 {
     //namespace StreamMusic
@@ -324,8 +326,9 @@ namespace DoomBASS
     
     namespace SoundEffects
     {
-        constexpr DWORD maxSoundChans = 128;
+        constexpr DWORD maxSoundChans = 32;
         constexpr boolean use_sfx_prefix = true;
+        bool bPitchShifting = false;
         
         struct DoomSFX
         {
@@ -468,19 +471,23 @@ namespace DoomBASS
         {
             char namebuf[9];
 
-            printf("DoomBASS: precaching sound effects");
+            printf("DoomBASS: precaching sound effects ");
 
             for (int i = 0; i < num_sounds; i++)
             {
                 GetSfxLumpName(&sounds[i], namebuf, sizeof(namebuf));
-                sounds[i].lumpnum = W_CheckNumForName(namebuf);
-                strncpy(sounds[i].name, namebuf, 9);
+
+                if (sounds[i].lumpnum < 0)
+                    sounds[i].lumpnum = W_CheckNumForName(namebuf);
 
                 if (sounds[i].lumpnum != -1)
                 {
                     Cache(&sounds[i]);
+                    printf(".");
                 }
             }
+
+            printf("\n");
         }
 
         static DoomSFX* GetSFXHandle(sfxinfo_t* sfxinfo)
@@ -514,7 +521,11 @@ namespace DoomBASS
 
             float newVol = (float)vol / 127.0f;
             float newSep = std::lerp(-1.0f, 1.0f, (float)sep / 256.0f);
-            float newPitch = (float)pitch / (float)NORM_PITCH;
+
+            float newPitch = 1.0f;
+            if (bPitchShifting)
+                newPitch = (float)pitch / (float)NORM_PITCH;
+            
 
             BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, newVol);
             BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, newSep);
@@ -549,7 +560,8 @@ namespace DoomBASS
         {
             for (const auto& info : DoomSFXInfos)
             {
-                BASS_SampleFree(info.second.handle);
+                if (bBassInited)
+                    BASS_SampleFree(info.second.handle);
                 free(info.second.data);
 
             }
@@ -580,7 +592,7 @@ static void DoomBASS_UpdateSoundParams(int channel, int vol, int sep)
     return DoomBASS::SoundEffects::UpdateSoundParams(channel, vol, sep);
 }
 
-static int DoomBASS_StartSound(sfxinfo_t* sfxinfo, int channel, int vol, int sep, int pitch)
+static int DoomBASS_StartSound(sfxinfo_t * sfxinfo, int channel, int vol, int sep, int pitch)
 {
     return DoomBASS::SoundEffects::Start(sfxinfo, vol, sep, pitch);
 }
@@ -598,6 +610,16 @@ static boolean DoomBASS_SoundIsPlaying(int channel)
 static void DoomBASS_CacheSounds(sfxinfo_t* sounds, int num_sounds)
 {
     return DoomBASS::SoundEffects::Precache(sounds, num_sounds);
+}
+
+boolean DoomBASS_SFX_GetPitchShifting()
+{
+    return DoomBASS::SoundEffects::bPitchShifting;
+}
+
+void DoomBASS_SFX_SetPitchShifting(bool val)
+{
+    DoomBASS::SoundEffects::bPitchShifting = val;
 }
 
 //
@@ -684,7 +706,6 @@ static boolean DoomBASS_MusicIsPlaying(void)
 // MUSIC END
 //
 
-static boolean bBassInited = 0;
 boolean DoomBASS_GetBassInited()
 {
     return bBassInited;

@@ -37,6 +37,7 @@ extern "C" {
 #include "Chocolate DOOM/d_main.h"
 #include "Chocolate DOOM/z_zone.h"
 #include "Chocolate DOOM/i_system.h"
+#include "Chocolate DOOM/w_wad.h"
 //#include "Chocolate DOOM/re_main.h"
 }
 
@@ -109,7 +110,9 @@ void LaunchDoom()
 	if (!doomedonce)
 		doomed = D_DoomMain();
 	else
+	{
 		doomed = true;
+	}
 	if (doomed)
 	{
 		doomedonce = doomed;
@@ -240,6 +243,13 @@ void DoomThread()
 			else if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_ACCURATE)
 				while (!FrameLimiter::Sync_SLP());
 		}
+
+		if ((GetAsyncKeyState(VK_F4) >> 15) & 1)
+		{
+			if (!doomed)
+				LaunchDoom();
+		}
+
 	}
 }
 
@@ -365,7 +375,7 @@ extern "C" __declspec(dllexport) void TheInitFunc()
 	//delete gPatternDetector;
 
 #else
-	LaunchDoom();
+	//LaunchDoom();
 	LaunchDoomThread();
 
 #endif // USE_SEPARATE_THREAD
