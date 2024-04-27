@@ -6,4 +6,6 @@ doom game stats
 
 DOOM TODO:
 - controls -- fix XInput <-> SDL bridging
+- modern controls by default
 - doom 1 and 2 selection via script parameter
+- crosshair
