@@ -11,6 +11,7 @@ extern "C" {
 #include "Chocolate DOOM/m_misc.h"
 #include "Chocolate DOOM/deh_str.h"
 #include "Chocolate DOOM/w_wad.h"
+#include "Chocolate DOOM/z_zone.h"
 #ifdef __cplusplus
 }
 #endif
@@ -20,6 +21,7 @@ extern "C" {
 #include <filesystem>
 #include <fstream>
 #include <vector>
+#include <map>
 
 namespace DoomBASS
 {
@@ -322,9 +324,18 @@ namespace DoomBASS
     
     namespace SoundEffects
     {
+        constexpr DWORD maxSoundChans = 128;
         constexpr boolean use_sfx_prefix = true;
         
+        struct DoomSFX
+        {
+            HSAMPLE handle;
+            uint8_t* data;
+            int samplerate;
+            int length;
+        };
 
+        std::map<std::string, DoomSFX> DoomSFXInfos;
 
         static void GetSfxLumpName(sfxinfo_t* sfx, char* buf, size_t buf_len)
         {
@@ -348,8 +359,108 @@ namespace DoomBASS
             //}
         }
 
+        static int GetSfxLumpNum(sfxinfo_t* sfx)
+        {
+            char namebuf[9];
+
+            GetSfxLumpName(sfx, namebuf, sizeof(namebuf));
+
+            return W_GetNumForName(namebuf);
+        }
+
+        static int ExpandSoundData(sfxinfo_t* sfxinfo,
+            byte* data,
+            int samplerate,
+            int length)
+        {
+            DoomSFX sound = {0, nullptr, samplerate, length};
+
+            DWORD flags = BASS_SAMPLE_OVER_POS | BASS_SAMPLE_MONO | BASS_SAMPLE_8BITS;
+
+            HSAMPLE samp = BASS_SampleCreate(length, samplerate, 1, maxSoundChans, flags);
+            if (!samp)
+            {
+                return BASS_ErrorGetCode();
+            }
+
+            uint8_t* newData = (uint8_t*)malloc(length);
+            memcpy(newData, data, length);
+
+            if (BASS_SampleSetData(samp, newData) == FALSE)
+            {
+                free(newData);
+                return BASS_ErrorGetCode();
+            }
+
+            sound.data = newData;
+
+            sound.handle = samp;
+
+            std::string name = sfxinfo->name;
+
+            DoomSFXInfos[name] = sound;
+
+            return 0;
+        }
+
         static void Cache(sfxinfo_t* sfxinfo)
         {
+            int lumpnum;
+            unsigned int lumplen;
+            int samplerate;
+            unsigned int length;
+            byte* data;
+
+            // need to load the sound
+
+            lumpnum = sfxinfo->lumpnum;
+            data = (byte*)W_CacheLumpNum(lumpnum, PU_STATIC);
+            lumplen = W_LumpLength(lumpnum);
+
+            // Check the header, and ensure this is a valid sound
+
+            if (lumplen < 8
+                || data[0] != 0x03 || data[1] != 0x00)
+            {
+                // Invalid sound
+
+                return;
+            }
+
+
+            // 16 bit sample rate field, 32 bit length field
+
+            samplerate = (data[3] << 8) | data[2];
+            length = (data[7] << 24) | (data[6] << 16) | (data[5] << 8) | data[4];
+
+            // If the header specifies that the length of the sound is greater than
+            // the length of the lump itself, this is an invalid sound lump
+
+            // We also discard sound lumps that are less than 49 samples long,
+            // as this is how DMX behaves - although the actual cut-off length
+            // seems to vary slightly depending on the sample rate.  This needs
+            // further investigation to better understand the correct
+            // behavior.
+
+            if (length > lumplen - 8 || length <= 48)
+            {
+                return;
+            }
+
+            // The DMX sound library seems to skip the first 16 and last 16
+            // bytes of the lump - reason unknown.
+
+            data += 16;
+            length -= 32;
+
+
+            if (ExpandSoundData(sfxinfo, data + 8, samplerate, length) != 0)
+            {
+                return;
+            }
+
+            // don't need the original lump any more
+            W_ReleaseLumpNum(lumpnum);
 
         }
 
@@ -363,7 +474,7 @@ namespace DoomBASS
             {
                 GetSfxLumpName(&sounds[i], namebuf, sizeof(namebuf));
                 sounds[i].lumpnum = W_CheckNumForName(namebuf);
-
+                strncpy(sounds[i].name, namebuf, 9);
 
                 if (sounds[i].lumpnum != -1)
                 {
@@ -371,10 +482,127 @@ namespace DoomBASS
                 }
             }
         }
+
+        static DoomSFX* GetSFXHandle(sfxinfo_t* sfxinfo)
+        {
+            std::string soundName = sfxinfo->name;
+
+            auto it = DoomSFXInfos.find(soundName);
+            if (it == DoomSFXInfos.end())
+                return nullptr;
+
+            return &it->second;
+        }
+
+        // #TODO: ADD BASS3D AUDIO
+        static HCHANNEL Start(sfxinfo_t* sfxinfo, int vol, int sep, int pitch)
+        {
+            DoomSFX* hSound = GetSFXHandle(sfxinfo);
+
+            if (hSound == nullptr)
+                return -1;
+
+            DWORD flags = 0;
+
+            HCHANNEL chan = BASS_SampleGetChannel(hSound->handle, flags);
+
+            if (!chan)
+            {
+                //return BASS_ErrorGetCode();
+                return -1;
+            }
+
+            float newVol = (float)vol / 127.0f;
+            float newSep = std::lerp(-1.0f, 1.0f, (float)sep / 256.0f);
+            float newPitch = (float)pitch / (float)NORM_PITCH;
+
+            BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, newVol);
+            BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, newSep);
+            BASS_ChannelSetAttribute(chan, BASS_ATTRIB_FREQ, hSound->samplerate * newPitch);
+
+            BASS_ChannelPlay(chan, FALSE);
+
+            return chan;
+        }
+
+        static void Stop(HCHANNEL chan)
+        {
+            BASS_ChannelStop(chan);
+        }
+
+        static bool SoundIsPlaying(HCHANNEL chan)
+        {
+            return BASS_ChannelIsActive(chan) == BASS_ACTIVE_PLAYING;
+        }
+
+        // #TODO: ADD BASS3D AUDIO
+        static void UpdateSoundParams(HCHANNEL chan, int vol, int sep)
+        {
+            float newVol = (float)vol / 127.0f;
+            float newSep = std::lerp(-1.0f, 1.0f, (float)sep / 256.0f);
+
+            BASS_ChannelSetAttribute(chan, BASS_ATTRIB_VOL, newVol);
+            BASS_ChannelSetAttribute(chan, BASS_ATTRIB_PAN, newSep);
+        }
+
+        static void Shutdown()
+        {
+            for (const auto& info : DoomSFXInfos)
+            {
+                BASS_SampleFree(info.second.handle);
+                free(info.second.data);
+
+            }
+
+            DoomSFXInfos.clear();
+        }
+
     }
 
 }
 
+//
+// SFX START
+//
+
+static void DoomBASS_ShutdownSFX(void)
+{
+    DoomBASS::SoundEffects::Shutdown();
+}
+
+static int DoomBASS_GetSfxLumpNum(sfxinfo_t* sfx)
+{
+    return DoomBASS::SoundEffects::GetSfxLumpNum(sfx);
+}
+
+static void DoomBASS_UpdateSoundParams(int channel, int vol, int sep)
+{
+    return DoomBASS::SoundEffects::UpdateSoundParams(channel, vol, sep);
+}
+
+static int DoomBASS_StartSound(sfxinfo_t* sfxinfo, int channel, int vol, int sep, int pitch)
+{
+    return DoomBASS::SoundEffects::Start(sfxinfo, vol, sep, pitch);
+}
+
+static void DoomBASS_StopSound(int channel)
+{
+    return DoomBASS::SoundEffects::Stop(channel);
+}
+
+static boolean DoomBASS_SoundIsPlaying(int channel)
+{
+    return DoomBASS::SoundEffects::SoundIsPlaying(channel);
+}
+
+static void DoomBASS_CacheSounds(sfxinfo_t* sounds, int num_sounds)
+{
+    return DoomBASS::SoundEffects::Precache(sounds, num_sounds);
+}
+
+//
+// SFX END
+//
 
 
 //
@@ -508,6 +736,29 @@ static snddevice_t DoomBASS_devices[] =
     SNDDEVICE_GENMIDI,
     SNDDEVICE_AWE32,
 };
+
+//
+// SFX START
+//
+
+const sound_module_t DoomBASS_SFX_module =
+{
+    DoomBASS_devices,
+    arrlen(DoomBASS_devices),
+    NULL,
+    DoomBASS_ShutdownSFX,
+    DoomBASS_GetSfxLumpNum,
+    NULL,
+    DoomBASS_UpdateSoundParams,
+    DoomBASS_StartSound,
+    DoomBASS_StopSound,
+    DoomBASS_SoundIsPlaying,
+    DoomBASS_CacheSounds,
+};
+
+//
+// SFX END
+//
 
 //
 // MUSIC START

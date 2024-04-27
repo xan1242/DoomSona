@@ -18,7 +18,7 @@
 // Contains various memory manipulation functions related to hooking or modding
 namespace MemoryUtils
 {
-	static Logger logger{ "MemoryUtils" };
+	static ::Logger logger{ "MemoryUtils" };
 	static constexpr int maskBytes = 0xffff;
 	
 	struct HookInformation
@@ -451,7 +451,7 @@ namespace MemoryUtils
 			std::string byteAsHex = "";
 			stream << std::hex << std::setfill('0') << std::setw(2) << (int)byte;
 			byteAsHex = stream.str();
-			hexString.append("0x" + byteAsHex + " ");
+			hexString.append(byteAsHex + " ");
 		}
 		return hexString;
 	}

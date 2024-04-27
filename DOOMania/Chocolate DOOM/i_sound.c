@@ -150,11 +150,12 @@ void I_InitSound(boolean use_sfx_prefix)
                 DoomBASS_Init(snd_samplerate);
         }
 
-        //if (!nosfx)
-        //{
-        //    //InitSfxModule(use_sfx_prefix);
-        //}
-        //
+        if (!nosfx)
+        {
+            //InitSfxModule(use_sfx_prefix);
+            sound_module = &DoomBASS_SFX_module;
+        }
+        
         if (!nomusic)
         {
             music_module = &DoomBASS_module;
@@ -166,11 +167,14 @@ void I_InitSound(boolean use_sfx_prefix)
 
 void I_ShutdownSound(void)
 {
-    printf("shutdownsound\n");
-
     if (music_module != NULL)
     {
         music_module->Shutdown();
+    }
+
+    if (sound_module != NULL)
+    {
+        sound_module->Shutdown();
     }
 
     if (DoomBASS_GetBassInited())
@@ -178,13 +182,6 @@ void I_ShutdownSound(void)
         DoomBASS_SetBassInited(0);
         DoomBASS_Shutdown();
     }
-
-    //if (sound_module != NULL)
-    //{
-    //    sound_module->Shutdown();
-    //}
-
-
 }
 
 int I_GetSfxLumpNum(sfxinfo_t *sfxinfo)
@@ -235,25 +232,32 @@ static void CheckVolumeSeparation(int *vol, int *sep)
     }
 }
 
-void I_UpdateSoundParams(sfxinfo_t* sfxinfo, int vol, int sep)
+void I_UpdateSoundParams(int channel, int vol, int sep)
 {
-    CheckVolumeSeparation(&vol, &sep);
+    if (sound_module != NULL)
+    {
+        CheckVolumeSeparation(&vol, &sep);
+        sound_module->UpdateSoundParams(channel, vol, sep);
+    }
+
     //RE_Sound_Update(sfxinfo, vol, sep);
 }
 
 int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
 {
-    //if (sound_module != NULL)
-    //{
-    //    CheckVolumeSeparation(&vol, &sep);
-    //    return sound_module->StartSound(sfxinfo, channel, vol, sep, pitch);
-    //}
-    //else
-    //{
-    //    return 0;
-    //}
+    //printf("sound start, vol: %d, sep: %d\n", vol, sep);
 
-    printf("sound start, vol: %d, sep: %d\n", vol, sep);
+    if (sound_module != NULL)
+    {
+        CheckVolumeSeparation(&vol, &sep);
+        return sound_module->StartSound(sfxinfo, channel, vol, sep, pitch);
+    }
+    else
+    {
+        return 0;
+    }
+
+    
 
 	//RE_Sound_Start(sfxinfo, vol, sep);
 	return 0;
@@ -261,20 +265,30 @@ int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch)
 
 void I_StopSound(int channel)
 {
-    //if (sound_module != NULL)
-    //{
-    //    sound_module->StopSound(channel);
-    //}
+    if (sound_module != NULL)
+    {
+        sound_module->StopSound(channel);
+    }
 }
 
-boolean I_SoundIsPlaying(sfxinfo_t* sfxinfo)
+boolean I_SoundIsPlaying(int channel)
 {
-	//return RE_Sound_IsPlaying(sfxinfo);
+    if (sound_module != NULL)
+    {
+        return sound_module->SoundIsPlaying(channel);
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void I_PrecacheSounds(sfxinfo_t *sounds, int num_sounds)
 {
-	//RE_Sound_Cache(sounds, num_sounds);
+    if (sound_module != NULL && sound_module->CacheSounds != NULL)
+    {
+        sound_module->CacheSounds(sounds, num_sounds);
+    }
 }
 
 void I_InitMusic(void)

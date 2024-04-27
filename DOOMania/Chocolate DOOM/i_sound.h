@@ -155,10 +155,10 @@ void I_InitSound(boolean use_sfx_prefix);
 void I_ShutdownSound(void);
 int I_GetSfxLumpNum(sfxinfo_t *sfxinfo);
 void I_UpdateSound(void);
-void I_UpdateSoundParams(sfxinfo_t* sfxinfo, int vol, int sep);
+void I_UpdateSoundParams(int channel, int vol, int sep);
 int I_StartSound(sfxinfo_t *sfxinfo, int channel, int vol, int sep, int pitch);
 void I_StopSound(int channel);
-boolean I_SoundIsPlaying(sfxinfo_t* sfxinfo);
+boolean I_SoundIsPlaying(int channel);
 void I_PrecacheSounds(sfxinfo_t *sounds, int num_sounds);
 
 // Interface for music modules

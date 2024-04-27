@@ -342,15 +342,6 @@
     <ClInclude Include="Chocolate DOOM\v_diskicon.h">
       <Filter>Source Files\DOOM</Filter>
     </ClInclude>
-    <ClInclude Include="..\ManiaAPI\ManiaModLoader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ManiaAPI\MemAccess.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\ManiaAPI\SonicMania.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Chocolate DOOM\i_glob.h">
       <Filter>Source Files\DOOM</Filter>
     </ClInclude>

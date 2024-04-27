@@ -15,6 +15,8 @@
 //	Mania mod entrypoint
 //
 
+//#define USE_SEPARATE_THREAD
+
 #include "pch.h"
 #include "FrameLimiter.hpp"
 
@@ -41,10 +43,20 @@ extern "C" {
 #include "DoomD3DHook.h"
 #include <thread>
 
+//#ifdef _DEBUG
+
+#include "dxhook/src/MemoryUtils.h"
+
+//#endif
+
 const char* modPath;
 
 bool doomed = false;			// flag indicating if DOOM has loaded
 bool doomedonce = false;
+
+// PERSONA STUFF
+uint16_t personaCurrBGM;
+
 
 FrameLimiter::FPSLimitMode mFPSLimitMode;
 
@@ -67,6 +79,25 @@ static void DoomMode_Init(void)
 
 #pragma runtime_checks( "", off )
 
+constexpr uintptr_t pScriptContext = 0x142ADCC28;
+
+#pragma pack(push, 1)
+struct tScriptContext
+{
+	uint8_t pad[0x2C];			// 000-02C
+	uint16_t m_nNumArgs;		// 02C-02E
+	uint8_t pad2;				// 02E-02F
+	uint8_t m_nArgTypes[32];	// 02F-04F
+	uint8_t pad3[0x11];			// 04F-058
+	uint64_t m_nArguments[32];	// 058-158
+	uint8_t pad4[0x7E];			// 158-1D8
+	uint32_t m_nReturn = 0;		// 1D8-1DC
+	uint8_t pad5[0x48];			// 1DC-224
+	uint32_t m_nWaitingFlag;	// 224-228
+	uint8_t pad6[0x200];		// 228-428 massive pad since im not sure how big this is
+};
+#pragma pack(pop)
+
 void DoomExited()
 {
 	doomed = false;
@@ -88,12 +119,111 @@ void LaunchDoom()
 	}
 }
 
-uint32_t _stdcall AIDebugPrintHook()
+enum DoomPersonaScriptParams
 {
-	LaunchDoom();
+	DPSP_UNK = -1,
+	DPSP_ISGAMERUNNING,
+	DPSP_CURRBGM,
+	DPSP_KILLS,
+	DPSP_SECRETS,
+	
+	DPSP_COUNT
+};
+
+//const char* DoomPersonaScriptParamsNames[] =
+//{
+//	"DPSP_ISGAMERUNNING",
+//	"DPSP_CURRBGM",
+//	"DPSP_KILLS",
+//	"DPSP_SECRETS",
+//};
+
+//tScriptContext* GetPersonaContext()
+//{
+//	return *reinterpret_cast<tScriptContext**>(pScriptContext);
+//}
+
+uint32_t _stdcall GetScriptArg(int num)
+{
+	return reinterpret_cast<uint32_t(__thiscall*)(int)>(0x1416E83F0)(num);
+}
+
+// multi-tool function - get stats and crap from game by input parameter
+uint32_t _stdcall TBL365ValueMDHook()
+{
+	uintptr_t context = *reinterpret_cast<uintptr_t*>(pScriptContext);
+
+
+
+	//uint64_t arg2 = *reinterpret_cast<uint64_t*>(context + 0x88);
+	//uint64_t arg1 = *reinterpret_cast<uint64_t*>(context + 0x88 + sizeof(uint64_t));
+	//uint64_t arg0 = *reinterpret_cast<uint64_t*>(context + 0x88 + sizeof(uint64_t) +sizeof(uint64_t));
+
+	uint64_t arg2 = GetScriptArg(2);
+	uint64_t arg1 = GetScriptArg(1);
+	uint64_t arg0 = GetScriptArg(0);
+
+	uint64_t retval = 0;
+
+	//printf("TBL365ValueMDHook: args: %lld %lld %lld\n", arg0, arg1, arg2);
+
+	//MemoryUtils::PrintBytesAtAddress(context, 0x200);
+
+
+	switch (arg0)
+	{
+	case DPSP_SECRETS:
+		break;
+	case DPSP_KILLS:
+		break;
+	case DPSP_CURRBGM:
+		retval = personaCurrBGM;
+		break;
+	case DPSP_ISGAMERUNNING:
+		retval = doomed;
+		break;
+	default:
+		break;
+	}
+
+	//printf("TBL365ValueMDHook: returning: %lld\n", retval);
+
+	// return value
+	*reinterpret_cast<uint64_t*>(context + 0x1D8) = retval;
+	*reinterpret_cast<uint8_t*>(context + 0x5F) = 0;
 
 	return 1;
 }
+
+uint32_t _stdcall CheckDisableSharePlayHook()
+{
+	//tScriptContext* context = GetPersonaContext();
+
+	uintptr_t context = *reinterpret_cast<uintptr_t*>(pScriptContext);
+
+	uint64_t arg0 = *reinterpret_cast<uint64_t*>(context + 0x60);
+
+	if (!doomed)
+		LaunchDoom();
+
+	// return value
+	*reinterpret_cast<uint64_t*>(context + 0x1D8) = doomed;
+	*reinterpret_cast<uint8_t*>(context + 0x5F) = 0;
+
+
+	return 1;
+}
+
+//uint32_t _stdcall BGMFuncHook()
+//{
+//	int argVal = reinterpret_cast<int(__thiscall*)(int)>(0x1416E83F0)(0);
+//
+//	printf("BGM: %d\n", argVal);
+//
+//	reinterpret_cast<void(__thiscall*)(int)>(0x14178AA40)(argVal);
+//
+//	return 1;
+//}
 
 #pragma runtime_checks( "", restore )
 
@@ -101,12 +231,15 @@ void DoomThread()
 {
 	while (1)
 	{
-		DoomMode_Main();
+		if (doomed)
+		{
+			DoomMode_Main();
 
-		if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_REALTIME)
-			while (!FrameLimiter::Sync_RT());
-		else if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_ACCURATE)
-			while (!FrameLimiter::Sync_SLP());
+			if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_REALTIME)
+				while (!FrameLimiter::Sync_RT());
+			else if (mFPSLimitMode == FrameLimiter::FPSLimitMode::FPS_ACCURATE)
+				while (!FrameLimiter::Sync_SLP());
+		}
 	}
 }
 
@@ -168,9 +301,11 @@ extern "C" __declspec(dllexport) void TheInitFunc()
 
 	
 	OpenConsole();
+	DoomD3DHook::Init();
+
+#ifndef USE_SEPARATE_THREAD
 	//LaunchDoom();
 
-	DoomD3DHook::Init();
 
 	struct hkGameLoop
 	{
@@ -186,9 +321,32 @@ extern "C" __declspec(dllexport) void TheInitFunc()
 		}
 	}; injector::MakeInline<hkGameLoop>(0x1401D6800, 0x1401D6800 + 7);
 
-	injector::MakeAbsJMP(0x0000000140825010, AIDebugPrintHook);
-	//injector::MakeJMP(0x0000000140825010, AIDebugPrintHook);
-	//injector::MakeJMP(0x0000000140825000, AIDebugPrintHook);
+	//struct hkCurrBGM
+	//{
+	//	void operator()(injector::reg_pack& regs)
+	//	{
+	//		personaCurrBGM = regs.rax & 0xFFFF;
+	//		printf("Current BGM: %d\n", personaCurrBGM);
+	//		regs.rcx = *reinterpret_cast<uintptr_t*>(0x142ADCE68);
+	//	}
+	//}; injector::MakeInline<hkCurrBGM>(0x00000001558A9EAB, 0x00000001558A9EB2);
+
+	struct hkCurrBGM
+	{
+		void operator()(injector::reg_pack& regs)
+		{
+			personaCurrBGM = regs.rbx;
+			//printf("Current BGM: %d\n", personaCurrBGM);
+			regs.rax = 0x141AAA670;
+		}
+	}; injector::MakeInline<hkCurrBGM>(0x15590AB38, 0x15590AB3F);
+
+	//injector::MakeAbsJMP(0x1416D9E90, BGMFuncHook);
+
+	injector::MakeAbsJMP(0x00000001416E1D20, CheckDisableSharePlayHook);
+	injector::MakeAbsJMP(0x00000001416DDFE0, TBL365ValueMDHook);
+	//injector::MakeAbsJMP(0x0000000140825010, AIDebugPrintHook);
+	//injector::MakeAbsJMP(0x0000000140825000, AIDebugPrintValueHook);
 
 	//struct hkAIDebugPrint
 	//{
@@ -206,7 +364,11 @@ extern "C" __declspec(dllexport) void TheInitFunc()
 
 	//delete gPatternDetector;
 
-	//LaunchDoomThread();
+#else
+	LaunchDoom();
+	LaunchDoomThread();
+
+#endif // USE_SEPARATE_THREAD
 }
 
 extern "C" __declspec(dllexport) void InitializeASI()

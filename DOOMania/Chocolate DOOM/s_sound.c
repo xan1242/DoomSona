@@ -182,7 +182,7 @@ static void S_StopChannel(int cnum)
     {
         // stop the sound playing
 
-        if (I_SoundIsPlaying(c->sfxinfo))
+        if (I_SoundIsPlaying(c->handle))
         {
             I_StopSound(c->handle);
         }
@@ -572,7 +572,7 @@ void S_UpdateSounds(mobj_t *listener)
 
         if (c->sfxinfo)
         {
-            if (I_SoundIsPlaying(c->sfxinfo))
+            if (I_SoundIsPlaying(c->handle))
             {
                 // initialize parameters
                 volume = snd_SfxVolume;
@@ -607,7 +607,7 @@ void S_UpdateSounds(mobj_t *listener)
                     }
                     else
                     {
-                        I_UpdateSoundParams(c->sfxinfo, volume, sep);
+                        I_UpdateSoundParams(c->handle, volume, sep);
                     }
                 }
             }

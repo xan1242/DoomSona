@@ -85,6 +85,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.asi</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -169,7 +170,7 @@
       <PreprocessorDefinitions>NDEBUG;DOOMANIA_EXPORTS;_WINDOWS;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\bass\c;D:\Temp\mania-doom\DOOMania\dxhook\DirectXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Temp\mania-doom\DOOMania\includes\asmjit\src;D:\Temp\mania-doom\DOOMania\includes\modutils;D:\Temp\mania-doom\DOOMania\includes\bass\c;D:\Temp\mania-doom\DOOMania\dxhook\DirectXTK\Inc;D:\Temp\mania-doom\DOOMania\dxhook\DirectXTK\Src\Shaders\Compiled;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -184,9 +185,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\ManiaAPI\ManiaModLoader.h" />
-    <ClInclude Include="..\ManiaAPI\MemAccess.h" />
-    <ClInclude Include="..\ManiaAPI\SonicMania.h" />
     <ClInclude Include="Chocolate DOOM\aes_prng.h" />
     <ClInclude Include="Chocolate DOOM\am_map.h" />
     <ClInclude Include="Chocolate DOOM\config.h" />
@@ -836,6 +834,7 @@
   <ItemGroup>
     <FxCompile Include="dxhook\src\Shaders.hlsl">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

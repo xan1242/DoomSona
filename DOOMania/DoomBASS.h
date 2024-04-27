@@ -14,11 +14,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
 	boolean DoomBASS_GetBassInited();
 	void DoomBASS_SetBassInited(boolean val);
 	int DoomBASS_Shutdown();
 	int DoomBASS_Init(int samplerate);
+
+	extern const sound_module_t DoomBASS_SFX_module;
 	extern const music_module_t DoomBASS_module;
+
 #ifdef __cplusplus
 }
 #endif
