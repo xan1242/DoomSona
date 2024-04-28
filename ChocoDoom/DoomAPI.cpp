@@ -24,9 +24,9 @@ DOOMAPI bool DoomAPI_bIsDoomRunning()
 	return bIsDoomRunning();
 }
 
-DOOMAPI bool DoomAPI_LaunchDoom()  // #TODO: expand for wad selection
+DOOMAPI bool DoomAPI_LaunchDoom(const char* args)  // #TODO: expand for wad selection
 {
-	return LaunchDoom();
+	return LaunchDoom(args);
 }
 
 DOOMAPI void DoomAPI_SetModPath(const char* path)

@@ -17,6 +17,19 @@ namespace DOOMSona
 		DPSP_COUNT
 	};
 
+	enum DoomIWads
+	{
+		IWAD_UNK = -1,
+		IWAD_DEFAULT,
+		IWAD_DOOMSHAREWARE,
+		IWAD_DOOM,
+		IWAD_DOOM2,
+		IWAD_FREEDOOM1,
+		IWAD_FREEDOOM2,
+
+		IWAD_COUNT
+	};
+
 	void Init();
 }
 

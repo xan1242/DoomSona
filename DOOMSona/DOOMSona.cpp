@@ -21,7 +21,7 @@ namespace DOOMSona
 			DoomD3DHook::SetFramebufferEnabled(false);
 		}
 
-		static bool Launch()
+		static bool Launch(int iwad)
 		{
 			if (!DoomAPI::modHandle)
 			{
@@ -32,8 +32,33 @@ namespace DOOMSona
 			DoomAPI::SetModPath(".");
 			DoomD3DHook::SetFramebufferEnabled(true);
 
-			if (!DoomAPI::LaunchDoom())
-				return false;
+			switch (iwad)
+			{
+			case IWAD_FREEDOOM2:
+				if (!DoomAPI::LaunchDoom("-iwad FREEDOOM2.WAD"))
+					return false;
+				break;
+			case IWAD_FREEDOOM1:
+				if (!DoomAPI::LaunchDoom("-iwad FREEDOOM1.WAD"))
+					return false;
+				break;
+			case IWAD_DOOM2:
+				if (!DoomAPI::LaunchDoom("-iwad DOOM2.WAD"))
+					return false;
+				break;
+			case IWAD_DOOM:
+				if (!DoomAPI::LaunchDoom("-iwad DOOM.WAD"))
+					return false;
+				break;
+			case IWAD_DOOMSHAREWARE:
+				if (!DoomAPI::LaunchDoom("-iwad DOOM1.WAD"))
+					return false;
+				break;
+			default:
+				if (!DoomAPI::LaunchDoom(""))
+					return false;
+				break;
+			}
 
 			DoomAPI::DoomRegisterAtExit(PerformAtDoomExit, true);
 
@@ -77,7 +102,7 @@ namespace DOOMSona
 		bool bDoomLaunchResult = false;
 
 		if (!DoomAPI::bIsDoomRunning())
-			bDoomLaunchResult = DOOM::Launch();
+			bDoomLaunchResult = DOOM::Launch(arg0);
 
 		// return value
 		*reinterpret_cast<uint64_t*>(context + 0x1D8) = bDoomLaunchResult;

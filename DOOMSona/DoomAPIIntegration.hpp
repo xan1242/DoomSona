@@ -28,14 +28,14 @@ namespace DoomAPI
 		return false;
 	}
 
-	inline bool(*_LaunchDoom)(); // #TODO: expand for wad selection
-	inline bool LaunchDoom()
+	inline bool(*_LaunchDoom)(const char* args); // #TODO: expand for wad selection
+	inline bool LaunchDoom(const char* args)
 	{
 		if (!_LaunchDoom && modHandle)
-			_LaunchDoom = reinterpret_cast<bool(*)()>(GetProcAddress(modHandle, "DoomAPI_LaunchDoom"));
+			_LaunchDoom = reinterpret_cast<bool(*)(const char*)>(GetProcAddress(modHandle, "DoomAPI_LaunchDoom"));
 
 		if (_LaunchDoom)
-			return _LaunchDoom();
+			return _LaunchDoom(args);
 
 		return false;
 	}
