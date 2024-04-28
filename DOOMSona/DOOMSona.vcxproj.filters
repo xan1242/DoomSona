@@ -1,0 +1,307 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\asmjit">
+      <UniqueIdentifier>{e744bada-e3c6-4ce9-8a8d-c13b7d7ae223}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook">
+      <UniqueIdentifier>{72dabf42-bf36-4aef-ae50-2bb98357c361}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\dxhook">
+      <UniqueIdentifier>{d7f25538-d8d1-484e-852f-bc977d903926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook\overlays">
+      <UniqueIdentifier>{4f1612e3-8baa-4f30-a1ef-ee715b2b95fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\dxhook\overlays">
+      <UniqueIdentifier>{a0d4a075-dc09-4c0e-a3c3-5b13c2816b12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\dxhook\DirectXTK">
+      <UniqueIdentifier>{0a2cdb9e-98e5-4b2d-bd8e-320eebe3cd06}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UALCheck.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DOOMSona.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DoomD3DHook.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\DirectXHook.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\ID3DRenderer.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\IRenderCallback.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\Logger.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\MemoryUtils.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\nmd_assembly.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\OverlayFramework.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\src\Renderer.h">
+      <Filter>Header Files\dxhook</Filter>
+    </ClInclude>
+    <ClInclude Include="dxhook\overlays\Example.h">
+      <Filter>Header Files\dxhook\overlays</Filter>
+    </ClInclude>
+    <ClInclude Include="DoomAPIIntegration.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DOOMSona.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86assembler.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86builder.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86compiler.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86emithelper.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86formatter.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86func.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86instapi.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86instdb.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86operand.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\x86\x86rapass.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64assembler.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64builder.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64compiler.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64emithelper.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64formatter.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64func.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64instapi.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64instdb.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64operand.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\a64rapass.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\arm\armformatter.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\archtraits.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\assembler.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\builder.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\codeholder.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\codewriter.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\compiler.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\constpool.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\cpuinfo.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\emithelper.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\emitter.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\emitterutils.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\environment.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\errorhandler.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\formatter.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\func.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\funcargscontext.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\globals.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\inst.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\instdb.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\jitallocator.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\jitruntime.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\logger.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\operand.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\osutils.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\ralocal.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\rapass.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\rastack.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\string.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\support.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\target.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\type.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\virtmem.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\zone.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\zonehash.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\zonelist.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\zonestack.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\zonetree.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="includes\asmjit\src\asmjit\core\zonevector.cpp">
+      <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="DoomD3DHook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\src\DirectXHook.cpp">
+      <Filter>Source Files\dxhook</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\src\Renderer.cpp">
+      <Filter>Source Files\dxhook</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\overlays\Example.cpp">
+      <Filter>Source Files\dxhook\overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\CommonStates.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\DDSTextureLoader.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\DirectXHelpers.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\SpriteBatch.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\VertexTypes.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\WICTextureLoader.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\BufferHelpers.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dxhook\src\Jump.asm">
+      <Filter>Source Files\dxhook</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="dxhook\src\Shaders.hlsl">
+      <Filter>Source Files\dxhook</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
