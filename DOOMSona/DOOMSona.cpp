@@ -8,11 +8,20 @@
 #include "includes/injector/injector.hpp"
 #include "includes/assembly64.hpp"
 
+#include "dxhook/src/MemoryUtils.h"
+
 namespace DOOMSona
 {
 	constexpr uintptr_t pGetScriptArg = 0x1416E83F0;
 	constexpr uintptr_t pScriptContext = 0x142ADCC28;
 	uint32_t personaCurrBGM;
+
+	bool bUndoCBT;
+
+	constexpr std::string StringParamKeyword = "CACODEMON ";
+	std::string currStringParam;
+
+	std::string currChocoDoomArgs = "";
 
 	namespace DOOM
 	{
@@ -21,7 +30,7 @@ namespace DOOMSona
 			DoomD3DHook::SetFramebufferEnabled(false);
 		}
 
-		static bool Launch(int iwad)
+		static bool Launch()
 		{
 			if (!DoomAPI::modHandle)
 			{
@@ -32,33 +41,10 @@ namespace DOOMSona
 			DoomAPI::SetModPath(".");
 			DoomD3DHook::SetFramebufferEnabled(true);
 
-			switch (iwad)
-			{
-			case IWAD_FREEDOOM2:
-				if (!DoomAPI::LaunchDoom("-iwad FREEDOOM2.WAD"))
-					return false;
-				break;
-			case IWAD_FREEDOOM1:
-				if (!DoomAPI::LaunchDoom("-iwad FREEDOOM1.WAD"))
-					return false;
-				break;
-			case IWAD_DOOM2:
-				if (!DoomAPI::LaunchDoom("-iwad DOOM2.WAD"))
-					return false;
-				break;
-			case IWAD_DOOM:
-				if (!DoomAPI::LaunchDoom("-iwad DOOM.WAD"))
-					return false;
-				break;
-			case IWAD_DOOMSHAREWARE:
-				if (!DoomAPI::LaunchDoom("-iwad DOOM1.WAD"))
-					return false;
-				break;
-			default:
-				if (!DoomAPI::LaunchDoom(""))
-					return false;
-				break;
-			}
+			printf("DOOMSona: Launching DOOM with args: %s\n", currChocoDoomArgs.c_str());
+
+			if (!DoomAPI::LaunchDoom(currChocoDoomArgs.c_str()))
+				return false;
 
 			DoomAPI::DoomRegisterAtExit(PerformAtDoomExit, true);
 
@@ -94,6 +80,20 @@ namespace DOOMSona
 		return reinterpret_cast<uint32_t(__thiscall*)(int)>(pGetScriptArg)(num);
 	}
 
+	static char* GetScriptArgStr(int num)
+	{
+		uintptr_t context = *reinterpret_cast<uintptr_t*>(pScriptContext);
+		uint32_t argCount = *reinterpret_cast<uint32_t*>(context + 0x2C);
+
+		uint8_t argType = *reinterpret_cast<uint8_t*>(context + 0x2F + (argCount - num));
+
+		if (argType != 5)
+			return nullptr;
+
+
+		return *reinterpret_cast<char**>(context + 0x58 + (sizeof(uint64_t) * (argCount - num)));
+	}
+
 	static uint32_t _stdcall CheckDisableSharePlayHook()
 	{
 		uintptr_t context = *reinterpret_cast<uintptr_t*>(pScriptContext);
@@ -102,7 +102,7 @@ namespace DOOMSona
 		bool bDoomLaunchResult = false;
 
 		if (!DoomAPI::bIsDoomRunning())
-			bDoomLaunchResult = DOOM::Launch(arg0);
+			bDoomLaunchResult = DOOM::Launch();
 
 		// return value
 		*reinterpret_cast<uint64_t*>(context + 0x1D8) = bDoomLaunchResult;
@@ -129,6 +129,15 @@ namespace DOOMSona
 			break;
 		case DPSP_KILLS:
 			break;
+		case DPSP_APPLYDOOMARGS:
+			currChocoDoomArgs = currStringParam;
+			break;
+		case DPSP_FILESIZE:
+			retval = std::filesystem::file_size(currStringParam);
+			break;
+		case DPSP_FILEEXISTS:
+			retval = std::filesystem::exists(currStringParam);
+			break;
 		case DPSP_CURRBGM:
 			retval = personaCurrBGM;
 			break;
@@ -146,6 +155,59 @@ namespace DOOMSona
 		return 1;
 	}
 
+	static bool bIncludesStrParamKeyword(const char* str)
+	{
+		if (!str)
+			return false;
+
+		std::string inString = str;
+		if (inString.empty())
+			return false;
+
+		if (inString.length() < StringParamKeyword.length())
+			return false; // The string is shorter than the keyword
+
+		std::transform(inString.begin(), inString.end(), inString.begin(), ::toupper);
+
+		for (size_t i = 0; i < StringParamKeyword.length(); ++i)
+		{
+			if (inString[i] != StringParamKeyword[i])
+			{
+				return false; // Characters don't match
+			}
+		}
+
+		return true;
+	}
+
+	static void CopyStringParam(const char* str)
+	{
+		std::string inString = str;
+		currStringParam = inString.substr(StringParamKeyword.length());
+	}
+
+	static uint32_t _stdcall DbgPutsHook()
+	{
+		//uintptr_t context = *reinterpret_cast<uintptr_t*>(pScriptContext);
+
+		//MemoryUtils::PrintBytesAtAddress(context, 0x200);
+
+		char* in_str = GetScriptArgStr(0);
+
+		if (in_str)
+		{
+			if (bIncludesStrParamKeyword(in_str))
+			{
+				CopyStringParam(in_str);
+				//printf("CACODEMON is: %s\n", currStringParam.c_str());
+			}
+			else
+				printf("DBG_PUTS: %s\n", in_str);
+		}
+
+		return 1;
+	}
+
 	void Init()
 	{
 		OpenConsole();
@@ -156,7 +218,13 @@ namespace DOOMSona
 		{
 			void operator()(injector::reg_pack& regs)
 			{
-				if (DoomAPI::bIsDoomRunning())
+				if (!bUndoCBT)
+				{
+					bUndoCBT = true;
+					injector::WriteMemory<uintptr_t>(0x0000000141AA7270, 0x1416DD550, true);
+				}
+
+				if (DoomAPI::bIsDoomRunning() && !DoomAPI::bHasDoomErrored())
 				{
 					regs.rax = 0;
 					DoomAPI::DoomMainLoopFunc();
@@ -182,5 +250,7 @@ namespace DOOMSona
 
 		injector::MakeAbsJMP(0x00000001416E1D20, CheckDisableSharePlayHook);
 		injector::MakeAbsJMP(0x00000001416DDFE0, TBL365ValueMDHook);
+		injector::MakeAbsJMP(0x00000001416DD550, DbgPutsHook);
+
 	}
 }

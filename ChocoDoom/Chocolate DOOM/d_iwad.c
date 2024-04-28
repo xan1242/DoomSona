@@ -831,6 +831,7 @@ char *D_FindIWAD(int mask, GameMission_t *mission)
         if (result == NULL)
         {
             I_Error("IWAD file '%s' not found!", iwadfile);
+            return NULL;
         }
         
         *mission = IdentifyIWADByName(result, mask);

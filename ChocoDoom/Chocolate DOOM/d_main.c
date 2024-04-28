@@ -1388,16 +1388,21 @@ boolean D_DoomMain (void)
 	};
 	int i;
 	
-	if ( gamemode == shareware)
-	    I_Error(DEH_String("\nYou cannot -file with the shareware "
-			       "version. Register!"));
-
+    if (gamemode == shareware)
+    {
+        I_Error(DEH_String("\nYou cannot -file with the shareware "
+            "version. Register!"));
+        return;
+    }
 	// Check for fake IWAD with right name,
 	// but w/o all the lumps of the registered version. 
 	if (gamemode == registered)
 	    for (i = 0;i < 23; i++)
-		if (W_CheckNumForName(name[i])<0)
-		    I_Error(DEH_String("\nThis is not the registered version."));
+            if (W_CheckNumForName(name[i]) < 0)
+            {
+                I_Error(DEH_String("\nThis is not the registered version."));
+                return;
+            }
     }
 
     if (W_CheckNumForName("SS_START") >= 0

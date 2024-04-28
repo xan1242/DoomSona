@@ -33,6 +33,7 @@ const char* modPath;
 
 bool doomed = false;
 bool doomedonce = false;
+bool bDoomErrored = false;
 
 
 std::vector<char*> sArgs;
@@ -54,11 +55,16 @@ static void DoomMode_Init(void)
 	D_DoomInit_Lite();
 }
 
-#pragma runtime_checks( "", off )
+//#pragma runtime_checks( "", off )
 
 bool bIsDoomRunning()
 {
 	return doomed;
+}
+
+bool bHasDoomErrored()
+{
+    return bDoomErrored;
 }
 
 void DoomExited()
@@ -74,6 +80,18 @@ void DoomExited()
 	doomed = false;
 }
 
+//
+// throw C++ exception from C land...?
+// ...or maybe not. this actually can't be handled externally...
+// this seems to work though
+//
+void DoomErrored(const char* str)
+{
+    printf("DOOM error!\n");
+    bDoomErrored = true;
+    //throw std::runtime_error(str);
+    //DebugBreak();
+}
 
 std::vector<char*> parseArguments(const std::string& argsString)
 {
@@ -149,10 +167,10 @@ bool LaunchDoom(const char* args)
 	{
 		doomedonce = doomed;
 		DoomMode_Init();
-		I_AtExit(&DoomExited, false);
+		I_AtExit(&DoomExited, true);
 	}
 
-	return doomed;
+	return doomed && !bDoomErrored;
 }
 
 void DoomMainLoopFunc()
@@ -171,4 +189,4 @@ void DoomRegisterAtExit(doom_atexit_func_t func, bool run_if_error)
 	return;
 }
 
-#pragma runtime_checks( "", restore )
+//#pragma runtime_checks( "", restore )

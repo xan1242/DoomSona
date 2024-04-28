@@ -49,7 +49,8 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
-#include "re_main.h"
+//#include "re_main.h"
+#include "../MainExports.hpp"
 
 #define DEFAULT_RAM 16 /* MiB */
 #define MIN_RAM     4  /* MiB */
@@ -272,7 +273,8 @@ void I_Error (char *error, ...)
     if (already_quitting)
     {
         fprintf(stderr, "Warning: recursive call to I_Error detected.\n");
-        exit(-1);
+        DoomErrored("Warning: recursive call to I_Error detected.");
+        return;
     }
     else
     {
@@ -318,13 +320,15 @@ void I_Error (char *error, ...)
         //                         PACKAGE_STRING, msgbuf, NULL);
     }
 
+    DoomErrored(msgbuf);
+
     // abort();
 
     //SDL_Quit();
 
-	system("pause");
+	//system("pause");
 
-    exit(-1);
+    //exit(-1);
 }
 
 //

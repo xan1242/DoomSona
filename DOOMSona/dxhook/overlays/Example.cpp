@@ -98,7 +98,7 @@ void Example::Setup()
 
 void Example::Render()
 {
-	if (bSetupThingies && DoomD3DHook::GetFramebufferEnabled())
+	if (bSetupThingies && DoomD3DHook::GetFramebufferEnabled() && DoomAPI::bIsDoomRunning())
 	{
 		if (!DoomAPI::GetHWND())
 		{

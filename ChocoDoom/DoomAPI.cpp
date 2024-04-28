@@ -24,6 +24,11 @@ DOOMAPI bool DoomAPI_bIsDoomRunning()
 	return bIsDoomRunning();
 }
 
+DOOMAPI bool DoomAPI_bHasDoomErrored()
+{
+	return bHasDoomErrored();
+}
+
 DOOMAPI bool DoomAPI_LaunchDoom(const char* args)  // #TODO: expand for wad selection
 {
 	return LaunchDoom(args);

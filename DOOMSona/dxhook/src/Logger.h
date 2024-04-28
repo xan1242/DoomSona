@@ -5,6 +5,8 @@
 
 class Logger
 {
+private:
+	char DebugPrintBuffer[4096];
 public:
 	Logger(const char* prefix)
 	{
@@ -26,7 +28,9 @@ public:
 		if (GetLogFile() != nullptr)
 		{
 			vfprintf(GetLogFile(), std::string(printPrefix + " > " + msg + "\n").c_str(), args);
+			vsprintf(DebugPrintBuffer, std::string(printPrefix + " > " + msg + "\n").c_str(), args);
 			fflush(GetLogFile());
+			OutputDebugStringA(DebugPrintBuffer);
 		}
 		va_end(args);
 	}

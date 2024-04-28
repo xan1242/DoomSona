@@ -28,6 +28,18 @@ namespace DoomAPI
 		return false;
 	}
 
+	inline bool(*_bHasDoomErrored)();
+	inline bool bHasDoomErrored()
+	{
+		if (!_bHasDoomErrored && modHandle)
+			_bHasDoomErrored = reinterpret_cast<bool(*)()>(GetProcAddress(modHandle, "DoomAPI_bHasDoomErrored"));
+
+		if (_bHasDoomErrored)
+			return _bHasDoomErrored();
+
+		return false;
+	}
+
 	inline bool(*_LaunchDoom)(const char* args); // #TODO: expand for wad selection
 	inline bool LaunchDoom(const char* args)
 	{
@@ -131,26 +143,6 @@ namespace DoomAPI
 		}
 	}
 
-	inline bool Init(std::filesystem::path name)
-	{
-		modHandle = GetModuleHandle(name.filename().wstring().c_str());
-		if (modHandle)
-			FreeLibrary(modHandle);
-
-		modHandle = LoadLibrary(name.wstring().c_str());
-		if (!modHandle)
-			return false;
-
-		//printf("DoomAPI::Init\n");
-
-		return true;
-	}
-
-	inline void Init(HMODULE mod)
-	{
-		modHandle = mod;
-	}
-
 	inline void Deinit()
 	{
 		if (!modHandle)
@@ -173,6 +165,26 @@ namespace DoomAPI
 		DoomScreenTexture::_GetScreenWidth = NULL;
 
 		modHandle = NULL;
+	}
+
+	inline bool Init(std::filesystem::path name)
+	{
+		modHandle = GetModuleHandle(name.filename().wstring().c_str());
+		if (modHandle)
+			Deinit();
+
+		modHandle = LoadLibrary(name.wstring().c_str());
+		if (!modHandle)
+			return false;
+
+		//printf("DoomAPI::Init\n");
+
+		return true;
+	}
+
+	inline void Init(HMODULE mod)
+	{
+		modHandle = mod;
 	}
 }
 
