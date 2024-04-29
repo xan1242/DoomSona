@@ -131,15 +131,15 @@ namespace DOOMSona
 			break;
 		case DPSP_APPLYDOOMARGS:
 			currChocoDoomArgs = currStringParam;
-			currStringParam = "";
+			currStringParam.clear();
 			break;
 		case DPSP_FILESIZE:
 			retval = std::filesystem::file_size(currStringParam);
-			currStringParam = "";
+			currStringParam.clear();
 			break;
 		case DPSP_FILEEXISTS:
 			retval = std::filesystem::exists(currStringParam);
-			currStringParam = "";
+			currStringParam.clear();
 			break;
 		case DPSP_CURRBGM:
 			retval = personaCurrBGM;
