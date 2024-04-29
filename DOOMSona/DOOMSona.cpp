@@ -1,6 +1,6 @@
 //
 // DOOMSona
-// A Persona 5 Royale to DOOM hook & bridge
+// A Persona 5 Royal to DOOM hook & bridge
 //
 
 #include "framework.h"
@@ -32,7 +32,7 @@ namespace DOOMSona
     // Example:
     // To perform a file existence check, in the GFD flow script you'd do the following:
     // 
-    // // applies the currStringParam for the given path
+    // // applies the currStringParam with the given path
     // DBG_PUTS("CACODEMON path/to/my/file");
     // 
     // // executes the hooked function with DPSP_FILEEXISTS, which performs a std::filesystem::exists and returns a value (1 = exists, 0 = doesn't exist)
@@ -139,7 +139,7 @@ namespace DOOMSona
 
     static uint32_t _stdcall CheckDisableSharePlayHook()
     {
-        uint64_t arg0 = GFD::GetScriptArg(0);
+        //uint64_t arg0 = GFD::GetScriptArg(0);
 
         bool bDoomLaunchResult = false;
 
@@ -171,10 +171,12 @@ namespace DOOMSona
             currStringParam.clear();
             break;
         case DPSP_FILESIZE:
+            // #TODO: handle filesystem exceptions
             retval = std::filesystem::file_size(currStringParam);
             currStringParam.clear();
             break;
         case DPSP_FILEEXISTS:
+            // #TODO: handle filesystem exceptions
             retval = std::filesystem::exists(currStringParam);
             currStringParam.clear();
             break;
