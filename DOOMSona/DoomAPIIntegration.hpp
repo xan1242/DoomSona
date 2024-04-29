@@ -19,6 +19,8 @@ namespace DoomAPI
 	inline bool(*_bIsDoomRunning)();
 	inline bool bIsDoomRunning()
 	{
+		//printf("DoomAPI::bIsDoomRunning\n");
+
 		if (!_bIsDoomRunning && modHandle)
 			_bIsDoomRunning = reinterpret_cast<bool(*)()>(GetProcAddress(modHandle, "DoomAPI_bIsDoomRunning"));
 
@@ -31,6 +33,8 @@ namespace DoomAPI
 	inline bool(*_bHasDoomErrored)();
 	inline bool bHasDoomErrored()
 	{
+		//printf("DoomAPI::bHasDoomErrored. 0x%llX\n", _bHasDoomErrored);
+
 		if (!_bHasDoomErrored && modHandle)
 			_bHasDoomErrored = reinterpret_cast<bool(*)()>(GetProcAddress(modHandle, "DoomAPI_bHasDoomErrored"));
 
@@ -40,9 +44,11 @@ namespace DoomAPI
 		return false;
 	}
 
-	inline bool(*_LaunchDoom)(const char* args); // #TODO: expand for wad selection
+	inline bool(*_LaunchDoom)(const char* args);
 	inline bool LaunchDoom(const char* args)
 	{
+		//printf("DoomAPI::LaunchDoom\n");
+
 		if (!_LaunchDoom && modHandle)
 			_LaunchDoom = reinterpret_cast<bool(*)(const char*)>(GetProcAddress(modHandle, "DoomAPI_LaunchDoom"));
 
@@ -55,6 +61,8 @@ namespace DoomAPI
 	inline void(*_SetModPath)(const char* path);
 	inline void SetModPath(const char* path)
 	{
+		//printf("DoomAPI::SetModPath\n");
+
 		if (!_SetModPath && modHandle)
 			_SetModPath = reinterpret_cast<void(*)(const char*)>(GetProcAddress(modHandle, "DoomAPI_SetModPath"));
 
@@ -65,6 +73,8 @@ namespace DoomAPI
 	inline void(*_DoomMainLoopFunc)();
 	inline void DoomMainLoopFunc()
 	{
+		//printf("DoomAPI::DoomMainLoopFunc\n");
+
 		if (!_DoomMainLoopFunc && modHandle)
 			_DoomMainLoopFunc = reinterpret_cast<void(*)()>(GetProcAddress(modHandle, "DoomAPI_DoomMainLoopFunc"));
 
@@ -75,6 +85,8 @@ namespace DoomAPI
 	inline void(*_DoomRegisterAtExit)(atexit_func_t func, bool run_if_error);
 	inline void DoomRegisterAtExit(atexit_func_t func, bool run_if_error)
 	{
+		//printf("DoomAPI::DoomRegisterAtExit\n");
+
 		if (!_DoomRegisterAtExit && modHandle)
 			_DoomRegisterAtExit = reinterpret_cast<void(*)(atexit_func_t, bool)>(GetProcAddress(modHandle, "DoomAPI_DoomRegisterAtExit"));
 
@@ -85,6 +97,8 @@ namespace DoomAPI
 	inline void(*_SetHWND)(HWND hWnd);
 	inline void SetHWND(HWND hWnd)
 	{
+		//printf("DoomAPI::SetHWND\n");
+
 		if (!_SetHWND && modHandle)
 			_SetHWND = reinterpret_cast<void(*)(HWND)>(GetProcAddress(modHandle, "DoomAPI_SetHWND"));
 
@@ -95,6 +109,8 @@ namespace DoomAPI
 	inline HWND(*_GetHWND)();
 	inline HWND GetHWND()
 	{
+		//printf("DoomAPI::GetHWND\n");
+
 		if (!_GetHWND && modHandle)
 			_GetHWND = reinterpret_cast<HWND(*)()>(GetProcAddress(modHandle, "DoomAPI_GetHWND"));
 
@@ -109,6 +125,8 @@ namespace DoomAPI
 		inline uint32_t* (*_GetScreenFramebuffer)();
 		inline uint32_t* GetScreenFramebuffer()
 		{
+			//printf("DoomAPI::GetScreenFramebuffer\n");
+
 			if (!_GetScreenFramebuffer && modHandle)
 				_GetScreenFramebuffer = reinterpret_cast<uint32_t * (*)()>(GetProcAddress(modHandle, "DoomAPI_DoomScreenTexture_GetScreenFramebuffer"));
 
@@ -121,6 +139,8 @@ namespace DoomAPI
 		inline uint32_t(*_GetScreenHeight)();
 		inline uint32_t GetScreenHeight()
 		{
+			//printf("DoomAPI::GetScreenHeight\n");
+
 			if (!_GetScreenHeight && modHandle)
 				_GetScreenHeight = reinterpret_cast<uint32_t(*)()>(GetProcAddress(modHandle, "DoomAPI_DoomScreenTexture_GetScreenHeight"));
 
@@ -133,6 +153,8 @@ namespace DoomAPI
 		inline uint32_t(*_GetScreenWidth)();
 		inline uint32_t GetScreenWidth()
 		{
+			//printf("DoomAPI::GetScreenWidth\n");
+
 			if (!_GetScreenWidth && modHandle)
 				_GetScreenWidth = reinterpret_cast<uint32_t(*)()>(GetProcAddress(modHandle, "DoomAPI_DoomScreenTexture_GetScreenWidth"));
 
@@ -159,6 +181,7 @@ namespace DoomAPI
 		_DoomRegisterAtExit = NULL;
 		_GetHWND = NULL;
 		_SetHWND = NULL;
+		_bHasDoomErrored = NULL;
 
 		DoomScreenTexture::_GetScreenFramebuffer = NULL;
 		DoomScreenTexture::_GetScreenHeight = NULL;
