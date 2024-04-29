@@ -251,6 +251,7 @@ namespace DOOMSona
 		injector::MakeAbsJMP(0x00000001416E1D20, CheckDisableSharePlayHook);
 		injector::MakeAbsJMP(0x00000001416DDFE0, TBL365ValueMDHook);
 		injector::MakeAbsJMP(0x00000001416DD550, DbgPutsHook);
-
+		// increase the cmmBookTable limit to 127 (this is as much as we can do without hooking code since it's a 'cmp esi, 7Fh' here)
+		injector::WriteMemory<uint8_t>(0x0000000140C8993B + 2, 0x7F, true); 
 	}
 }
