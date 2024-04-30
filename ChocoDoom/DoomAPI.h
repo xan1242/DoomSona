@@ -19,5 +19,6 @@ DOOMAPI void DoomAPI_DoomMainLoopFunc();
 DOOMAPI void DoomAPI_DoomRegisterAtExit(doom_atexit_func_t func, bool run_if_error);
 DOOMAPI void DoomAPI_SetHWND(HWND hWnd);
 DOOMAPI HWND DoomAPI_GetHWND();
+DOOMAPI int DoomAPI_GetCompletedLevels();
 
 #endif

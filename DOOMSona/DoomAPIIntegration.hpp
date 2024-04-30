@@ -120,6 +120,18 @@ namespace DoomAPI
 		return 0;
 	}
 
+	inline int(*_GetCompletedLevels)();
+	inline int GetCompletedLevels()
+	{
+		if (!_GetCompletedLevels && modHandle)
+			_GetCompletedLevels = reinterpret_cast<int(*)()>(GetProcAddress(modHandle, "DoomAPI_GetCompletedLevels"));
+
+		if (_GetCompletedLevels)
+			return _GetCompletedLevels();
+
+		return 0;
+	}
+
 	namespace DoomScreenTexture
 	{
 		inline uint32_t* (*_GetScreenFramebuffer)();
@@ -182,6 +194,7 @@ namespace DoomAPI
 		_GetHWND = NULL;
 		_SetHWND = NULL;
 		_bHasDoomErrored = NULL;
+		_GetCompletedLevels = NULL;
 
 		DoomScreenTexture::_GetScreenFramebuffer = NULL;
 		DoomScreenTexture::_GetScreenHeight = NULL;

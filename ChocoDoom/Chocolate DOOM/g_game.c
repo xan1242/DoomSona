@@ -230,7 +230,10 @@ int		bodyqueslot;
  
 int             vanilla_savegame_limit = 1;
 int             vanilla_demo_limit = 1;
- 
+
+// extra stat tracks for Persona
+int completed_levels = 0;
+
 int G_CmdChecksum (ticcmd_t* cmd) 
 { 
     size_t		i;
@@ -1329,7 +1332,9 @@ extern char*	pagename;
 void G_ExitLevel (void) 
 { 
     secretexit = false; 
-    gameaction = ga_completed; 
+    gameaction = ga_completed;
+
+    completed_levels++;
 } 
 
 // Here's for the german edition.
@@ -1342,6 +1347,8 @@ void G_SecretExitLevel (void)
     else
 	secretexit = true; 
     gameaction = ga_completed; 
+
+    completed_levels++;
 } 
  
 void G_DoCompleted (void) 
@@ -2299,5 +2306,8 @@ boolean G_CheckDemoStatus (void)
     return false; 
 } 
  
- 
- 
+int GetCompletedLevels(void)
+{
+    return completed_levels;
+}
+

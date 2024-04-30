@@ -162,9 +162,8 @@ namespace DOOMSona
 
         switch (arg0)
         {
-        case DPSP_SECRETS:
-            break;
-        case DPSP_KILLS:
+        case DPSP_COMPLETEDLEVELS:
+            retval = DoomAPI::GetCompletedLevels();
             break;
         case DPSP_APPLYDOOMARGS:
             currChocoDoomArgs = currStringParam;

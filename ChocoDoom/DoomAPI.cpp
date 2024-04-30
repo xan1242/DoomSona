@@ -4,6 +4,14 @@
 #include "DoomWin32.h"
 #include "MainExports.hpp"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "Chocolate DOOM/g_game.h"
+#ifdef __cplusplus
+}
+#endif
+
 DOOMAPI uint32_t* DoomAPI_DoomScreenTexture_GetScreenFramebuffer()
 {
 	return DoomScreenTexture::GetScreenFramebuffer();
@@ -59,3 +67,7 @@ DOOMAPI HWND DoomAPI_GetHWND()
 	return DoomWin32_GetHWND();
 }
 
+DOOMAPI int DoomAPI_GetCompletedLevels()
+{
+	return GetCompletedLevels();
+}
