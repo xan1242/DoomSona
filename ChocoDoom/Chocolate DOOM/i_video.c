@@ -207,13 +207,15 @@ void I_StartTic (void)
     }
 
     Win32HandleStuff();
-    I_GetEvent();
 
-    if (usemouse && !nomouse && window_focused)
+    if (window_focused)
     {
-        I_ReadMouse();
+        I_GetEvent();
+        if (usemouse && !nomouse)
+        {
+            I_ReadMouse();
+        }
     }
-
 
     if (joywait < I_GetTime())
     {
