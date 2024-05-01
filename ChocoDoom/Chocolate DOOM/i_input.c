@@ -26,11 +26,13 @@
 #include "i_input.h"
 #include "m_argv.h"
 #include "m_config.h"
+#include "g_game.h"
 
 #define WIN32_LEAN_AND_MEAN
 #include <stdio.h>
 #include <windows.h>
 #include "../DoomWin32.h"
+#include "../DoomXInput.h"
 
 static const int scancode_translate_table[] = SCANCODE_TO_KEYS_ARRAY;
 
@@ -328,6 +330,11 @@ void I_ReadMouse(void)
         {
             ev.data3 = 0;
         }
+
+        // HACK: add in controller input here because joy inputs are SUPER pepeg
+        ev.data2 += XInput_Lerp(0.0f, 160.0f, XInput_AxisToPercentage(XInput_GetTurnAxis()));
+        ev.data3 += XInput_Lerp(0.0f, 50.0f, XInput_AxisToPercentage(-XInput_GetMovementYAxis()));
+
 
         // XXX: undefined behaviour since event is scoped to
         // this function

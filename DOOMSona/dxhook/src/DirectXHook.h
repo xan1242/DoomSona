@@ -21,7 +21,7 @@
 */
 typedef HRESULT(__stdcall* Present)(IDXGISwapChain* This, UINT SyncInterval, UINT Flags);
 typedef HRESULT(__stdcall* ResizeBuffers)(IDXGISwapChain* This, UINT BufferCount, UINT Width, UINT Height, DXGI_FORMAT NewFormat, UINT SwapChainFlags);
-typedef void(__stdcall* ExecuteCommandLists)(ID3D12CommandQueue* This, UINT NumCommandLists, const ID3D12CommandList** ppCommandLists);
+//typedef void(__stdcall* ExecuteCommandLists)(ID3D12CommandQueue* This, UINT NumCommandLists, const ID3D12CommandList** ppCommandLists);
 
 // Hooks DirectX 11 and DirectX 12
 class DirectXHook
@@ -37,9 +37,9 @@ public:
 	void Hook();
 	void SetDrawExampleTriangle(bool doDraw);
 	void AddRenderCallback(IRenderCallback* object);
-	ID3D12CommandQueue* CreateDummyCommandQueue();
-	void HookCommandQueue(ID3D12CommandQueue* dummyCommandQueue, uintptr_t executeCommandListsDetourFunction, uintptr_t* executeCommandListsReturnAddress);
-	void UnhookCommandQueue();
+	//ID3D12CommandQueue* CreateDummyCommandQueue();
+	//void HookCommandQueue(ID3D12CommandQueue* dummyCommandQueue, uintptr_t executeCommandListsDetourFunction, uintptr_t* executeCommandListsReturnAddress);
+	//void UnhookCommandQueue();
 
 private:
 	Logger logger{ "DirectXHook" };

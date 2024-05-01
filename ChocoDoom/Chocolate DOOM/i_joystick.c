@@ -90,13 +90,13 @@ void I_InitJoystick(void)
 
 void I_UpdateJoystick(void)
 {
-    event_t ev;
+    //event_t ev;
     RE_Control();
-
-	event_t ev_m;
-	ev.type = ev_mouse;
-	ev.data1 = ev.data2 = ev.data3 = 0;
-	D_PostEvent(&ev_m);
+    //
+	//event_t ev_m;
+	//ev.type = ev_mouse;
+	//ev.data1 = ev.data2 = ev.data3 = 0;
+	//D_PostEvent(&ev_m);
 }
 
 void I_BindJoystickVariables(void)

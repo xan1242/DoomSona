@@ -42,22 +42,22 @@ HRESULT __stdcall OnResizeBuffers(IDXGISwapChain* pThis, UINT bufferCount, UINT 
 * We need to hook this so we can grab the command queue and use it to create the D3D11On12 device in DirectX 12 games.
 * https://learn.microsoft.com/en-us/windows/win32/api/d3d12/nf-d3d12-id3d12commandqueue-executecommandlists
 */
-void __stdcall OnExecuteCommandLists(ID3D12CommandQueue* pThis, UINT numCommandLists, const ID3D12CommandList** ppCommandLists)
-{
-	if (pThis->GetDesc().Type == D3D12_COMMAND_LIST_TYPE_DIRECT)
-	{
-		hookInstance->renderer->SetCommandQueue(pThis);
-		//hookInstance->UnhookCommandQueue();
-	}
-
-	((ExecuteCommandLists)hookInstance->executeCommandListsReturnAddress)(pThis, numCommandLists, ppCommandLists);
-}
-
-void GetCommandQueue()
-{
-	ID3D12CommandQueue* dummyCommandQueue = hookInstance->CreateDummyCommandQueue();
-	hookInstance->HookCommandQueue(dummyCommandQueue, (uintptr_t)&OnExecuteCommandLists, &hookInstance->executeCommandListsReturnAddress);
-}
+// void __stdcall OnExecuteCommandLists(ID3D12CommandQueue* pThis, UINT numCommandLists, const ID3D12CommandList** ppCommandLists)
+// {
+// 	if (pThis->GetDesc().Type == D3D12_COMMAND_LIST_TYPE_DIRECT)
+// 	{
+// 		hookInstance->renderer->SetCommandQueue(pThis);
+// 		//hookInstance->UnhookCommandQueue();
+// 	}
+// 
+// 	((ExecuteCommandLists)hookInstance->executeCommandListsReturnAddress)(pThis, numCommandLists, ppCommandLists);
+// }
+// 
+// void GetCommandQueue()
+// {
+// 	ID3D12CommandQueue* dummyCommandQueue = hookInstance->CreateDummyCommandQueue();
+// 	hookInstance->HookCommandQueue(dummyCommandQueue, (uintptr_t)&OnExecuteCommandLists, &hookInstance->executeCommandListsReturnAddress);
+// }
 
 DirectXHook::DirectXHook(ID3DRenderer* renderer)
 {
@@ -70,15 +70,15 @@ void DirectXHook::Hook()
 	logger.Log("OnPresent: %p", &OnPresent);
 	logger.Log("OnResizeBuffers: %p", &OnResizeBuffers);
 
-	renderer->SetGetCommandQueueCallback(&GetCommandQueue);
+	//renderer->SetGetCommandQueueCallback(&GetCommandQueue);
 	IDXGISwapChain* dummySwapChain = CreateDummySwapChain();
 	HookSwapChain(dummySwapChain, (uintptr_t)&OnPresent, (uintptr_t)&OnResizeBuffers, &presentReturnAddress, &resizeBuffersReturnAddress);
 }
 
-void DirectXHook::SetDrawExampleTriangle(bool doDraw)
-{
-	((Renderer*)renderer)->SetDrawExampleTriangle(doDraw);
-}
+// void DirectXHook::SetDrawExampleTriangle(bool doDraw)
+// {
+// 	((Renderer*)renderer)->SetDrawExampleTriangle(doDraw);
+// }
 
 void DirectXHook::AddRenderCallback(IRenderCallback* object)
 {
@@ -216,22 +216,22 @@ IDXGISwapChain* DirectXHook::CreateDummySwapChain()
 //	return dummyDevice;
 //}
 
-ID3D12CommandQueue* DirectXHook::CreateDummyCommandQueue()
-{
-	D3D12_COMMAND_QUEUE_DESC queueDesc {};
-	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-	ID3D12Device* d12Device = nullptr;
-	D3D12CreateDevice(NULL, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), (void**)&d12Device);
-
-	ID3D12CommandQueue* dummyCommandQueue;
-	d12Device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&dummyCommandQueue));
-
-	logger.Log("Command queue: %p", dummyCommandQueue);
-
-	return dummyCommandQueue;
-}
+// ID3D12CommandQueue* DirectXHook::CreateDummyCommandQueue()
+// {
+// 	D3D12_COMMAND_QUEUE_DESC queueDesc {};
+// 	queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+// 	queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+// 
+// 	ID3D12Device* d12Device = nullptr;
+// 	D3D12CreateDevice(NULL, D3D_FEATURE_LEVEL_11_0, _uuidof(ID3D12Device), (void**)&d12Device);
+// 
+// 	ID3D12CommandQueue* dummyCommandQueue;
+// 	d12Device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&dummyCommandQueue));
+// 
+// 	logger.Log("Command queue: %p", dummyCommandQueue);
+// 
+// 	return dummyCommandQueue;
+// }
 
 void DirectXHook::HookSwapChain(
 	IDXGISwapChain* dummySwapChain,
@@ -279,42 +279,42 @@ void DirectXHook::HookSwapChain(
 	dummySwapChain->Release();
 }
 
-void DirectXHook::HookCommandQueue(
-	ID3D12CommandQueue* dummyCommandQueue,
-	uintptr_t executeCommandListsDetourFunction,
-	uintptr_t* executeCommandListsReturnAddress)
-{
-	int vmtExecuteCommandListsOffset = 10;
-	size_t numBytes = 8;
-
-	uintptr_t vmtBaseAddress = (*(uintptr_t*)dummyCommandQueue);
-	uintptr_t vmtExecuteCommandListsIndex = (vmtBaseAddress + (numBytes * vmtExecuteCommandListsOffset));
-
-	logger.Log("CommandQueue VMT base address: %p", vmtBaseAddress);
-	logger.Log("ExecuteCommandLists index: %p", vmtExecuteCommandListsIndex);
-
-	MemoryUtils::ToggleMemoryProtection(false, vmtExecuteCommandListsIndex, numBytes);
-	executeCommandListsAddress = (*(uintptr_t*)vmtExecuteCommandListsIndex);
-	MemoryUtils::ToggleMemoryProtection(true, vmtExecuteCommandListsIndex, numBytes);
-
-	//executeCommandListsAddress = injector::ReadMemory<uintptr_t>(vmtExecuteCommandListsIndex, true);
-
-	logger.Log("ExecuteCommandLists address: %p", executeCommandListsAddress);
-
-	//*executeCommandListsReturnAddress = executeCommandListsAddress;
-	//injector::WriteMemory(vmtExecuteCommandListsIndex, executeCommandListsDetourFunction, true);
-
-	bool hookIsPresent = MemoryUtils::IsAddressHooked(executeCommandListsAddress);
-	if (hookIsPresent)
-	{
-		logger.Log("Hook already present in ExecuteCommandLists");
-	}
-
-	MemoryUtils::PlaceHook(executeCommandListsAddress, executeCommandListsDetourFunction, executeCommandListsReturnAddress);
-	dummyCommandQueue->Release();
-}
-
-void DirectXHook::UnhookCommandQueue()
-{
-	//MemoryUtils::Unhook(executeCommandListsAddress);
-}
+// void DirectXHook::HookCommandQueue(
+// 	ID3D12CommandQueue* dummyCommandQueue,
+// 	uintptr_t executeCommandListsDetourFunction,
+// 	uintptr_t* executeCommandListsReturnAddress)
+// {
+// 	int vmtExecuteCommandListsOffset = 10;
+// 	size_t numBytes = 8;
+// 
+// 	uintptr_t vmtBaseAddress = (*(uintptr_t*)dummyCommandQueue);
+// 	uintptr_t vmtExecuteCommandListsIndex = (vmtBaseAddress + (numBytes * vmtExecuteCommandListsOffset));
+// 
+// 	logger.Log("CommandQueue VMT base address: %p", vmtBaseAddress);
+// 	logger.Log("ExecuteCommandLists index: %p", vmtExecuteCommandListsIndex);
+// 
+// 	MemoryUtils::ToggleMemoryProtection(false, vmtExecuteCommandListsIndex, numBytes);
+// 	executeCommandListsAddress = (*(uintptr_t*)vmtExecuteCommandListsIndex);
+// 	MemoryUtils::ToggleMemoryProtection(true, vmtExecuteCommandListsIndex, numBytes);
+// 
+// 	//executeCommandListsAddress = injector::ReadMemory<uintptr_t>(vmtExecuteCommandListsIndex, true);
+// 
+// 	logger.Log("ExecuteCommandLists address: %p", executeCommandListsAddress);
+// 
+// 	//*executeCommandListsReturnAddress = executeCommandListsAddress;
+// 	//injector::WriteMemory(vmtExecuteCommandListsIndex, executeCommandListsDetourFunction, true);
+// 
+// 	bool hookIsPresent = MemoryUtils::IsAddressHooked(executeCommandListsAddress);
+// 	if (hookIsPresent)
+// 	{
+// 		logger.Log("Hook already present in ExecuteCommandLists");
+// 	}
+// 
+// 	MemoryUtils::PlaceHook(executeCommandListsAddress, executeCommandListsDetourFunction, executeCommandListsReturnAddress);
+// 	dummyCommandQueue->Release();
+// }
+// 
+// void DirectXHook::UnhookCommandQueue()
+// {
+// 	//MemoryUtils::Unhook(executeCommandListsAddress);
+// }

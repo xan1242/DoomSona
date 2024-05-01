@@ -1,17 +1,4 @@
-//
-// Copyright(C) 2020 TheStoneBanana
-//
-// This program is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-
+#define NOMINMAX
 #include "pch.h"
 #include "DoomXInput.h"
 
@@ -23,120 +10,127 @@ extern "C" {
 
 #include <Xinput.h>
 #pragma comment(lib, "XInput.lib")
-
+#include <limits>
+#include <cstdlib>
+#include <cmath>
 
 constexpr int controllerIndex = 0;
-// ----------------------------------------------------------------------------
-// Reading the action buttons
-// ----------------------------------------------------------------------------
+
+constexpr SHORT INPUT_DEADZONE_LS = (0.24f * std::numeric_limits<SHORT>::max());
+constexpr SHORT INPUT_DEADZONE_RS = (0.24f * std::numeric_limits<SHORT>::max());
+constexpr SHORT TRIGGER_ACTIVATION_THRESHOLD = (0.12f * std::numeric_limits<BYTE>::max());  // 12% for analog triggers digital activation
+
 static int RE_Control_ReadIn()
 {
-
 	XINPUT_STATE state;
 	ZeroMemory(&state, sizeof(XINPUT_STATE));
 
-	// Get the state of the controller
-	if (XInputGetState(controllerIndex, &state) == ERROR_SUCCESS)
+	if (XInputGetState(controllerIndex, &state) != ERROR_SUCCESS)
+		return 0;
+
+	int res = 0;
+	WORD wButtons = state.Gamepad.wButtons;
+
+	if (wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)
 	{
-		int res = 0;
-		WORD wButtons = state.Gamepad.wButtons;
-		if ((wButtons & XINPUT_GAMEPAD_Y) && (wButtons & XINPUT_GAMEPAD_B))
-		{
-			if (wButtons & XINPUT_GAMEPAD_DPAD_UP)
-			{
-				res |= (1 << 6);		// swap weapon up
-			}
-			else if (wButtons & XINPUT_GAMEPAD_DPAD_DOWN)
-			{
-				res |= (1 << 5);		// swap weapon down
-			}
-			return (res);
-		}
-		else
-		{
-			if (wButtons & XINPUT_GAMEPAD_Y)
-			{
-				res |= (1 << 3);		// use item
-			}
-			if (wButtons & XINPUT_GAMEPAD_B)
-			{
-				res |= (1 << 1);		// strafe
-			}
-		}
-		if (wButtons & XINPUT_GAMEPAD_A)
-		{
-			res |= (1 << 0);		// fire gun
-		}
-		if (wButtons & XINPUT_GAMEPAD_X)
-		{
-			res |= (1 << 2);		// run
-		}
-
-		if (wButtons & XINPUT_GAMEPAD_START)
-		{
-			res |= (1 << 4);		// activate menu
-		}
-
-		return res;
+		res |= (1 << 6);		// swap weapon up
 	}
-	return 0;
+	else if (wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)
+	{
+		res |= (1 << 5);		// swap weapon down
+	}
 
-	//return 0;
+	if ((wButtons & XINPUT_GAMEPAD_A) || (wButtons & XINPUT_GAMEPAD_RIGHT_THUMB))
+	{
+		res |= (1 << 3);		// use item
+	}
+	if (wButtons & XINPUT_GAMEPAD_X)
+	{
+		res |= (1 << 1);		// strafe
+	}
+
+	if (state.Gamepad.bRightTrigger > TRIGGER_ACTIVATION_THRESHOLD)
+	{
+		res |= (1 << 0);		// fire gun
+	}
+
+	if (state.Gamepad.bLeftTrigger > TRIGGER_ACTIVATION_THRESHOLD)
+	{
+		res |= (1 << 2);		// run
+	}
+
+	if (wButtons & XINPUT_GAMEPAD_START)
+	{
+		res |= (1 << 4);		// activate menu
+	}
+
+	return res;
 }
 
-
-
-// ----------------------------------------------------------------------------
-// Reading the D-Pad
-// ----------------------------------------------------------------------------
-static int RE_Joy_ReadIn(boolean axis)
+int XInput_GetTurnAxis()
 {
-
 	XINPUT_STATE state;
 	ZeroMemory(&state, sizeof(XINPUT_STATE));
 
-	// Get the state of the controller
-	if (XInputGetState(controllerIndex, &state) == ERROR_SUCCESS)
+	if (XInputGetState(controllerIndex, &state) != ERROR_SUCCESS)
+		return 0;
+
+	int res = 0;
+
+	if (std::abs(state.Gamepad.sThumbRX) > INPUT_DEADZONE_RS)
 	{
-		WORD wButtons = state.Gamepad.wButtons;
-		int res = 0;
-		// If we're checking the X-axis...
-		if (axis == false)
-		{
-
-			//res = state.Gamepad.sThumbLX;
-
-			if (wButtons & XINPUT_GAMEPAD_DPAD_LEFT)
-			{
-				res -= 0x7FFF;
-			}
-			if (wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)
-			{
-				res += 0x7FFF;
-			}
-		}
-		// Otherwise, we're checking the Y-axis...
-		else
-		{
-			//res = -state.Gamepad.sThumbRY;
-			if (wButtons & XINPUT_GAMEPAD_DPAD_DOWN)
-			{
-				res += 0x7FFF;
-			}
-			if (wButtons & XINPUT_GAMEPAD_DPAD_UP)
-			{
-				res -= 0x7FFF;
-			}
-		}
-		return res;
+		res = state.Gamepad.sThumbRX;
 	}
 
-	return 0;
+	return res;
 }
 
-// ----------------------------------------------------------------------------
-// Constructing a joystick input event to post to DOOM
-// ----------------------------------------------------------------------------
+int XInput_GetMovementYAxis()
+{
+	XINPUT_STATE state;
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+
+	if (XInputGetState(controllerIndex, &state) != ERROR_SUCCESS)
+		return 0;
+
+	int res = 0;
+
+	if (std::abs(state.Gamepad.sThumbLY) > INPUT_DEADZONE_LS)
+	{
+		res = -state.Gamepad.sThumbLY;
+	}
+
+	return res;
+}
+
+int XInput_GetMovementStrafeAxis()
+{
+	XINPUT_STATE state;
+	ZeroMemory(&state, sizeof(XINPUT_STATE));
+
+	if (XInputGetState(controllerIndex, &state) != ERROR_SUCCESS)
+		return 0;
+
+	int res = 0;
+
+	if (std::abs(state.Gamepad.sThumbLX) > INPUT_DEADZONE_LS)
+	{
+		res = state.Gamepad.sThumbLX;
+	}
+
+	return res;
+}
+
+float XInput_AxisToPercentage(SHORT axis)
+{
+	return (float)axis / std::numeric_limits<SHORT>::max();
+}
+
+float XInput_Lerp(float a, float b, float t)
+{
+	return std::lerp(a, b, t);
+}
+
 void RE_Control()
 {
 	event_t ev;
@@ -144,18 +138,16 @@ void RE_Control()
 	// read in input
 	ev.type = ev_joystick;
 	ev.data1 = RE_Control_ReadIn();
-	// if the player is swapping weapons, don't listen to the input joysticks
-	if (!(ev.data1 & (1 << 5)) && !(ev.data1 & (1 << 6)))
-	{
-		ev.data2 = RE_Joy_ReadIn(false);
-		ev.data3 = RE_Joy_ReadIn(true);
-	}
-	else
-	{
-		ev.data2 = ev.data3 = 0;
-	}
-	ev.data4 = ev.data5 = 0;
+	ev.data2 = 0;
+	ev.data3 = 0;
+	//ev.data4 = 0;
+	ev.data4 = XInput_Lerp(0.0f, 40.0f, XInput_AxisToPercentage(XInput_GetMovementStrafeAxis()));
+	ev.data5 = 0;
 
+	//ev.data2 = XInput_GetTurnAxis();
+	//ev.data3 = XInput_GetMovementYAxis();
+	//ev.data4 = XInput_GetMovementStrafeAxis();
+	//ev.data5 = 0;
 
 	D_PostEvent(&ev);
 }

@@ -25,10 +25,10 @@ void Renderer::OnResizeBuffers(IDXGISwapChain* pThis, UINT bufferCount, UINT wid
 	mustInitializeD3DResources = true;
 }
 
-void Renderer::SetDrawExampleTriangle(bool doDraw)
-{
-	drawExamples = doDraw;
-}
+// void Renderer::SetDrawExampleTriangle(bool doDraw)
+// {
+// 	drawExamples = doDraw;
+// }
 
 void Renderer::AddRenderCallback(IRenderCallback* object)
 {
@@ -36,10 +36,10 @@ void Renderer::AddRenderCallback(IRenderCallback* object)
 	callbackInitialized = false;
 }
 
-void Renderer::SetCommandQueue(ID3D12CommandQueue* commandQueue)
-{
-	this->commandQueue = commandQueue;
-}
+// void Renderer::SetCommandQueue(ID3D12CommandQueue* commandQueue)
+// {
+// 	this->commandQueue = commandQueue;
+// }
 
 void Renderer::SetGetCommandQueueCallback(void (*callback)())
 {
@@ -58,10 +58,10 @@ bool Renderer::InitD3DResources(IDXGISwapChain* swapChain)
 			isDeviceRetrieved = RetrieveD3DDeviceFromSwapChain();
 		}
 
-		if (WaitForCommandQueueIfRunningD3D12())
-		{
-			return false;
-		}
+		// if (WaitForCommandQueueIfRunningD3D12())
+		// {
+		// 	return false;
+		// }
 
 		GetSwapChainDescription();
 		GetBufferCount();
@@ -91,13 +91,13 @@ bool Renderer::RetrieveD3DDeviceFromSwapChain()
 		return true;
 	}
 	
-	bool d3d12DeviceRetrieved = SUCCEEDED(swapChain->GetDevice(__uuidof(ID3D12Device), (void**)d3d12Device.GetAddressOf()));
-	if (d3d12DeviceRetrieved)
-	{
-		logger.Log("Retrieved D3D12 device");
-		isRunningD3D12 = true;
-		return true;
-	}
+	// bool d3d12DeviceRetrieved = SUCCEEDED(swapChain->GetDevice(__uuidof(ID3D12Device), (void**)d3d12Device.GetAddressOf()));
+	// if (d3d12DeviceRetrieved)
+	// {
+	// 	logger.Log("Retrieved D3D12 device");
+	// 	isRunningD3D12 = true;
+	// 	return true;
+	// }
 
 	throw("Failed to retrieve D3D device");
 }
@@ -144,14 +144,14 @@ void Renderer::CreateViewport()
 
 void Renderer::InitD3D()
 {
-	if (!isRunningD3D12)
+	//if (!isRunningD3D12)
 	{
 		InitD3D11();
 	}
-	else
-	{
-		InitD3D12();
-	}
+	//else
+	//{
+	//	InitD3D12();
+	//}
 }
 
 void Renderer::InitD3D11()
@@ -187,115 +187,115 @@ void Renderer::CreateD3D11RenderTargetView()
 	backbuffer.ReleaseAndGetAddressOf();
 }
 
-void Renderer::InitD3D12()
-{
-	logger.Log("Initializing D3D12...");
-	
-	if (!firstTimeInitPerformed)
-	{
-		CreateD3D11On12Device();
-		CheckSuccess(swapChain->QueryInterface(__uuidof(IDXGISwapChain3), &swapChain3));
-		CreateSpriteBatch();
-	}
-	CreateD3D12Buffers();
+// void Renderer::InitD3D12()
+// {
+// 	logger.Log("Initializing D3D12...");
+// 	
+// 	if (!firstTimeInitPerformed)
+// 	{
+// 		CreateD3D11On12Device();
+// 		CheckSuccess(swapChain->QueryInterface(__uuidof(IDXGISwapChain3), &swapChain3));
+// 		CreateSpriteBatch();
+// 	}
+// 	CreateD3D12Buffers();
+// 
+// 	logger.Log("Initialized D3D12");
+// }
+// 
+// bool Renderer::WaitForCommandQueueIfRunningD3D12()
+// {
+// 	if (isRunningD3D12)
+// 	{
+// 		if (commandQueue.Get() == nullptr)
+// 		{
+// 			logger.Log("Waiting for command queue...");
+// 			if (!getCommandQueueCalled && callbackGetCommandQueue != nullptr)
+// 			{
+// 				callbackGetCommandQueue();
+// 				getCommandQueueCalled = true;
+// 			}
+// 			return true;
+// 		}
+// 	}
+// 	return false;
+// }
 
-	logger.Log("Initialized D3D12");
-}
+// void Renderer::CreateD3D11On12Device()
+// {
+// 	D3D_FEATURE_LEVEL featureLevels = { D3D_FEATURE_LEVEL_11_0 };
+// 	bool d3d11On12DeviceCreated = CheckSuccess(
+// 		D3D11On12CreateDevice(
+// 			d3d12Device.Get(),
+// 			NULL,
+// 			&featureLevels,
+// 			1,
+// 			reinterpret_cast<IUnknown**>(commandQueue.GetAddressOf()),
+// 			1,
+// 			0,
+// 			d3d11Device.GetAddressOf(),
+// 			d3d11Context.GetAddressOf(),
+// 			nullptr));
+// 
+// 	bool d3d11On12DeviceChecked = CheckSuccess(d3d11Device.As(&d3d11On12Device));
+// 
+// 	if (!d3d11On12DeviceCreated || !d3d11On12DeviceChecked)
+// 	{
+// 		throw("Failed to create D3D11On12 device");
+// 	}
+// }
 
-bool Renderer::WaitForCommandQueueIfRunningD3D12()
-{
-	if (isRunningD3D12)
-	{
-		if (commandQueue.Get() == nullptr)
-		{
-			logger.Log("Waiting for command queue...");
-			if (!getCommandQueueCalled && callbackGetCommandQueue != nullptr)
-			{
-				callbackGetCommandQueue();
-				getCommandQueueCalled = true;
-			}
-			return true;
-		}
-	}
-	return false;
-}
+// void Renderer::CreateD3D12Buffers()
+// {
+// 	d3d12RenderTargets = std::vector<ComPtr<ID3D12Resource>>(bufferCount, nullptr);
+// 	d3d11WrappedBackBuffers = std::vector<ComPtr<ID3D11Resource>>(bufferCount, nullptr);
+// 	d3d11RenderTargetViews = std::vector<ComPtr<ID3D11RenderTargetView>>(bufferCount, nullptr);
+// 
+// 	ComPtr<ID3D12DescriptorHeap> rtvHeap = CreateD3D12RtvHeap();
+// 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
+// 	UINT rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+// 	for (UINT i = 0; i < bufferCount; i++)
+// 	{
+// 		CreateD3D12RenderTargetView(i, rtvHandle);
+// 		CreateD3D11WrappedBackBuffer(i);
+// 		CreateD3D11RenderTargetViewWithWrappedBackBuffer(i);
+// 		rtvHandle.ptr = SIZE_T(INT64(rtvHandle.ptr) + INT64(1) * INT64(rtvDescriptorSize));
+// 	}
+// }
 
-void Renderer::CreateD3D11On12Device()
-{
-	D3D_FEATURE_LEVEL featureLevels = { D3D_FEATURE_LEVEL_11_0 };
-	bool d3d11On12DeviceCreated = CheckSuccess(
-		D3D11On12CreateDevice(
-			d3d12Device.Get(),
-			NULL,
-			&featureLevels,
-			1,
-			reinterpret_cast<IUnknown**>(commandQueue.GetAddressOf()),
-			1,
-			0,
-			d3d11Device.GetAddressOf(),
-			d3d11Context.GetAddressOf(),
-			nullptr));
+// ComPtr<ID3D12DescriptorHeap> Renderer::CreateD3D12RtvHeap()
+// {
+// 	ComPtr<ID3D12DescriptorHeap> rtvHeap;
+// 	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+// 	rtvHeapDesc.NumDescriptors = bufferCount;
+// 	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+// 	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+// 	CheckSuccess(d3d12Device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(rtvHeap.GetAddressOf())));
+// 	return rtvHeap;
+// }
 
-	bool d3d11On12DeviceChecked = CheckSuccess(d3d11Device.As(&d3d11On12Device));
+// void Renderer::CreateD3D12RenderTargetView(UINT bufferIndex, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle)
+// {
+// 	if (!CheckSuccess(swapChain->GetBuffer(bufferIndex, IID_PPV_ARGS(&d3d12RenderTargets[bufferIndex]))))
+// 	{
+// 		throw("Failed to create D3D12 render target view");
+// 	}
+// 	d3d12Device->CreateRenderTargetView(d3d12RenderTargets[bufferIndex].Get(), nullptr, rtvHandle);
+// }
 
-	if (!d3d11On12DeviceCreated || !d3d11On12DeviceChecked)
-	{
-		throw("Failed to create D3D11On12 device");
-	}
-}
-
-void Renderer::CreateD3D12Buffers()
-{
-	d3d12RenderTargets = std::vector<ComPtr<ID3D12Resource>>(bufferCount, nullptr);
-	d3d11WrappedBackBuffers = std::vector<ComPtr<ID3D11Resource>>(bufferCount, nullptr);
-	d3d11RenderTargetViews = std::vector<ComPtr<ID3D11RenderTargetView>>(bufferCount, nullptr);
-
-	ComPtr<ID3D12DescriptorHeap> rtvHeap = CreateD3D12RtvHeap();
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvHeap->GetCPUDescriptorHandleForHeapStart());
-	UINT rtvDescriptorSize = d3d12Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	for (UINT i = 0; i < bufferCount; i++)
-	{
-		CreateD3D12RenderTargetView(i, rtvHandle);
-		CreateD3D11WrappedBackBuffer(i);
-		CreateD3D11RenderTargetViewWithWrappedBackBuffer(i);
-		rtvHandle.ptr = SIZE_T(INT64(rtvHandle.ptr) + INT64(1) * INT64(rtvDescriptorSize));
-	}
-}
-
-ComPtr<ID3D12DescriptorHeap> Renderer::CreateD3D12RtvHeap()
-{
-	ComPtr<ID3D12DescriptorHeap> rtvHeap;
-	D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
-	rtvHeapDesc.NumDescriptors = bufferCount;
-	rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	CheckSuccess(d3d12Device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(rtvHeap.GetAddressOf())));
-	return rtvHeap;
-}
-
-void Renderer::CreateD3D12RenderTargetView(UINT bufferIndex, D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle)
-{
-	if (!CheckSuccess(swapChain->GetBuffer(bufferIndex, IID_PPV_ARGS(&d3d12RenderTargets[bufferIndex]))))
-	{
-		throw("Failed to create D3D12 render target view");
-	}
-	d3d12Device->CreateRenderTargetView(d3d12RenderTargets[bufferIndex].Get(), nullptr, rtvHandle);
-}
-
-void Renderer::CreateD3D11WrappedBackBuffer(UINT bufferIndex)
-{
-	D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
-	if (!CheckSuccess(
-		d3d11On12Device->CreateWrappedResource(
-			d3d12RenderTargets[bufferIndex].Get(),
-			&d3d11Flags,
-			D3D12_RESOURCE_STATE_RENDER_TARGET,
-			D3D12_RESOURCE_STATE_PRESENT,
-			IID_PPV_ARGS(&d3d11WrappedBackBuffers[bufferIndex]))))
-	{
-		throw "Failed to create D3D11 wrapped backbuffer";
-	}
-}
+// void Renderer::CreateD3D11WrappedBackBuffer(UINT bufferIndex)
+// {
+// 	D3D11_RESOURCE_FLAGS d3d11Flags = { D3D11_BIND_RENDER_TARGET };
+// 	if (!CheckSuccess(
+// 		d3d11On12Device->CreateWrappedResource(
+// 			d3d12RenderTargets[bufferIndex].Get(),
+// 			&d3d11Flags,
+// 			D3D12_RESOURCE_STATE_RENDER_TARGET,
+// 			D3D12_RESOURCE_STATE_PRESENT,
+// 			IID_PPV_ARGS(&d3d11WrappedBackBuffers[bufferIndex]))))
+// 	{
+// 		throw "Failed to create D3D11 wrapped backbuffer";
+// 	}
+// }
 
 void Renderer::CreateD3D11RenderTargetViewWithWrappedBackBuffer(UINT bufferIndex)
 {
@@ -319,11 +319,11 @@ void Renderer::Render()
 
 void Renderer::PreRender()
 {
-	if (isRunningD3D12)
-	{
-		bufferIndex = swapChain3->GetCurrentBackBufferIndex();
-		d3d11On12Device->AcquireWrappedResources(d3d11WrappedBackBuffers[bufferIndex].GetAddressOf(), 1);
-	}
+	// if (isRunningD3D12)
+	// {
+	// 	bufferIndex = swapChain3->GetCurrentBackBufferIndex();
+	// 	d3d11On12Device->AcquireWrappedResources(d3d11WrappedBackBuffers[bufferIndex].GetAddressOf(), 1);
+	// }
 
 	d3d11Context->OMSetRenderTargets(1, d3d11RenderTargetViews[bufferIndex].GetAddressOf(), 0);
 	d3d11Context->RSSetViewports(1, &viewport);
@@ -348,11 +348,11 @@ void Renderer::RenderCallbacks()
 
 void Renderer::PostRender()
 {
-	if (isRunningD3D12)
-	{
-		d3d11On12Device->ReleaseWrappedResources(d3d11WrappedBackBuffers[bufferIndex].GetAddressOf(), 1);
-		d3d11Context->Flush();
-	}
+	// if (isRunningD3D12)
+	// {
+	// 	d3d11On12Device->ReleaseWrappedResources(d3d11WrappedBackBuffers[bufferIndex].GetAddressOf(), 1);
+	// 	d3d11Context->Flush();
+	// }
 }
 
 // Creates the necessary things for rendering the examples
@@ -454,16 +454,16 @@ void Renderer::ReleaseViewsBuffersAndContext()
 {
 	for (int i = 0; i < bufferCount; i++)
 	{
-		if (d3d12Device.Get() == nullptr)
+		//if (d3d12Device.Get() == nullptr)
 		{
 			d3d11RenderTargetViews[i].ReleaseAndGetAddressOf();
 		}
-		else
-		{
-			d3d11RenderTargetViews[i].ReleaseAndGetAddressOf();
-			d3d12RenderTargets[i].ReleaseAndGetAddressOf();
-			d3d11WrappedBackBuffers[i].ReleaseAndGetAddressOf();
-		}
+		// else
+		// {
+		// 	d3d11RenderTargetViews[i].ReleaseAndGetAddressOf();
+		// 	d3d12RenderTargets[i].ReleaseAndGetAddressOf();
+		// 	d3d11WrappedBackBuffers[i].ReleaseAndGetAddressOf();
+		// }
 	}
 	
 	if (d3d11Context.Get() != nullptr)

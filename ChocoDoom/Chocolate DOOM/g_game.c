@@ -353,8 +353,7 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
     
     // use two stage accelerative turning
     // on the keyboard and joystick
-    if (joyxmove < 0
-	|| joyxmove > 0  
+    if (joyxmove != 0 
 	|| gamekeydown[key_right]
 	|| gamekeydown[key_left]) 
 	turnheld += ticdup; 
@@ -415,19 +414,19 @@ void G_BuildTiccmd (ticcmd_t* cmd, int maketic)
 
     if (gamekeydown[key_strafeleft]
      || joybuttons[joybstrafeleft]
-     || mousebuttons[mousebstrafeleft]
-     || joystrafemove < 0)
+     || mousebuttons[mousebstrafeleft])
     {
         side -= sidemove[speed];
     }
 
     if (gamekeydown[key_straferight]
      || joybuttons[joybstraferight]
-     || mousebuttons[mousebstraferight]
-     || joystrafemove > 0)
+     || mousebuttons[mousebstraferight])
     {
         side += sidemove[speed]; 
     }
+
+    side += joystrafemove;
 
     // buttons
     cmd->chatchar = HU_dequeueChatChar(); 
@@ -835,12 +834,12 @@ boolean G_Responder (event_t* ev)
 	mousey = ev->data3*(mouseSensitivity+5)/10; 
 	return true;    // eat events 
  
-      case ev_joystick: 
+    case ev_joystick: 
         SetJoyButtons(ev->data1);
-	joyxmove = ev->data2; 
-	joyymove = ev->data3; 
+	    joyxmove = ev->data2; 
+	    joyymove = ev->data3; 
         joystrafemove = ev->data4;
-	return true;    // eat events 
+	    return true;    // eat events 
  
       default: 
 	break; 
