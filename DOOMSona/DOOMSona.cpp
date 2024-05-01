@@ -17,6 +17,7 @@
 
 namespace DOOMSona
 {
+    int numCompletedLevels;
     uint32_t personaCurrBGM;
 
     bool bUndoCBT;
@@ -48,6 +49,8 @@ namespace DOOMSona
     {
         static void PerformAtDoomExit()
         {
+            if (!DoomAPI::bHasDoomErrored())
+                numCompletedLevels = DoomAPI::GetCompletedLevels();
             DoomD3DHook::SetFramebufferEnabled(false);
         }
 
@@ -67,6 +70,7 @@ namespace DOOMSona
             if (!DoomAPI::LaunchDoom(currChocoDoomArgs.c_str()))
                 return false;
 
+            numCompletedLevels = 0;
             DoomAPI::DoomRegisterAtExit(PerformAtDoomExit, true);
 
             return true;
@@ -163,7 +167,7 @@ namespace DOOMSona
         switch (arg0)
         {
         case DPSP_COMPLETEDLEVELS:
-            retval = DoomAPI::GetCompletedLevels();
+            retval = numCompletedLevels;
             break;
         case DPSP_APPLYDOOMARGS:
             currChocoDoomArgs = currStringParam;
@@ -272,7 +276,9 @@ namespace DOOMSona
                 else
                 {
                     if (DoomAPI::modHandle)
+                    {
                         DoomAPI::Deinit();
+                    }
                     regs.rax = *reinterpret_cast<uintptr_t*>(0x142A0B720);
                 }
             }
