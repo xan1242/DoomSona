@@ -67,6 +67,23 @@ static int RE_Control_ReadIn()
 	return res;
 }
 
+static SHORT calculateAxisValue(short rawValue, short deadzone)
+{
+	// Calculate the deadzone-adjusted value
+	if (std::abs(rawValue) < deadzone)
+	{
+		return 0;  // Value within deadzone, return 0
+	}
+	else
+	{
+		// Calculate the adjusted value outside the deadzone
+		SHORT sign = (rawValue > 0) ? 1 : -1;
+		float ratio = (std::abs(rawValue) - deadzone) / ((float)std::numeric_limits<SHORT>::max() - deadzone);
+		SHORT adjustedValue = static_cast<short>(ratio * (float)std::numeric_limits<SHORT>::max()) * sign;
+		return adjustedValue;
+	}
+}
+
 int XInput_GetTurnAxis()
 {
 	XINPUT_STATE state;
@@ -75,14 +92,7 @@ int XInput_GetTurnAxis()
 	if (XInputGetState(controllerIndex, &state) != ERROR_SUCCESS)
 		return 0;
 
-	int res = 0;
-
-	if (std::abs(state.Gamepad.sThumbRX) > INPUT_DEADZONE_RS)
-	{
-		res = state.Gamepad.sThumbRX;
-	}
-
-	return res;
+	return calculateAxisValue(state.Gamepad.sThumbRX, INPUT_DEADZONE_RS);
 }
 
 int XInput_GetMovementYAxis()
@@ -93,14 +103,7 @@ int XInput_GetMovementYAxis()
 	if (XInputGetState(controllerIndex, &state) != ERROR_SUCCESS)
 		return 0;
 
-	int res = 0;
-
-	if (std::abs(state.Gamepad.sThumbLY) > INPUT_DEADZONE_LS)
-	{
-		res = -state.Gamepad.sThumbLY;
-	}
-
-	return res;
+	return calculateAxisValue(-state.Gamepad.sThumbLY, INPUT_DEADZONE_LS);
 }
 
 int XInput_GetMovementStrafeAxis()
@@ -111,14 +114,7 @@ int XInput_GetMovementStrafeAxis()
 	if (XInputGetState(controllerIndex, &state) != ERROR_SUCCESS)
 		return 0;
 
-	int res = 0;
-
-	if (std::abs(state.Gamepad.sThumbLX) > INPUT_DEADZONE_LS)
-	{
-		res = state.Gamepad.sThumbLX;
-	}
-
-	return res;
+	return calculateAxisValue(state.Gamepad.sThumbLX, INPUT_DEADZONE_LS);
 }
 
 float XInput_AxisToPercentage(SHORT axis)
