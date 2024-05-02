@@ -248,9 +248,11 @@ void DirectXHook::HookSwapChain(
 	uintptr_t vmtPresentIndex = (vmtBaseAddress + (numBytes * vmtPresentOffset));
 	uintptr_t vmtResizeBuffersIndex = (vmtBaseAddress + (numBytes * vmtResizeBuffersOffset));
 
+#ifdef _DEBUG
 	logger.Log("SwapChain VMT base address: %p", vmtBaseAddress);
 	logger.Log("SwapChain VMT Present index: %p", vmtPresentIndex);
 	logger.Log("SwapChain VMT ResizeBuffers index: %p", vmtResizeBuffersIndex);
+#endif
 
 	MemoryUtils::ToggleMemoryProtection(false, vmtPresentIndex, numBytes);
 	MemoryUtils::ToggleMemoryProtection(false, vmtResizeBuffersIndex, numBytes);
@@ -261,8 +263,10 @@ void DirectXHook::HookSwapChain(
 	//uintptr_t presentAddress = injector::ReadMemory<uintptr_t>(vmtPresentIndex, true);
 	//uintptr_t resizeBuffersAddress = injector::ReadMemory<uintptr_t>(vmtResizeBuffersIndex, true);
 
+#ifdef _DEBUG
 	logger.Log("Present address: %p", presentAddress);
 	logger.Log("ResizeBuffers address: %p", resizeBuffersAddress);
+#endif
 
 	MemoryUtils::ToggleMemoryProtection(true, vmtPresentIndex, numBytes);
 	MemoryUtils::ToggleMemoryProtection(true, vmtResizeBuffersIndex, numBytes);

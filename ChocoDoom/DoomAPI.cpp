@@ -3,11 +3,12 @@
 #include "DoomScreenTexture.h"
 #include "DoomWin32.h"
 #include "MainExports.hpp"
+#include "DoomLevelCompletionTracker.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "Chocolate DOOM/g_game.h"
+#include "Chocolate DOOM/f_finale.h"
 #ifdef __cplusplus
 }
 #endif
@@ -67,7 +68,17 @@ DOOMAPI HWND DoomAPI_GetHWND()
 	return DoomWin32_GetHWND();
 }
 
-DOOMAPI int DoomAPI_GetCompletedLevels()
+DOOMAPI int DoomAPI_GetUniquelyCompletedLevels()
 {
-	return GetCompletedLevels();
+	return DoomLevelCompletionTracker_GetUniqueMapCount();
+}
+
+DOOMAPI int DoomAPI_GetUniquelyCompletedLevelsBySkill(int skill)
+{
+	return DoomLevelCompletionTracker_GetUniqueMapCountBySkill(skill);
+}
+
+DOOMAPI bool DoomAPI_GetFinishedShareware()
+{
+	return F_GetSharewareFinished();
 }

@@ -73,6 +73,8 @@
 
 #include "g_game.h"
 
+#include "../DoomLevelCompletionTracker.h"
+
 
 #define SAVEGAMESIZE	0x2c000
 
@@ -1332,8 +1334,6 @@ void G_ExitLevel (void)
 { 
     secretexit = false; 
     gameaction = ga_completed;
-
-    completed_levels++;
 } 
 
 // Here's for the german edition.
@@ -1345,9 +1345,7 @@ void G_SecretExitLevel (void)
 	secretexit = false;
     else
 	secretexit = true; 
-    gameaction = ga_completed; 
-
-    completed_levels++;
+    gameaction = ga_completed;
 } 
  
 void G_DoCompleted (void) 
@@ -1355,7 +1353,9 @@ void G_DoCompleted (void)
     int             i; 
 	 
     gameaction = ga_nothing; 
- 
+
+    DoomLevelCompletionTracker_Add(gameepisode, gamemap, gameskill);
+
     for (i=0 ; i<MAXPLAYERS ; i++) 
 	if (playeringame[i]) 
 	    G_PlayerFinishLevel (i);        // take away cards and stuff 
@@ -2304,9 +2304,3 @@ boolean G_CheckDemoStatus (void)
 	 
     return false; 
 } 
- 
-int GetCompletedLevels(void)
-{
-    return completed_levels;
-}
-

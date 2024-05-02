@@ -1217,7 +1217,7 @@ boolean D_DoomMain (void)
 	DEH_printf(D_DEVSTR);
     
     // Auto-detect the configuration dir.
-    char* path2 = M_StringJoin(modPath, "\\", NULL);
+    char* path2 = M_StringJoin(modPath, "\\");
     M_SetConfigDir(path2);
     
     // init subsystems

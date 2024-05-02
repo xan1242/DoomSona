@@ -99,11 +99,14 @@ std::vector<char*> parseArguments(const std::string& argsString)
     std::istringstream iss(argsString);
     std::string argument;
 
-    constexpr const char* dummyArg = "dummy";
+    //constexpr const char* dummyArg = "dummy";
+    //const char* dummyArg = modPath;
+    std::string firstArg = modPath;
+    firstArg += "/ChocoDoom.dll";
 
-    char* staticStr = (char*)malloc(strlen(dummyArg) + 1);
-    memset(staticStr, 0, strlen(dummyArg) + 1);
-    memcpy(staticStr, dummyArg, strlen(dummyArg));
+    char* staticStr = (char*)malloc(strlen(firstArg.c_str()) + 1);
+    memset(staticStr, 0, strlen(firstArg.c_str()) + 1);
+    memcpy(staticStr, firstArg.c_str(), strlen(firstArg.c_str()));
 
     arguments.push_back(staticStr);
 

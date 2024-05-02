@@ -39,7 +39,7 @@ void F_Drawer (void);
 
 void F_StartFinale (void);
 
-
+boolean F_GetSharewareFinished();
 
 
 #endif

@@ -131,7 +131,9 @@ namespace MemoryUtils
 
 	static void ShowErrorPopup(std::string error)
 	{
+#ifdef _DEBUG
 		logger.Log("Raised error: %s", error.c_str());
+#endif
 		//MessageBox(NULL, error.c_str(), GetCurrentModuleName().c_str(), MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	}
 
@@ -161,9 +163,11 @@ namespace MemoryUtils
 	{
 		DWORD processId = GetCurrentProcessId();
 		uintptr_t regionStart = GetProcessBaseAddress(processId);
+#ifdef _DEBUG
 		logger.Log("Process name: %s", GetCurrentProcessName().c_str());
 		logger.Log("Process ID: %i", processId);
 		logger.Log("Process base address: 0x%llX", regionStart);
+#endif
 		PrintPattern(pattern);
 
 		size_t numRegionsChecked = 0;

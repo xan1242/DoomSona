@@ -348,6 +348,9 @@
     <ClInclude Include="MainExports.hpp">
       <Filter>Source Files\DLL Base</Filter>
     </ClInclude>
+    <ClInclude Include="DoomLevelCompletionTracker.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -705,6 +708,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DoomAPI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DoomLevelCompletionTracker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

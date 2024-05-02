@@ -64,6 +64,11 @@ static int RE_Control_ReadIn()
 		res |= (1 << 4);		// activate menu
 	}
 
+	if (wButtons & XINPUT_GAMEPAD_BACK)
+	{
+		res |= (1 << 7);		// activate automap
+	}
+
 	return res;
 }
 

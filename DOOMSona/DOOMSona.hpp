@@ -15,21 +15,21 @@ namespace DOOMSona
 		DPSP_FILESIZE,
 		DPSP_APPLYDOOMARGS,
 		DPSP_COMPLETEDLEVELS,
+		DPSP_COMPLETEDLEVELSBYSKILL,
+		DPSP_FINISHEDSHAREWARE,
 
 		DPSP_COUNT
 	};
 
-	enum DoomIWads
+	enum skill_t
 	{
-		IWAD_UNK = -1,
-		IWAD_DEFAULT,
-		IWAD_DOOMSHAREWARE,
-		IWAD_DOOM,
-		IWAD_DOOM2,
-		IWAD_FREEDOOM1,
-		IWAD_FREEDOOM2,
-
-		IWAD_COUNT
+		sk_noitems = -1,        // the "-skill 0" hack
+		sk_baby = 0,
+		sk_easy,
+		sk_medium,
+		sk_hard,
+		sk_nightmare,
+		sk_count
 	};
 
 	void Init();

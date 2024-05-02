@@ -120,14 +120,38 @@ namespace DoomAPI
 		return 0;
 	}
 
-	inline int(*_GetCompletedLevels)();
-	inline int GetCompletedLevels()
+	inline int(*_GetUniquelyCompletedLevels)();
+	inline int GetUniquelyCompletedLevels()
 	{
-		if (!_GetCompletedLevels && modHandle)
-			_GetCompletedLevels = reinterpret_cast<int(*)()>(GetProcAddress(modHandle, "DoomAPI_GetCompletedLevels"));
+		if (!_GetUniquelyCompletedLevels && modHandle)
+			_GetUniquelyCompletedLevels = reinterpret_cast<int(*)()>(GetProcAddress(modHandle, "DoomAPI_GetUniquelyCompletedLevels"));
 
-		if (_GetCompletedLevels)
-			return _GetCompletedLevels();
+		if (_GetUniquelyCompletedLevels)
+			return _GetUniquelyCompletedLevels();
+
+		return 0;
+	}
+
+	inline int(*_GetUniquelyCompletedLevelsBySkill)(int skill);
+	inline int GetUniquelyCompletedLevelsBySkill(int skill)
+	{
+		if (!_GetUniquelyCompletedLevelsBySkill && modHandle)
+			_GetUniquelyCompletedLevelsBySkill = reinterpret_cast<int(*)(int)>(GetProcAddress(modHandle, "DoomAPI_GetUniquelyCompletedLevelsBySkill"));
+
+		if (_GetUniquelyCompletedLevelsBySkill)
+			return _GetUniquelyCompletedLevelsBySkill(skill);
+
+		return 0;
+	}
+
+	inline bool(*_GetFinishedShareware)();
+	inline bool GetFinishedShareware()
+	{
+		if (!_GetFinishedShareware && modHandle)
+			_GetFinishedShareware = reinterpret_cast<bool(*)()>(GetProcAddress(modHandle, "DoomAPI_GetFinishedShareware"));
+
+		if (_GetFinishedShareware)
+			return _GetFinishedShareware();
 
 		return 0;
 	}
@@ -194,7 +218,9 @@ namespace DoomAPI
 		_GetHWND = NULL;
 		_SetHWND = NULL;
 		_bHasDoomErrored = NULL;
-		_GetCompletedLevels = NULL;
+		_GetUniquelyCompletedLevels = NULL;
+		_GetUniquelyCompletedLevelsBySkill = NULL;
+		_GetFinishedShareware = NULL;
 
 		DoomScreenTexture::_GetScreenFramebuffer = NULL;
 		DoomScreenTexture::_GetScreenHeight = NULL;

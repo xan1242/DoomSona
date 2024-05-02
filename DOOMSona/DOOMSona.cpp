@@ -6,6 +6,7 @@
 #include "framework.h"
 #include <iostream>
 #include <filesystem>
+#include <fstream>
 #include "DOOMSona.hpp"
 #include "DoomD3DHook.hpp"
 #include "DoomAPIIntegration.hpp"
@@ -17,7 +18,9 @@
 
 namespace DOOMSona
 {
+    int numCompletedLevelsBySkill[sk_count];
     int numCompletedLevels;
+    bool bFinishedShareware;
     uint32_t personaCurrBGM;
 
     bool bUndoCBT;
@@ -41,8 +44,10 @@ namespace DOOMSona
     // int result = TBL_365_VALUE_MD(DoomPersonaScriptParams.DPSP_FILEEXISTS, 0 ,0);
     //
     constexpr std::string StringParamKeyword = "CACODEMON ";
-    std::string currStringParam;
+    constexpr std::string currModPathStr = "DOOMSona";
+    constexpr std::string argsFilename = "args.txt";
 
+    std::string currStringParam;
     std::string currChocoDoomArgs = "";
 
     namespace DOOM
@@ -50,19 +55,71 @@ namespace DOOMSona
         static void PerformAtDoomExit()
         {
             if (!DoomAPI::bHasDoomErrored())
-                numCompletedLevels = DoomAPI::GetCompletedLevels();
+            {
+                bFinishedShareware = DoomAPI::GetFinishedShareware();
+                numCompletedLevels = DoomAPI::GetUniquelyCompletedLevels();
+
+                for (int i = 0; i < sk_count; i++)
+                {
+                    numCompletedLevelsBySkill[i] = DoomAPI::GetUniquelyCompletedLevelsBySkill(i);
+                }
+
+            }
             DoomD3DHook::SetFramebufferEnabled(false);
+        }
+
+        static void ResetDoomStats()
+        {
+            numCompletedLevels = 0;
+            for (int i = 0; i < sk_count; i++)
+            {
+                numCompletedLevelsBySkill[i] = 0;
+            }
+            bFinishedShareware = false;
+        }
+
+        static void ReadLaunchParamsOptFile()
+        {
+            std::filesystem::path pathArgs = currModPathStr;
+            pathArgs /= argsFilename;
+
+            // #TODO handle exceptions
+            if (!std::filesystem::exists(pathArgs))
+                return;
+
+            std::ifstream ifile;
+            ifile.open(pathArgs);
+            if (!ifile.is_open())
+                return;
+
+            std::string line;
+            std::string collectedArgs;
+
+            while (std::getline(ifile, line))
+            {
+                collectedArgs += line + ' ';
+            }
+
+            ifile.close();
+
+            if (currChocoDoomArgs.empty())
+                currChocoDoomArgs = collectedArgs;
+            else
+                currChocoDoomArgs += collectedArgs;
         }
 
         static bool Launch()
         {
             if (!DoomAPI::modHandle)
             {
-                if (!DoomAPI::Init("ChocoDoom.dll"))
+                std::filesystem::path libDoomPath = currModPathStr;
+                libDoomPath /= "ChocoDoom.dll";
+                if (!DoomAPI::Init(libDoomPath))
                     return false;
             }
 
-            DoomAPI::SetModPath(".");
+            DoomAPI::SetModPath(currModPathStr.c_str());
+            ReadLaunchParamsOptFile();
             DoomD3DHook::SetFramebufferEnabled(true);
 
             printf("DOOMSona: Launching DOOM with args: %s\n", currChocoDoomArgs.c_str());
@@ -70,7 +127,8 @@ namespace DOOMSona
             if (!DoomAPI::LaunchDoom(currChocoDoomArgs.c_str()))
                 return false;
 
-            numCompletedLevels = 0;
+            ResetDoomStats();
+
             DoomAPI::DoomRegisterAtExit(PerformAtDoomExit, true);
 
             return true;
@@ -159,13 +217,19 @@ namespace DOOMSona
     static uint32_t _stdcall TBL365ValueMDHook()
     {
         //uint32_t arg2 = GFD::GetScriptArg(2);
-        //uint32_t arg1 = GFD::GetScriptArg(1);
+        uint32_t arg1 = GFD::GetScriptArg(1);
         uint32_t arg0 = GFD::GetScriptArg(0);
 
         uint64_t retval = 0;
 
         switch (arg0)
         {
+        case DPSP_FINISHEDSHAREWARE:
+            retval = bFinishedShareware;
+            break;
+        case DPSP_COMPLETEDLEVELSBYSKILL:
+            retval = numCompletedLevelsBySkill[arg1];
+            break;
         case DPSP_COMPLETEDLEVELS:
             retval = numCompletedLevels;
             break;

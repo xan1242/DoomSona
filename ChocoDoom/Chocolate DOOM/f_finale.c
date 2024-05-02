@@ -54,6 +54,15 @@ finalestage_t finalestage;
 
 unsigned int finalecount;
 
+// extra stats for persona
+boolean bFinishedShareware;
+
+boolean F_GetSharewareFinished()
+{
+    return bFinishedShareware;
+}
+
+
 #define	TEXTSPEED	3
 #define	TEXTWAIT	250
 
@@ -153,6 +162,10 @@ void F_StartFinale (void)
     finalestage = F_STAGE_TEXT;
     finalecount = 0;
 	
+    if (gamemode == shareware)
+    {
+        bFinishedShareware = true;
+    }
 }
 
 

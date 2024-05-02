@@ -131,7 +131,7 @@
       </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\ChocoDoom.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R"
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\ChocoDoom.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R\DOOMSona"
 @copy /Y "D:\Temp\mania-doom\x64\Debug\ChocoDoom.dll" "D:\MyNFSCode\DoomTester\x64\Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -184,7 +184,7 @@
       </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\ChocoDoom.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R"
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\ChocoDoom.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R\DOOMSona"
 @copy /Y "D:\Temp\mania-doom\x64\Release\ChocoDoom.dll" "D:\MyNFSCode\DoomTester\x64\Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -292,6 +292,7 @@
     <ClInclude Include="Chocolate DOOM\z_zone.h" />
     <ClInclude Include="DoomAPI.h" />
     <ClInclude Include="DoomBASS.h" />
+    <ClInclude Include="DoomLevelCompletionTracker.h" />
     <ClInclude Include="DoomScreenTexture.h" />
     <ClInclude Include="DoomWin32.h" />
     <ClInclude Include="DoomXInput.h" />
@@ -740,6 +741,7 @@
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="DoomAPI.cpp" />
     <ClCompile Include="DoomBASS.cpp" />
+    <ClCompile Include="DoomLevelCompletionTracker.cpp" />
     <ClCompile Include="DoomScreenTexture.cpp" />
     <ClCompile Include="DoomWin32.cpp" />
     <ClCompile Include="DoomXInput.cpp" />

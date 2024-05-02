@@ -18,14 +18,10 @@ void Example::UpdateD3D11Buffer()
 
 	ofDevice.Get()->GetImmediateContext(&pDeviceContext);
 
-	//HRESULT hr = pDeviceContext->Map((ID3D11Resource*)ofTextures[0].Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 	HRESULT hr = pDeviceContext->Map(pStagingTexture, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 	if (SUCCEEDED(hr))
 	{
-		//uint32_t sizeX = DoomAPI::GetScreenX();
-		//uint32_t sizeY = DoomAPI::GetScreenY();
-
 		uint32_t sizeX = DoomAPI::DoomScreenTexture::GetScreenWidth();
 		uint32_t sizeY = DoomAPI::DoomScreenTexture::GetScreenHeight();
 
@@ -48,10 +44,12 @@ void Example::UpdateD3D11Buffer()
 		pDeviceContext->Unmap(pStagingTexture, 0);
 
 	}
+#ifdef _DEBUG
 	else
 	{
 		printf("HR: 0x%X\n", hr);
 	}
+#endif
 }
 
 void Example::Setup()
@@ -59,11 +57,8 @@ void Example::Setup()
 	D3D11_VIEWPORT* vp = renderer->GetViewport();
 
 	InitFramework(device, spriteBatch, window);
-	//box = CreateBox(100, 100, 100, 100);
-	//box = CreateBox(0, 0, 848, 480);
 	box = CreateBox(0, 0, vp->Width, vp->Height);
-	//doomtex = LoadTexture("test.dds");
-	//LoadTextureFromFile();
+
 	doomtex = 0;
 	D3D11_TEXTURE2D_DESC textureDesc = {};
 	textureDesc.Width = 424;
@@ -90,10 +85,12 @@ void Example::Setup()
 		ofTextures.push_back(texture);
 		bSetupThingies = true;
 	}
+#ifdef _DEBUG
 	else
 	{
 		printf("HR2: 0x%X\n", hr);
 	}
+#endif
 }
 
 void Example::Render()
@@ -105,18 +102,7 @@ void Example::Render()
 			DoomAPI::SetHWND(this->renderer->GetSwapChainDesc()->OutputWindow);
 		}
 
-		//CheckMouseEvents();
 		UpdateD3D11Buffer();
 		DrawBox(box, doomtex);
-
-		//RECT rect;
-		//rect.top = 0;
-		//rect.left = 0;
-		//rect.bottom = 240;
-		//rect.right = 424;
-		//
-		//box->hasBeenRendered = true;
-		//ofSpriteBatch->Draw(tex2, rect, nullptr, { 1.0f, 1.0f, 1.0f, 1.0f }, 0.0f, DirectX::XMFLOAT2(0.0f, 0.0f), DirectX::SpriteEffects_None);
 	}
-	//DrawBox(box, 255, 0, 0, 255);
 }

@@ -34,6 +34,7 @@
 #include "i_system.h"
 #include "m_argv.h"
 #include "m_misc.h"
+#include "d_main.h"
 
 #include "z_zone.h"
 
@@ -2175,7 +2176,7 @@ static char *GetDefaultConfigDir(void)
     result = SDL_GetPrefPath("", PACKAGE_TARNAME);
     return result;
 #endif /* #ifndef _WIN32 */
-    return M_StringDuplicate("mods\\DOOM\\");
+    return M_StringDuplicate(modPath);
 }
 
 // 

@@ -9,6 +9,7 @@ extern "C" {
 #include "Chocolate DOOM/i_sound.h"
 #include "Chocolate DOOM/mus2mid.h"
 #include "Chocolate DOOM/m_misc.h"
+#include "Chocolate DOOM/d_main.h"
 #include "Chocolate DOOM/deh_str.h"
 #include "Chocolate DOOM/w_wad.h"
 #include "Chocolate DOOM/z_zone.h"
@@ -633,7 +634,9 @@ void DoomBASS_SFX_SetPitchShifting(bool val)
 
 static boolean DoomBASS_InitMidi(void)
 {
-    return DoomBASS::MidiMusic::LoadSoundFont("DOOMSona.sf2"); // #TODO: configurable filename maybe?
+    std::filesystem::path sf2Path = modPath;
+    sf2Path /= "DOOMSona.sf2";
+    return DoomBASS::MidiMusic::LoadSoundFont(sf2Path); // #TODO: configurable filename maybe?
 }
 
 static void DoomBASS_ShutdownMidi(void)
