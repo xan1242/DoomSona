@@ -43,9 +43,16 @@ namespace DOOMSona
     // // assuming DoomPersonaScriptParams enum is also in the flow script
     // int result = TBL_365_VALUE_MD(DoomPersonaScriptParams.DPSP_FILEEXISTS, 0 ,0);
     //
-    constexpr std::string StringParamKeyword = "CACODEMON ";
-    constexpr std::string currModPathStr = "DOOMSona";
-    constexpr std::string argsFilename = "args.txt";
+
+#ifdef _DEBUG
+    #define STRCONST const
+#else
+    #define STRCONST constexpr
+#endif
+
+    STRCONST std::string StringParamKeyword = "CACODEMON ";
+    STRCONST const char* currModPathStr = "DOOMSona";
+    STRCONST std::string argsFilename = "args.txt";
 
     std::string currStringParam;
     std::string currChocoDoomArgs = "";
@@ -118,7 +125,7 @@ namespace DOOMSona
                     return false;
             }
 
-            DoomAPI::SetModPath(currModPathStr.c_str());
+            DoomAPI::SetModPath(currModPathStr);
             ReadLaunchParamsOptFile();
             DoomD3DHook::SetFramebufferEnabled(true);
 
