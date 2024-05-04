@@ -1,0 +1,28 @@
+// THIS IS A DUMMY
+// THIS WILL BE UPDATED LATER
+{
+  "ModId": "p5rpc.addon.doomsona",
+  "ModName": "Reloaded Mod Config Template",
+  "ModAuthor": "Someone",
+  "ModVersion": "1.0.0",
+  "ModDescription": "Template for a Reloaded Mod Configuration",
+  "ModDll": "ReloadedDOOMSonaInstallerLauncher.dll",
+  "ModIcon": "",
+  "ModR2RManagedDll32": "",
+  "ModR2RManagedDll64": "",
+  "ModNativeDll32": "",
+  "ModNativeDll64": "Reloaded-DOOMSonaLib.dll",
+  "Tags": [],
+  "CanUnload": null,
+  "HasExports": null,
+  "IsLibrary": false,
+  "ReleaseMetadataFileName": "p5rpc.test.test.ReleaseMetadata.json",
+  "PluginData": {},
+  "IsUniversalMod": false,
+  "ModDependencies": [],
+  "OptionalDependencies": [],
+  "SupportedAppId": [
+    "p5r.exe"
+  ],
+  "ProjectUrl": ""
+}
