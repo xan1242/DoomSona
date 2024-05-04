@@ -6,8 +6,20 @@ setlocal
 :: 
 :: p5rpc.addon.doomsona - contains Reloaded-II mod stuff
 :: ForGameRoot - contains stuff that goes into the game root directory - this stuff should get zipped up into DOOMSona.zip and placed next to the installer
-:: NOTE: ASI loader also needs to be placed in the "ForGameRoot" folder as "dinput8.dll" before packing it up!
+:: NOTE: ASI loader also needs to be placed in the "ForGameRoot" directory as "dinput8.dll" before packing it up!
 ::
+:: USAGE:
+:: - ensure you have 7z in your PATH
+:: - get ThirteenAG's Ultimate ASI Loader x64 DLL and place it as "dinput8.dll" in the "post-install" directory (you only need to do this once)
+:: - build all solutions
+:: - set repo root directory as the work directory
+:: - launch "post-install\GatherFiles.bat" <build_type> -- where <build_type> can be Release or Debug
+::
+
+if "%~1"=="" (
+    echo Error: First argument is empty. Exiting script.
+    exit /b 1
+)
 
 SET BuildType=%1
 
@@ -35,7 +47,7 @@ IF EXIST "%_FILEBASSMIDI%" (
 
 SET _FILESF2="sf2\DOOMSona.sf2"
 IF EXIST "%_FILESF2%" (
-    COPY /Y "%_FILESF2%" ".%BuildType% Package\ForGameRoot"
+    COPY /Y "%_FILESF2%" ".%BuildType% Package\p5rpc.addon.doomsona\DOOMSona"
 )
 
 :: chocolate-doom-setup stuff (likely to be removed, here just for simplicity)
@@ -100,5 +112,19 @@ SET _FILERELOADEDPNG="ReloadedModStuff\Preview.png"
 IF EXIST "%_FILERELOADEDPNG%" (
     COPY /Y "%_FILERELOADEDPNG%" ".%BuildType% Package\p5rpc.addon.doomsona"
 )
+
+:: ASI Loader
+SET _FILEASILOADER="post-install\dinput8.dll"
+IF EXIST "%_FILEASILOADER%" (
+    COPY /Y "%_FILEASILOADER%" ".%BuildType% Package\ForGameRoot"
+)
+
+:: Zip it up
+set "original_dir=%CD%"
+cd /d ".%BuildType% Package\ForGameRoot"
+
+7z a "..\p5rpc.addon.doomsona\DOOMSona.zip" ".\*"
+
+cd /d "%original_dir%"
 
 endlocal
