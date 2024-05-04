@@ -19,6 +19,7 @@ extern "C" {
 
 #include "includes/bass/c/bass.h"
 #include "includes/bassmidi/c/bassmidi.h"
+#include "MainExports.hpp"
 #include <filesystem>
 #include <fstream>
 #include <vector>
@@ -634,7 +635,7 @@ void DoomBASS_SFX_SetPitchShifting(bool val)
 
 static boolean DoomBASS_InitMidi(void)
 {
-    std::filesystem::path sf2Path = modPath;
+    std::filesystem::path sf2Path = GetModPath();
     sf2Path /= "DOOMSona.sf2";
     return DoomBASS::MidiMusic::LoadSoundFont(sf2Path); // #TODO: configurable filename maybe?
 }

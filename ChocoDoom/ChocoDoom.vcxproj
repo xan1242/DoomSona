@@ -131,7 +131,7 @@
       </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\ChocoDoom.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R\DOOMSona"
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\ChocoDoom.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.test.test\DOOMSona"
 @copy /Y "D:\Temp\mania-doom\x64\Debug\ChocoDoom.dll" "D:\MyNFSCode\DoomTester\x64\Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -184,7 +184,7 @@
       </ModuleDefinitionFile>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\ChocoDoom.dll" "D:\Program Files (x86)\Steam\steamapps\common\P5R\DOOMSona"
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\ChocoDoom.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.test.test\DOOMSona"
 @copy /Y "D:\Temp\mania-doom\x64\Release\ChocoDoom.dll" "D:\MyNFSCode\DoomTester\x64\Debug"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

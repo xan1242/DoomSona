@@ -32,6 +32,8 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
+#include "../MainExports.hpp"
+
 static const iwad_t iwads[] =
 {
     { "doom2.wad",    doom2,     commercial, "Doom II" },
@@ -683,7 +685,7 @@ static void BuildIWADDirList(void)
 
     // Look in the current directory.  Doom always does this.
     //AddIWADDir(".");
-    AddIWADDir(modPath);
+    AddIWADDir(GetModPath());
 
     // Add DOOMWADDIR if it is in the environment
     env = getenv("DOOMWADDIR");

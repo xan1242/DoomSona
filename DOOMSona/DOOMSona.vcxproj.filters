@@ -75,6 +75,9 @@
     <ClInclude Include="DoomAPIIntegration.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ReloadedPathIntegration.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

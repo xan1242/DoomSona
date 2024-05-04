@@ -58,16 +58,26 @@ namespace DoomAPI
 		return false;
 	}
 
-	inline void(*_SetModPath)(const char* path);
-	inline void SetModPath(const char* path)
+	inline void(*_SetModPathA)(const char* path);
+	inline void SetModPathA(const char* path)
 	{
-		//printf("DoomAPI::SetModPath\n");
 
-		if (!_SetModPath && modHandle)
-			_SetModPath = reinterpret_cast<void(*)(const char*)>(GetProcAddress(modHandle, "DoomAPI_SetModPath"));
+		if (!_SetModPathA && modHandle)
+			_SetModPathA = reinterpret_cast<void(*)(const char*)>(GetProcAddress(modHandle, "DoomAPI_SetModPathA"));
 
-		if (_SetModPath)
-			return _SetModPath(path);
+		if (_SetModPathA)
+			return _SetModPathA(path);
+	}
+
+	inline void(*_SetModPathW)(const wchar_t* path);
+	inline void SetModPathW(const wchar_t* path)
+	{
+
+		if (!_SetModPathW && modHandle)
+			_SetModPathW = reinterpret_cast<void(*)(const wchar_t*)>(GetProcAddress(modHandle, "DoomAPI_SetModPathW"));
+
+		if (_SetModPathW)
+			return _SetModPathW(path);
 	}
 
 	inline void(*_DoomMainLoopFunc)();
@@ -212,7 +222,8 @@ namespace DoomAPI
 
 		_bIsDoomRunning = NULL;
 		_LaunchDoom = NULL;
-		_SetModPath = NULL;
+		_SetModPathA = NULL;
+		_SetModPathW = NULL;
 		_DoomMainLoopFunc = NULL;
 		_DoomRegisterAtExit = NULL;
 		_GetHWND = NULL;

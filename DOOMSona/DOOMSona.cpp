@@ -6,10 +6,12 @@
 #include "framework.h"
 #include <iostream>
 #include <filesystem>
+#include <thread>
 #include <fstream>
 #include "DOOMSona.hpp"
 #include "DoomD3DHook.hpp"
 #include "DoomAPIIntegration.hpp"
+#include "ReloadedPathIntegration.hpp"
 #include "ModPath.hpp"
 
 #include "includes/injector/injector.hpp"
@@ -27,6 +29,8 @@ namespace DOOMSona
     bool bUndoCBT;
 
     std::filesystem::path thisModPath;
+    std::filesystem::path rldModPath;
+    std::filesystem::path currRootPath;
 
     //
     // Explanation:
@@ -83,15 +87,30 @@ namespace DOOMSona
 
         static void ReadLaunchParamsOptFile()
         {
-            std::filesystem::path pathArgs = currModPathStr;
+            std::filesystem::path pathArgs = currRootPath;
+            pathArgs /= currModPathStr;
             pathArgs /= argsFilename;
 
-            // #TODO handle exceptions
-            if (!std::filesystem::exists(pathArgs))
+            try
+            {
+                if (!std::filesystem::exists(pathArgs))
+                    return;
+            }
+            catch (...)
+            {
                 return;
+            }
 
             std::ifstream ifile;
-            ifile.open(pathArgs);
+            try
+            {
+                ifile.open(pathArgs);
+            }
+            catch (...)
+            {
+                return;
+            }
+
             if (!ifile.is_open())
                 return;
 
@@ -113,16 +132,19 @@ namespace DOOMSona
 
         static bool Launch()
         {
+            std::filesystem::path baseDoomSona = currRootPath;
+            baseDoomSona /= currModPathStr;
+
             if (!DoomAPI::modHandle)
             {
-                std::filesystem::path libDoomPath = thisModPath.parent_path();
-                libDoomPath /= currModPathStr;
+                std::filesystem::path libDoomPath = baseDoomSona;
                 libDoomPath /= "ChocoDoom.dll";
                 if (!DoomAPI::Init(libDoomPath))
                     return false;
             }
 
-            DoomAPI::SetModPath(currModPathStr);
+
+            DoomAPI::SetModPathW(baseDoomSona.wstring().c_str());
             ReadLaunchParamsOptFile();
             DoomD3DHook::SetFramebufferEnabled(true);
 
@@ -226,7 +248,7 @@ namespace DOOMSona
 
         uint64_t retval = 0;
 
-        std::filesystem::path chkPath = thisModPath.parent_path();
+        std::filesystem::path chkPath = currRootPath;
 
         switch (arg0)
         {
@@ -337,9 +359,45 @@ namespace DOOMSona
         return 1;
     }
 
+    static void GetPathFromReloadedModule()
+    {
+        int c = 0;
+
+        // wait for the module to appear
+        while (!ReloadedPath::modHandle)
+        {
+            ReloadedPath::Init("Reloaded-DOOMSonaLib.dll");
+            Sleep(1);
+            c++;
+
+            // stop after 5s
+            if (c >= 5000)
+                break;
+        }
+
+        if (!ReloadedPath::modHandle)
+        {
+            return;
+        }
+
+        size_t len = (ReloadedPath::GetModPathLength() + 1) * sizeof(char16_t);
+        char16_t* tmp = (char16_t*)(malloc(len));
+        if (tmp != nullptr)
+        {
+            memset(tmp, 0, len);
+            ReloadedPath::GetModPathW(tmp);
+            rldModPath = tmp;
+            free(tmp);
+
+            currRootPath = rldModPath.parent_path();
+        }
+    }
+
     void Init()
     {
         thisModPath = ModPath::GetThisModulePath<std::filesystem::path>();
+        currRootPath = thisModPath.parent_path();
+
         OpenConsole();
         DoomD3DHook::Init();
 
@@ -347,7 +405,9 @@ namespace DOOMSona
         {
             void operator()(injector::reg_pack& regs)
             {
-                // Have to undo what the CBT mod does because it doesn't hook these functions properly...
+                // Have to undo what the CBT mod does because it doesn't hook this functions properly...
+                // and to be fair, neither are we here...
+                // #TODO: pass call to original func!
                 if (!bUndoCBT)
                 {
                     bUndoCBT = true;
@@ -390,5 +450,9 @@ namespace DOOMSona
         injector::MakeAbsJMP(0x00000001416DD550, DbgPutsHook);
         // increase the cmmBookTable limit to 127 (this is as much as we can do without hooking code since it's a 'cmp esi, 7Fh' here)
         injector::WriteMemory<uint8_t>(0x0000000140C8993B + 2, 0x7F, true); 
+
+        // spin up a thread to wait for the reloaded module...
+        std::thread rldWaitThread(GetPathFromReloadedModule);
+        rldWaitThread.detach();
     }
 }

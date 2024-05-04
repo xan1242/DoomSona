@@ -75,6 +75,8 @@
 
 #include "d_main.h"
 
+#include "../MainExports.hpp"
+
 //
 // D-DoomLoop()
 // Not a globally visible function,
@@ -1221,7 +1223,8 @@ boolean D_DoomMain (void)
 	DEH_printf(D_DEVSTR);
     
     // Auto-detect the configuration dir.
-    char* path2 = M_StringJoin(modPath, "\\", NULL);
+    char* modpath = GetModPath();
+    char* path2 = M_StringJoin(modpath, "\\", NULL);
     M_SetConfigDir(path2);
     
     // init subsystems
@@ -1327,7 +1330,7 @@ boolean D_DoomMain (void)
     // Autoloading things since we take command line features away
     if (gamemission < pack_chex && gamemode != shareware)
     {
-        char* wadPath = M_StringJoin(modPath, "\\WADs", NULL);
+        char* wadPath = M_StringJoin(GetModPath(), "\\WADs", NULL);
         DEH_AutoLoadPatches(wadPath);
         W_AutoLoadWADs(wadPath);
     }

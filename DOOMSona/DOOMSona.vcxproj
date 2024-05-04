@@ -109,6 +109,7 @@
     <ClInclude Include="dxhook\src\OverlayFramework.h" />
     <ClInclude Include="dxhook\src\Renderer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="ReloadedPathIntegration.hpp" />
     <ClInclude Include="UALCheck.hpp" />
   </ItemGroup>
   <ItemGroup>

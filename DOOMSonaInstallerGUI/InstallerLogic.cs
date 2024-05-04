@@ -313,11 +313,15 @@ namespace DOOMSonaInstallerGUI
                 string pathBootstrapper64 = jsonObject.Bootstrapper64Path;
                 string pathBootstrapperOut = Path.Combine(destPath, "Reloaded.Mod.Loader.Bootstrapper.asi");
 
-                Log("Copying bootstrapper: " + pathBootstrapper64 + " --> " + pathBootstrapperOut);
 
                 if (!File.Exists(pathBootstrapperOut))
                 {
+                    Log("Copying bootstrapper: " + pathBootstrapper64 + " --> " + pathBootstrapperOut);
                     File.Copy(pathBootstrapper64, pathBootstrapperOut);
+                }
+                else
+                {
+                    Log("Bootstrapper already exists, skipping...");
                 }
             }
             catch (Exception ex)

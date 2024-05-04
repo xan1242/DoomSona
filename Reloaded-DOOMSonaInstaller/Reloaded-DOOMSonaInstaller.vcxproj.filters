@@ -24,12 +24,18 @@
     <ClInclude Include="ModPath.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PathReporter.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Installer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PathReporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

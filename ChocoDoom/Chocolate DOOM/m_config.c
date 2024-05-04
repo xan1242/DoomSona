@@ -38,6 +38,8 @@
 
 #include "z_zone.h"
 
+#include "../MainExports.hpp"
+
 //
 // DEFAULTS
 //
@@ -2176,7 +2178,7 @@ static char *GetDefaultConfigDir(void)
     result = SDL_GetPrefPath("", PACKAGE_TARNAME);
     return result;
 #endif /* #ifndef _WIN32 */
-    return M_StringDuplicate(modPath);
+    return M_StringDuplicate(GetModPath());
 }
 
 // 

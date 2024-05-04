@@ -38,12 +38,17 @@ DOOMAPI bool DoomAPI_bHasDoomErrored()
 	return bHasDoomErrored();
 }
 
-DOOMAPI bool DoomAPI_LaunchDoom(const char* args)  // #TODO: expand for wad selection
+DOOMAPI bool DoomAPI_LaunchDoom(const char* args)
 {
 	return LaunchDoom(args);
 }
 
-DOOMAPI void DoomAPI_SetModPath(const char* path)
+DOOMAPI void DoomAPI_SetModPathA(const char* path)
+{
+	return SetModPath(path);
+}
+
+DOOMAPI void DoomAPI_SetModPathW(const wchar_t* path)
 {
 	return SetModPath(path);
 }

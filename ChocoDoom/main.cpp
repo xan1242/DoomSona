@@ -33,7 +33,10 @@ extern "C" {
 #include "Chocolate DOOM/m_argv.h"
 }
 
-const char* modPath;
+//const char* modPath;
+std::filesystem::path realModPath;
+std::string strModPath;
+//char* modPathBuf;
 
 bool doomed = false;
 bool doomedonce = false;
@@ -96,11 +99,17 @@ void DoomExited()
 {
     for (char* s : sArgs)
     {
-        free(s);
+        if (s)
+            free(s);
     }
 
     sArgs.clear();
     sArgs.shrink_to_fit();
+
+    realModPath.clear();
+    strModPath.clear();
+    
+    strModPath.shrink_to_fit();
 
     doomed = false;
 }
@@ -126,7 +135,7 @@ std::vector<char*> parseArguments(const std::string& argsString)
 
     //constexpr const char* dummyArg = "dummy";
     //const char* dummyArg = modPath;
-    std::string firstArg = modPath;
+    std::string firstArg = GetModPath();
     firstArg += "/ChocoDoom.dll";
 
     char* staticStr = (char*)malloc(strlen(firstArg.c_str()) + 1);
@@ -206,9 +215,25 @@ void DoomMainLoopFunc()
 	return DoomMode_Main();
 }
 
-void SetModPath(const char* path)
+//void SetModPath(const char* path)
+//{
+//	modPath = path;
+//}
+
+void SetModPath(std::filesystem::path path)
 {
-	modPath = path;
+    realModPath = path;
+    strModPath = path.string();
+}
+
+const char* GetModPath()
+{
+    return strModPath.c_str();
+}
+
+std::filesystem::path GetRealModPath()
+{
+    return realModPath;
 }
 
 void DoomRegisterAtExit(doom_atexit_func_t func, bool run_if_error)

@@ -48,7 +48,7 @@ boolean D_DoomMain(void);
 //
 
 extern  gameaction_t    gameaction;
-extern	const char* modPath;
+//extern	const char* modPath;
 
 #endif
 

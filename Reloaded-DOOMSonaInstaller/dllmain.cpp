@@ -1,9 +1,11 @@
 #include "framework.h"
 #include "Installer.hpp"
+#include "PathReporter.hpp"
 
-extern "C" __declspec(dllexport) void ReloadedStart()
+RLD_DOOMSONA_API void ReloadedStart()
 {
     Installer::Init();
+    PathReporter::Init();
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule,

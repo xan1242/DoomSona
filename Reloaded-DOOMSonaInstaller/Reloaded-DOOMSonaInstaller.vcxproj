@@ -24,6 +24,7 @@
     <ProjectGuid>{bb5b7887-7b60-445b-bce6-7a263994ff26}</ProjectGuid>
     <RootNamespace>ReloadedDOOMSonaInstaller</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>Reloaded-DOOMSonaLib</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -120,7 +121,7 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\Reloaded-DOOMSonaInstaller.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.test.test"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\Reloaded-DOOMSonaLib.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.test.test"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -143,14 +144,16 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\Reloaded-DOOMSonaInstaller.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.test.test"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\Reloaded-DOOMSonaLib.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.test.test"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Installer.cpp" />
+    <ClCompile Include="PathReporter.cpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Installer.hpp" />
     <ClInclude Include="ModPath.hpp" />
+    <ClInclude Include="PathReporter.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
