@@ -51,21 +51,6 @@ public class Mod : ModBase // <= Do not Remove.
         _owner = context.Owner;
         _configuration = context.Configuration;
         _modConfig = context.ModConfig;
-
-
-        // For more information about this template, please see
-        // https://reloaded-project.github.io/Reloaded-II/ModTemplate/
-
-        // If you want to implement e.g. unload support in your mod,
-        // and some other neat features, override the methods in ModBase.
-
-        // TODO: Implement some mod logic
-        // if (!_modLoader.GetController<IFlowFramework>().TryGetTarget(out var flowFramework))
-        // {
-        //     throw new Exception("FUCK");
-        // }
-        // 
-        // _ReloadedDOOMSonaInstallerLauncher = new(flowFramework, _logger);
     }
 
     #region Standard Overrides

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -13,15 +14,25 @@ namespace DOOMSonaInstallerGUI
 {
     public partial class Form1 : Form
     {
+        bool bInUninstallFlow = false;
+
         public delegate void PageAdvancer();
         public delegate void FinalButtonFlowNotifier(bool nextBtnState);
+
+        public delegate void UninstallFlowStarter();
+
         List<UserControl> pagesList = new List<UserControl>();
+        List<UserControl> uninstallPagesList = new List<UserControl>();
+
         private int currentPageIndex = 0;
+        private int currentUninstallPageIndex = 0;
 
         private PageOneControl page1;
         private PageTwoControl page2;
         private PageThreeControl page3;
         //private PageFourControl page4;
+
+        private UninstallPageOneControl uninstallPage1;
 
         private void InitializePagesList()
         {
@@ -30,14 +41,20 @@ namespace DOOMSonaInstallerGUI
             page3 = new PageThreeControl();
             //page4 = new PageFourControl();
 
+            uninstallPage1 = new UninstallPageOneControl();
+
             //page1.pageAdv += AdvancePage;
             page3.btnNotifier += SetFinalButtonFlow;
             //page3.pageAdv += AdvancePage;
+            page1.uninstallStarter += StartUninstallFlow;
 
             pagesList.Add(page1);
             pagesList.Add(page2);
             pagesList.Add(page3);
             //pagesList.Add(page4);
+
+            uninstallPagesList.Add(uninstallPage1);
+            uninstallPagesList.Add(page3);
         }
 
         private DialogResult ShowCancelDialog()
@@ -66,8 +83,80 @@ namespace DOOMSonaInstallerGUI
             InitializePagesList();
         }
 
+        private void OptionallyLaunchGame()
+        {
+            if (InstallerLogic.IsCmdFlagPresent("--launchGame"))
+            {
+                try
+                {
+                    string pathConfigJson = InstallerLogic.Reloaded_GetCfgPath();
+                    if (pathConfigJson == null)
+                        return;
+
+                    dynamic jsonObject = InstallerLogic.Reloaded_ParseJSON(pathConfigJson);
+                    if (jsonObject == null)
+                        return;
+
+                    string pathLauncher = InstallerLogic.Reloaded_GetLauncherPath(jsonObject);
+                    if (pathLauncher == null)
+                        return;
+
+                    string pathGameExe = Path.Combine(InstallerLogic.GetGamePath(), "P5R.exe");
+
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = pathLauncher;
+                    startInfo.Arguments = "--launch \"" + pathGameExe + "\"";
+
+                    // Start the process
+                    Process.Start(startInfo);
+
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+            }
+            return;
+        }
+
         private void AdvancePage()
         {
+            if (bInUninstallFlow)
+            {
+                if (currentUninstallPageIndex == uninstallPagesList.Count - 1)
+                {
+                    Application.Exit();
+                }
+
+                if (currentUninstallPageIndex == 0)
+                {
+                    if (InstallerLogic.IsProcessRunning("Reloaded-II"))
+                    {
+                        ShowRldRunningError();
+                        return;
+                    }
+
+                    if (InstallerLogic.IsProcessRunning("Reloaded-II32"))
+                    {
+                        ShowRld32RunningError();
+                        return;
+                    }
+
+                    if (currentUninstallPageIndex < uninstallPagesList.Count - 1)
+                    {
+                        EnableAllFlowButtons();
+                        currentUninstallPageIndex++;
+                        ShowCurrentPage();
+                    }
+                }
+            }
+
+            if (currentPageIndex == pagesList.Count - 1)
+            {
+                OptionallyLaunchGame();
+                Application.Exit();
+            }
+
             if (currentPageIndex == 0)
             {
                 if (InstallerLogic.IsProcessRunning("Reloaded-II"))
@@ -87,6 +176,31 @@ namespace DOOMSonaInstallerGUI
             {
                 EnableAllFlowButtons();
                 currentPageIndex++;
+                ShowCurrentPage();
+            }
+        }
+
+        private void DecrementPage()
+        {
+            if (bInUninstallFlow)
+            {
+                if (currentUninstallPageIndex > 0)
+                {
+                    currentUninstallPageIndex--;
+                    ShowCurrentPage();
+                }
+                else
+                {
+                    bInUninstallFlow = false;
+                    currentPageIndex = 0;
+                    InstallerLogic.bUninstallMode = false;
+                    ShowCurrentPage();
+                }
+            }
+
+            if (currentPageIndex > 0)
+            {
+                currentPageIndex--;
                 ShowCurrentPage();
             }
         }
@@ -121,21 +235,12 @@ namespace DOOMSonaInstallerGUI
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            if (currentPageIndex == pagesList.Count - 1)
-            {
-                Application.Exit();
-            }
-
             AdvancePage();
         }
 
         private void btnBack_Click(object sender, EventArgs e)
         {
-            if (currentPageIndex > 0)
-            {
-                currentPageIndex--;
-                ShowCurrentPage();
-            }
+            DecrementPage();
         }
 
         private void DisableAllFlowButtons()
@@ -163,10 +268,41 @@ namespace DOOMSonaInstallerGUI
             btnNext.Text = "Finish";
         }
 
-        private void ShowCurrentPage()
+        private void ShowCurrentUninstallPage()
         {
             // Clear panel and show the current page
             ClearPanelControls(panel1);
+
+            UserControl currentPage = uninstallPagesList[currentUninstallPageIndex];
+            panel1.Controls.Add(currentPage);
+            currentPage.Visible = true;
+
+            switch (currentUninstallPageIndex)
+            {
+                case 1:
+                    SetFinalButtonFlow(false);
+                    break;
+                case 0:
+                    btnBack.Enabled = true;
+                    btnNext.Text = "Uninstall";
+                    break;
+                default:
+                    btnNext.Text = "Next";
+                    break;
+            }
+        }
+
+        private void ShowCurrentPage()
+        {
+            if (bInUninstallFlow)
+            {
+                ShowCurrentUninstallPage();
+                return;
+            }
+
+            // Clear panel and show the current page
+            ClearPanelControls(panel1);
+
             UserControl currentPage = pagesList[currentPageIndex];
             panel1.Controls.Add(currentPage);
             currentPage.Visible = true;
@@ -187,6 +323,13 @@ namespace DOOMSonaInstallerGUI
                     btnNext.Text = "Next";
                     break;
             }
+        }
+
+        private void StartUninstallFlow()
+        {
+            bInUninstallFlow = true;
+            InstallerLogic.bUninstallMode = true;
+            ShowCurrentPage();
         }
 
         private void ClearPanelControls(Panel panel)

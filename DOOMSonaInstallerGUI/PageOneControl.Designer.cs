@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnConfig = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelGamePathTitle = new System.Windows.Forms.Label();
             this.labelInstalledModVersion = new System.Windows.Forms.Label();
@@ -38,7 +39,6 @@
             this.btnUninstall = new System.Windows.Forms.Button();
             this.labelTitle = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
-            this.btnConfig = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -55,6 +55,16 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(574, 359);
             this.panel1.TabIndex = 1;
+            // 
+            // btnConfig
+            // 
+            this.btnConfig.Location = new System.Drawing.Point(4, 304);
+            this.btnConfig.Name = "btnConfig";
+            this.btnConfig.Size = new System.Drawing.Size(118, 23);
+            this.btnConfig.TabIndex = 8;
+            this.btnConfig.Text = "Configure DOOM";
+            this.btnConfig.UseVisualStyleBackColor = true;
+            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
             // panel2
             // 
@@ -124,6 +134,7 @@
             this.btnUninstall.TabIndex = 2;
             this.btnUninstall.Text = "Uninstall / Cleanup";
             this.btnUninstall.UseVisualStyleBackColor = true;
+            this.btnUninstall.Click += new System.EventHandler(this.btnUninstall_Click);
             // 
             // labelTitle
             // 
@@ -146,16 +157,6 @@
             this.labelDescription.TabIndex = 0;
             this.labelDescription.Text = "Installation Description Text";
             this.labelDescription.UseMnemonic = false;
-            // 
-            // btnConfig
-            // 
-            this.btnConfig.Location = new System.Drawing.Point(4, 304);
-            this.btnConfig.Name = "btnConfig";
-            this.btnConfig.Size = new System.Drawing.Size(118, 23);
-            this.btnConfig.TabIndex = 8;
-            this.btnConfig.Text = "Configure DOOM";
-            this.btnConfig.UseVisualStyleBackColor = true;
-            this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
             // PageOneControl
             // 

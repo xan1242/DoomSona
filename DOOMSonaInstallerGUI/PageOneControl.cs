@@ -15,6 +15,8 @@ namespace DOOMSonaInstallerGUI
 {
     public partial class PageOneControl : UserControl
     {
+        public event UninstallFlowStarter uninstallStarter;
+
         public PageOneControl()
         {
             InitializeComponent();
@@ -64,16 +66,15 @@ namespace DOOMSonaInstallerGUI
 
         private void btnConfig_Click(object sender, EventArgs e)
         {
-            string GamePath = InstallerLogic.GetGamePath();
-            if (GamePath == null)
+            if (!Directory.Exists("DOOMSona"))
                 return;
 
-            string pathChocoDoomConfig = Path.Combine(GamePath, "DOOMSona", "chocolate-doom-setup.exe");
+            string pathChocoDoomConfig = Path.Combine("DOOMSona", "chocolate-doom-setup.exe");
             if (!File.Exists(pathChocoDoomConfig))
                 return;
 
             // Specify the new working directory
-            string newWorkingDir = Path.Combine(GamePath, "DOOMSona");
+            string newWorkingDir = "DOOMSona";
 
             // Create a ProcessStartInfo object
             ProcessStartInfo psi = new ProcessStartInfo
@@ -89,6 +90,11 @@ namespace DOOMSonaInstallerGUI
             // Start the process
             Process process = new Process { StartInfo = psi };
             process.Start();
+        }
+
+        private void btnUninstall_Click(object sender, EventArgs e)
+        {
+            uninstallStarter?.Invoke();
         }
     }
 }

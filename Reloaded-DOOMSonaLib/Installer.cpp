@@ -412,6 +412,16 @@ namespace Installer
 
         std::filesystem::path installerPath = pathThis / "DOOMSonaInstallerGUI.exe";
 
+        try
+        {
+            if (!std::filesystem::exists(installerPath))
+                return;
+        }
+        catch (...)
+        {
+            return;
+        }
+
         // temporarily set the work directory to the mod folder
         DWORD pathlen = GetCurrentDirectoryW(0, NULL);
         wchar_t* LastPath = new wchar_t[pathlen + 1];
@@ -419,8 +429,11 @@ namespace Installer
 
         SetCurrentDirectoryW(pathThis.wstring().c_str());
 
-        std::string cmd = "@start ";
+        std::string cmd = "start \"\" ";
+        cmd += "\"";
         cmd += installerPath.string().c_str();
+        cmd += "\"";
+        cmd += " --launchGame";
 
         std::system(cmd.c_str());
 

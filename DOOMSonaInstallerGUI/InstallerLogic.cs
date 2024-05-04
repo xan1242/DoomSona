@@ -10,6 +10,7 @@ using static System.Net.Mime.MediaTypeNames;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.Runtime.Remoting.Contexts;
 
 namespace DOOMSonaInstallerGUI
 {
@@ -50,28 +51,28 @@ namespace DOOMSonaInstallerGUI
                         // Check if the file already exists
                         if (File.Exists(entryPath))
                         {
-                            string filename = Path.GetFileName(entryPath);
+                            //string filename = Path.GetFileName(entryPath);
 
-                            if (filename == "dinput8.dll")
-                            {
-                                // if it is the first time install...
-                                if (GetGameVersion() == null)
-                                {
-                                    string pathTag = Path.Combine(extractPath, asiLoaderTagFilename);
-                                    if (!File.Exists(pathTag))
-                                        File.Create(pathTag);
-                                }
-                            }
-                            else if (filename == "Reloaded.Mod.Loader.Bootstrapper.asi")
-                            {
-                                // if it is the first time install...
-                                if (GetGameVersion() == null)
-                                {
-                                    string pathTag = Path.Combine(extractPath, asiBootstrapperTagFilename);
-                                    if (!File.Exists(pathTag))
-                                        File.Create(pathTag);
-                                }
-                            }
+                            // if (filename == "dinput8.dll")
+                            // {
+                            //     // if it is the first time install...
+                            //     if (GetGameVersion() == null)
+                            //     {
+                            //         string pathTag = Path.Combine(extractPath, asiLoaderTagFilename);
+                            //         if (!File.Exists(pathTag))
+                            //             File.Create(pathTag);
+                            //     }
+                            // }
+                            // else if (filename == "Reloaded.Mod.Loader.Bootstrapper.asi")
+                            // {
+                            //     // if it is the first time install...
+                            //     if (GetGameVersion() == null)
+                            //     {
+                            //         string pathTag = Path.Combine(extractPath, asiBootstrapperTagFilename);
+                            //         if (!File.Exists(pathTag))
+                            //             File.Create(pathTag);
+                            //     }
+                            // }
 
                             File.Delete(entryPath); // Delete existing file
                         }
@@ -85,8 +86,8 @@ namespace DOOMSonaInstallerGUI
         }
 
         private const string versionTagFilename = "DOOMSonaVersion.tag";
-        private const string asiLoaderTagFilename = "DOOMSonaASILoader.tag";
-        private const string asiBootstrapperTagFilename = "DOOMSonaASIBootstrapper.tag";
+        private const string cleanupFileListFilename = "CleanupList.txt";
+        public static string[] cleanupFileList;
 
         private static string pathDoom1WAD;
         private static string pathDoom2WAD;
@@ -97,6 +98,9 @@ namespace DOOMSonaInstallerGUI
         public static int lastDontInjectSetterErrorLevel = -1;
 
         public static bool bInstallCompleted = false;
+
+        public static bool bUninstallMode = false;
+        public static bool bCleanupASILoader = false;
 
         public static void SetDoom1WADPath(string path)
         { 
@@ -112,13 +116,51 @@ namespace DOOMSonaInstallerGUI
 
         public static string GetDoom2WADPath() { return pathDoom2WAD; }
 
+        public static string GetArgumentValue(string argName)
+        {
+            string[] commandLineArgs = Environment.GetCommandLineArgs();
+            string argValue = null;
+
+            for (int i = 0; i < commandLineArgs.Length; i++)
+            {
+                if (commandLineArgs[i] == argName && i + 1 < commandLineArgs.Length)
+                {
+                    argValue = commandLineArgs[i + 1];
+                    break;
+                }
+            }
+
+            return argValue;
+        }
+
+        public static bool IsCmdFlagPresent(string flag)
+        {
+            string[] commandLineArgs = Environment.GetCommandLineArgs();
+
+            foreach (string arg in commandLineArgs)
+            {
+                if (arg == flag)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static string GetGamePath()
         {
-            string[] args = Environment.GetCommandLineArgs();
+            // string[] args = Environment.GetCommandLineArgs();
+            // 
+            // if ((args != null) && (args.Length >= 2))
+            // {
+            //     return args[1];
+            // }
 
-            if ((args != null) && (args.Length >= 2))
-            {
-                return args[1];
+            string overridePath = GetArgumentValue("--path");
+            if (overridePath != null) 
+            { 
+                return overridePath; 
             }
 
             string rldPath = Reloaded_GetGamePath();
@@ -176,7 +218,7 @@ namespace DOOMSonaInstallerGUI
                 return null;
             }
         }
-        private static string Reloaded_GetGamePath()
+        public static string Reloaded_GetGamePath()
         {
             string pathAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string pathConfigJson = Path.Combine(pathAppData, "Reloaded-Mod-Loader-II", "ReloadedII.json");
@@ -232,7 +274,42 @@ namespace DOOMSonaInstallerGUI
             lastTagErrorLevel = 0;
             return 0;
         }
-        private static void Reloaded_SetDontInject(string pathJson)
+
+        public static string Reloaded_GetCfgPath()
+        {
+            string pathAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            return Path.Combine(pathAppData, "Reloaded-Mod-Loader-II", "ReloadedII.json"); ;
+        }
+
+        public static dynamic Reloaded_ParseJSON(string jsonPath)
+        {
+            dynamic jsonObject;
+
+            string jsonText = File.ReadAllText(jsonPath);
+            jsonObject = JsonConvert.DeserializeObject(jsonText);
+
+            return jsonObject;
+        }
+
+        public static string Reloaded_GetBoostrapper64Path(dynamic jsonObject)
+        {
+            return jsonObject.Bootstrapper64Path;
+        }
+
+        public static string Reloaded_GetLauncherPath(dynamic jsonObject)
+        {
+            return jsonObject.LauncherPath;
+        }
+
+        public static string Reloaded_GetAppCfgJsonPath(dynamic jsonObject)
+        {
+            string pathAppsCfgDir = jsonObject.ApplicationConfigDirectory;
+            string pathAppJson = Path.Combine(pathAppsCfgDir, "p5r.exe", "AppConfig.json");
+
+            return pathAppJson;
+        }
+
+        public static void Reloaded_SetDontInject(string pathJson, bool val)
         {
             JObject jsonObject;
             try
@@ -248,11 +325,10 @@ namespace DOOMSonaInstallerGUI
                 return;
             }
 
-            // #TODO: add a check - if already true, then don't set
             try
             {
                 Log("Setting \"DontInject\" flag...");
-                jsonObject["DontInject"] = true;
+                jsonObject["DontInject"] = val;
 
                 try
                 {
@@ -290,8 +366,7 @@ namespace DOOMSonaInstallerGUI
 
         public static int Reloaded_InstallBootstrap(string destPath)
         {
-            string pathAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string pathConfigJson = Path.Combine(pathAppData, "Reloaded-Mod-Loader-II", "ReloadedII.json");
+            string pathConfigJson = Reloaded_GetCfgPath();
 
             Log("Installing Reloaded bootstrap...");
             
@@ -299,8 +374,7 @@ namespace DOOMSonaInstallerGUI
             try
             {
                 Log("Parsing Reloaded config from: " + pathConfigJson);
-                string jsonText = File.ReadAllText(pathConfigJson);
-                jsonObject = JsonConvert.DeserializeObject(jsonText);
+                jsonObject = Reloaded_ParseJSON(pathConfigJson);
             }
             catch (Exception ex)
             {
@@ -310,7 +384,7 @@ namespace DOOMSonaInstallerGUI
 
             try
             {
-                string pathBootstrapper64 = jsonObject.Bootstrapper64Path;
+                string pathBootstrapper64 = Reloaded_GetBoostrapper64Path(jsonObject);
                 string pathBootstrapperOut = Path.Combine(destPath, "Reloaded.Mod.Loader.Bootstrapper.asi");
 
 
@@ -333,14 +407,16 @@ namespace DOOMSonaInstallerGUI
 
             try
             {
-                string pathAppsCfgDir = jsonObject.ApplicationConfigDirectory;
-                string pathAppJson = Path.Combine(pathAppsCfgDir, "p5r.exe", "AppConfig.json");
+                //string pathAppsCfgDir = jsonObject.ApplicationConfigDirectory;
+                //string pathAppsCfgDir = 
+                //string pathAppJson = Path.Combine(pathAppsCfgDir, "p5r.exe", "AppConfig.json");
+                string pathAppJson = Reloaded_GetAppCfgJsonPath(jsonObject);
 
-                Log("Setting \"DontInject\" on Reloaded game config: " + pathAppJson);
+                Log("Setting \"DontInject\" to true on Reloaded game config: " + pathAppJson);
 
                 if (File.Exists(pathAppJson))
                 {
-                    Reloaded_SetDontInject(pathAppJson);
+                    Reloaded_SetDontInject(pathAppJson, true);
                 }
                 else
                 {
@@ -359,7 +435,7 @@ namespace DOOMSonaInstallerGUI
             return 0;
         }
 
-        public static int PerformInstall(string srcZip, string destPath)
+        public static int PerformInstall(string srcZip, string destPath, string destModPath)
         {
             bool bDOOM1WadCopyFailed = false;
             bool bDOOM2WadCopyFailed = false;
@@ -387,7 +463,12 @@ namespace DOOMSonaInstallerGUI
             {
                 if ((pathDoom1WAD != null) && (pathDoom1WAD.Length > 1))
                 {
-                    string DOOMSonaWAD1Path = Path.Combine(destPath, "DOOMSona", "DOOM.WAD");
+                    if (!Directory.Exists(Path.Combine(destModPath, "DOOMSona")))
+                    {
+                        Directory.CreateDirectory(Path.Combine(destModPath, "DOOMSona"));
+                    }
+
+                    string DOOMSonaWAD1Path = Path.Combine(destModPath, "DOOMSona", "DOOM.WAD");
                     Log("Copying Doom 1 WAD: " + pathDoom1WAD + " to " + DOOMSonaWAD1Path);
                     File.Copy(pathDoom1WAD, DOOMSonaWAD1Path, true);
                 }
@@ -404,7 +485,12 @@ namespace DOOMSonaInstallerGUI
             {
                 if ((pathDoom2WAD != null) && (pathDoom2WAD.Length > 1))
                 {
-                    string DOOMSonaWAD2Path = Path.Combine(destPath, "DOOMSona", "DOOM2.WAD");
+                    if (!Directory.Exists(Path.Combine(destModPath, "DOOMSona")))
+                    {
+                        Directory.CreateDirectory(Path.Combine(destModPath, "DOOMSona"));
+                    }
+
+                    string DOOMSonaWAD2Path = Path.Combine(destModPath, "DOOMSona", "DOOM2.WAD");
                     Log("Copying Doom 2 WAD: " + pathDoom2WAD + " to " + DOOMSonaWAD2Path);
                     File.Copy(pathDoom2WAD, DOOMSonaWAD2Path, true);
                 }
@@ -423,6 +509,155 @@ namespace DOOMSonaInstallerGUI
                 Log("PerformInstall success!");
 
             lastInstallErrorLevel = 0;
+            return 0;
+        }
+
+        public static bool BuildCleanupList()
+        {
+            try
+            {
+                Log("Loading cleanup list from: " + cleanupFileListFilename);
+                if (cleanupFileList != null)
+                {
+                    if (cleanupFileList.Length > 0)
+                        Array.Clear(cleanupFileList, 0, cleanupFileList.Length);
+                }
+                cleanupFileList = File.ReadAllLines(cleanupFileListFilename);
+            }
+            catch (Exception ex)
+            {
+                Log("ERROR: Can't read cleanup list file: " + ex);
+                return false;
+            }
+
+            return true;
+        }
+
+        public static int PerformCleanup(string destPath)
+        {
+            if (!BuildCleanupList())
+                return -1;
+
+            try
+            {
+                string tagPath = Path.Combine(destPath, versionTagFilename);
+                if (File.Exists(tagPath))
+                {
+                    Log("Removing: " + tagPath);
+                    File.Delete(tagPath);
+                }
+
+                foreach (string path in cleanupFileList)
+                {
+                    string fullPath = Path.Combine(destPath, path);
+                    
+                    if (path.EndsWith("/") || path.EndsWith("\\"))
+                    {
+                        Log("Removing directory: " + fullPath);
+                        Directory.Delete(fullPath, true);
+                    }
+                    else if (File.Exists(fullPath))
+                    {
+                        Log("Removing: " + fullPath);
+                        File.Delete(fullPath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("ERROR: Can't perform cleanup: " + ex);
+            }
+
+            return 0;
+        }
+
+        public static int PerformASILoaderCleanup(string destPath)
+        {
+            string fullPath = Path.Combine(destPath, "dinput8.dll");
+            try
+            {
+                if (File.Exists(fullPath))
+                {
+                    Log("Removing ASI loader from: " + fullPath);
+                    File.Delete(fullPath);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("ERROR: Can't remove ASI loader: " + ex);
+                return -1;
+            }
+
+            return 0;
+        }
+
+        public static int PerformASIBootstrapperCleanup(string destPath)
+        {
+            bool bPerformedCleanup = false;
+
+            string fullPath = Path.Combine(destPath, "Reloaded.Mod.Loader.Bootstrapper.asi");
+            try
+            {
+                if (File.Exists(fullPath))
+                {
+                    Log("Removing ASI bootstrapper from: " + fullPath);
+                    File.Delete(fullPath);
+                    bPerformedCleanup = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("ERROR: Can't remove ASI bootstrapper: " + ex);
+            }
+
+            // don't set the flag if the user didn't have the bootstrapper...
+            if (!bPerformedCleanup)
+                return 0;
+
+            Log("Setting \"DontInject\" flag to false...");
+            try
+            {
+                string pathConfigJson = Reloaded_GetCfgPath();
+                dynamic jsonObject;
+
+                try
+                {
+                    Log("Parsing Reloaded config from: " + pathConfigJson);
+                    jsonObject = Reloaded_ParseJSON(pathConfigJson);
+                }
+                catch (Exception ex)
+                {
+                    Log("ERROR: Reloaded config JSON parsing failed, exception: " + ex);
+                    return -1;
+                }
+
+                try
+                {
+                    string pathAppJson = Reloaded_GetAppCfgJsonPath(jsonObject);
+
+                    Log("Setting \"DontInject\" to false on Reloaded game config: " + pathAppJson);
+
+                    if (File.Exists(pathAppJson))
+                    {
+                        Reloaded_SetDontInject(pathAppJson, false);
+                    }
+                    else
+                    {
+                        Log("WARNING: Cannot find app configuration at: " + pathAppJson);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log("ERROR: Reloaded DontInject setter failed, exception: " + ex);
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log("ERROR: Can't set DontInject flag: " + ex);
+                return -1;
+            }
+
             return 0;
         }
 
