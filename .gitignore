@@ -215,3 +215,4 @@ ModelManifest.xml
 Ignored/
 /.Debug Package
 /post-install/dinput8.dll
+/.Release Package
