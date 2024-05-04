@@ -1078,7 +1078,9 @@ void M_QuitResponse(int key)
 	    S_StartSound(NULL,quitsounds[(gametic>>2)&7]);
 	I_WaitVBL(105);
     }
-    I_Quit ();
+    //I_Quit ();
+    wipegamestate = -1;
+    DoomDelayedExitSpinup();
 }
 
 

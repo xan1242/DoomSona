@@ -234,13 +234,17 @@ void I_FinishUpdate (void)
 
     if (!initialized)
     {
+#ifdef _DEBUG
         printf("not inited!\n");
+#endif
         return;
     }
 
     if (noblit)
     {
+#ifdef _DEBUG
         printf("not blit!\n");
+#endif
         return;
     }
 
@@ -340,12 +344,12 @@ int I_GetPaletteIndex(int r, int g, int b)
     return best;
 }
 
-static const char *hw_emu_warning = 
-"===========================================================================\n"
-"WARNING: it looks like you are using a software GL implementation.\n"
-"To improve performance, try setting force_software_renderer in your\n"
-"configuration file.\n"
-"===========================================================================\n";
+// static const char *hw_emu_warning = 
+// "===========================================================================\n"
+// "WARNING: it looks like you are using a software GL implementation.\n"
+// "To improve performance, try setting force_software_renderer in your\n"
+// "configuration file.\n"
+// "===========================================================================\n";
 
 void I_InitGraphics(void)
 {

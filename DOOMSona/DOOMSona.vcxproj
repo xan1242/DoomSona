@@ -184,6 +184,7 @@
     <ClCompile Include="includes\asmjit\src\asmjit\x86\x86instdb.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\x86\x86operand.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\x86\x86rapass.cpp" />
+    <ClCompile Include="ModPath.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dxhook\src\Jump.asm" />

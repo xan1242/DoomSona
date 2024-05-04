@@ -287,10 +287,13 @@
     <ClCompile Include="dxhook\DirectXTK\Src\VertexTypes.cpp">
       <Filter>Source Files\dxhook\DirectXTK</Filter>
     </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\WICTextureLoader.cpp">
+    <ClCompile Include="dxhook\DirectXTK\Src\BufferHelpers.cpp">
       <Filter>Source Files\dxhook\DirectXTK</Filter>
     </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\BufferHelpers.cpp">
+    <ClCompile Include="ModPath.hpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\WICTextureLoader.cpp">
       <Filter>Source Files\dxhook\DirectXTK</Filter>
     </ClCompile>
   </ItemGroup>

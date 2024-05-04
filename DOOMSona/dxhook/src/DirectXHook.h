@@ -42,8 +42,9 @@ public:
 	//void UnhookCommandQueue();
 
 private:
+#ifdef _DEBUG
 	Logger logger{ "DirectXHook" };
-
+#endif
 	IDXGISwapChain* CreateDummySwapChain();
 	void HookSwapChain(IDXGISwapChain* dummySwapChain, uintptr_t presentDetourFunction, uintptr_t resizeBuffersDetourFunction, uintptr_t* presentReturnAddress, uintptr_t* resizeBuffersReturnAddress);
 };

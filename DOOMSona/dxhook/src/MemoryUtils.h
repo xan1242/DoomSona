@@ -18,7 +18,9 @@
 // Contains various memory manipulation functions related to hooking or modding
 namespace MemoryUtils
 {
+#ifdef _DEBUG
 	static ::Logger logger{ "MemoryUtils" };
+#endif
 	static constexpr int maskBytes = 0xffff;
 	
 	struct HookInformation
@@ -128,12 +130,12 @@ namespace MemoryUtils
 		}
 		return moduleName;
 	}
-
+#ifdef _DEBUG
 	static void ShowErrorPopup(std::string error)
 	{
-#ifdef _DEBUG
+
 		logger.Log("Raised error: %s", error.c_str());
-#endif
+
 		//MessageBox(NULL, error.c_str(), GetCurrentModuleName().c_str(), MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 	}
 
@@ -157,7 +159,7 @@ namespace MemoryUtils
 		}
 		logger.Log("Pattern: %s", patternString.c_str());
 	}
-
+#endif
 	// Scans the memory of the main process module for the given signature.
 	static uintptr_t SigScan(std::vector<uint16_t> pattern)
 	{
@@ -167,9 +169,9 @@ namespace MemoryUtils
 		logger.Log("Process name: %s", GetCurrentProcessName().c_str());
 		logger.Log("Process ID: %i", processId);
 		logger.Log("Process base address: 0x%llX", regionStart);
-#endif
-		PrintPattern(pattern);
 
+		PrintPattern(pattern);
+#endif
 		size_t numRegionsChecked = 0;
 		size_t maxNumberOfRegionsToCheck = 10000;
 		uintptr_t currentAddress = 0;
@@ -178,6 +180,7 @@ namespace MemoryUtils
 			MEMORY_BASIC_INFORMATION memoryInfo = { 0 };
 			if (VirtualQuery((void*)regionStart, &memoryInfo, sizeof(MEMORY_BASIC_INFORMATION)) == 0)
 			{
+#ifdef _DEBUG
 				DWORD error = GetLastError();
 				if (error == ERROR_INVALID_PARAMETER)
 				{
@@ -187,6 +190,7 @@ namespace MemoryUtils
 				{
 					logger.Log("VirtualQuery failed, error code: %i.", error);
 				}
+#endif
 				break;
 			}
 
@@ -206,7 +210,9 @@ namespace MemoryUtils
 
 			if (isMemoryReadable)
 			{
+#ifdef _DEBUG
 				logger.Log("Checking region: %p", regionStart);
+#endif
 				currentAddress = regionStart;
 				while (currentAddress < regionEnd - pattern.size())
 				{
@@ -225,7 +231,9 @@ namespace MemoryUtils
 						else if (i == pattern.size() - 1)
 						{
 							uintptr_t signature = currentAddress - pattern.size() + 1;
+#ifdef _DEBUG
 							logger.Log("Found signature at %p", signature);
+#endif
 							return signature;
 						}
 						currentAddress++;
@@ -234,15 +242,18 @@ namespace MemoryUtils
 			}
 			else
 			{
+#ifdef _DEBUG
 				logger.Log("Skipped region: %p", regionStart);
+#endif
 			}
 
 			numRegionsChecked++;
 			regionStart += regionSize;
 		}
-
+#ifdef _DEBUG
 		logger.Log("Stopped at: %p, num regions checked: %i", currentAddress, numRegionsChecked);
 		ShowErrorPopup("Could not find signature!");
+#endif
 		return 0;
 	}
 
@@ -253,11 +264,15 @@ namespace MemoryUtils
 
 		if (memoryAddress == NULL)
 		{
+#ifdef _DEBUG
 			logger.Log("Failed to allocate %i bytes of memory", numBytes);
+#endif
 		}
 		else
 		{
+#ifdef _DEBUG
 			logger.Log("Allocated %i bytes of memory at %p", numBytes, memoryAddress);
+#endif
 			MemSet(memoryAddress, 0x90, numBytes);
 		}
 
@@ -298,11 +313,15 @@ namespace MemoryUtils
 
 		if (memoryAddress == NULL)
 		{
+#ifdef _DEBUG
 			logger.Log("Failed to allocate %i bytes of memory", numBytes);
+#endif
 		}
 		else
 		{
+#ifdef _DEBUG
 			logger.Log("Allocated %i bytes of memory at %p", numBytes, memoryAddress);
+#endif
 			MemSet(memoryAddress, 0x90, numBytes);
 		}
 
@@ -378,7 +397,9 @@ namespace MemoryUtils
 
 			if (instructionSize <= 0)
 			{
+#ifdef _DEBUG
 				logger.Log("Instruction invalid, could not check length!");
+#endif
 				return minimumClearance;
 			}
 
@@ -431,7 +452,9 @@ namespace MemoryUtils
 		unsigned char absoluteJumpBytes[6] = { 0xff, 0x25, 0x00, 0x00, 0x00, 0x00};
 		MemCopy(address, (uintptr_t)&absoluteJumpBytes[0], 6);
 		MemCopy(address + 6, (uintptr_t)&destinationAddress, 8);
+#ifdef _DEBUG
 		logger.Log("Created absolute jump from %p to %p with a clearance of %i", address, destinationAddress, clearance);
+#endif
 	}
 
 	// Places a 5-byte relatively addressed jump from A to B. 
@@ -443,7 +466,9 @@ namespace MemoryUtils
 		MemCopy(address, (uintptr_t)&relativeJumpBytes[0], 5);
 		int32_t relativeAddress = CalculateRelativeDisplacementForRelativeJump(address, destinationAddress);
 		MemCopy((address + 1), (uintptr_t)&relativeAddress, 4);
+#ifdef _DEBUG
 		logger.Log("Created relative jump from %p to %p with a clearance of %i", address, destinationAddress, clearance);
+#endif
 	}
 
 	static std::string ConvertVectorOfBytesToStringOfHex(std::vector<uint8_t> bytes)
@@ -465,14 +490,18 @@ namespace MemoryUtils
 		std::vector<uint8_t> bytesBuffer(numBytes, 0x90);
 		MemCopy((uintptr_t)&bytesBuffer[0], address, bytesBuffer.size());
 		std::string hexString = ConvertVectorOfBytesToStringOfHex(bytesBuffer);
+#ifdef _DEBUG
 		logger.Log("Existing bytes: %s", hexString.c_str());
+#endif
 	}
 
 	// Place a trampoline hook from A to B while taking third-party hooks into consideration.
 	// Add extra clearance when the jump doesn't fit cleanly.
 	static void PlaceHook(uintptr_t addressToHook, uintptr_t destinationAddress, uintptr_t* returnAddress)
 	{
+#ifdef _DEBUG
 		logger.Log("Hooking...");
+#endif
 
 		// Most overlays don't care if we overwrite the 0xE9 jump and place it somewhere else, but MSI Afterburner does.
 		// So instead of overwriting jumps we follow them and place our jump at the final destination.
@@ -545,7 +574,9 @@ namespace MemoryUtils
 				hookedAddress, 
 				(uintptr_t)&InfoBufferForHookedAddresses[hookedAddress].originalBytes[0], 
 				InfoBufferForHookedAddresses[hookedAddress].originalBytes.size());
+#ifdef _DEBUG
 			logger.Log("Removed hook from %p", hookedAddress);
+#endif
 		}
 	}
 

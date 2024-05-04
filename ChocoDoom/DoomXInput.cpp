@@ -20,7 +20,7 @@ constexpr SHORT INPUT_DEADZONE_LS = (0.24f * std::numeric_limits<SHORT>::max());
 constexpr SHORT INPUT_DEADZONE_RS = (0.24f * std::numeric_limits<SHORT>::max());
 constexpr SHORT TRIGGER_ACTIVATION_THRESHOLD = (0.12f * std::numeric_limits<BYTE>::max());  // 12% for analog triggers digital activation
 
-static int RE_Control_ReadIn()
+static int XInput_Read()
 {
 	XINPUT_STATE state;
 	ZeroMemory(&state, sizeof(XINPUT_STATE));
@@ -138,7 +138,7 @@ void RE_Control()
 
 	// read in input
 	ev.type = ev_joystick;
-	ev.data1 = RE_Control_ReadIn();
+	ev.data1 = XInput_Read();
 	ev.data2 = 0;
 	ev.data3 = 0;
 	//ev.data4 = 0;

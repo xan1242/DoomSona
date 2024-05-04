@@ -21,6 +21,8 @@ extern "C" {
 #endif
 
 void DoomErrored(const char* str);
+void DoomDelayedExitSpinup();
+int bDoomIsAboutToExit();
 
 #ifdef __cplusplus
 }

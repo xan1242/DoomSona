@@ -247,7 +247,12 @@ wipe_EndScreen
   int	height )
 {
     wipe_scr_end = Z_Malloc(SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end), PU_STATIC, NULL);
-    I_ReadScreen(wipe_scr_end);
+    if (bDoomIsAboutToExit())
+    {
+        memset(wipe_scr_end, 0, SCREENWIDTH * SCREENHEIGHT * sizeof(*wipe_scr_end));
+    }
+    else
+        I_ReadScreen(wipe_scr_end);
     V_DrawBlock(x, y, width, height, wipe_scr_start); // restore start scr.
     return 0;
 }
@@ -285,8 +290,11 @@ wipe_ScreenWipe
     // final stuff
     if (rc)
     {
-	go = 0;
-	(*wipes[wipeno*3+2])(width, height, ticks);
+        if (!bDoomIsAboutToExit())
+        {
+            go = 0;
+            (*wipes[wipeno * 3 + 2])(width, height, ticks);
+        }
     }
 
     return !go;

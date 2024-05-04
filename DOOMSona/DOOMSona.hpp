@@ -4,6 +4,12 @@
 #ifndef DOOMSONA_HPP
 #define DOOMSONA_HPP
 
+#ifdef _DEBUG
+#define STRCONST const
+#else
+#define STRCONST constexpr
+#endif
+
 namespace DOOMSona
 {
 	enum DoomPersonaScriptParams

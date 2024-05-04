@@ -67,9 +67,10 @@ DirectXHook::DirectXHook(ID3DRenderer* renderer)
 
 void DirectXHook::Hook()
 {
+#ifdef _DEBUG
 	logger.Log("OnPresent: %p", &OnPresent);
 	logger.Log("OnResizeBuffers: %p", &OnResizeBuffers);
-
+#endif
 	//renderer->SetGetCommandQueueCallback(&GetCommandQueue);
 	IDXGISwapChain* dummySwapChain = CreateDummySwapChain();
 	HookSwapChain(dummySwapChain, (uintptr_t)&OnPresent, (uintptr_t)&OnResizeBuffers, &presentReturnAddress, &resizeBuffersReturnAddress);
@@ -135,11 +136,14 @@ IDXGISwapChain* DirectXHook::CreateDummySwapChain()
 	if (FAILED(result))
 	{
 		_com_error error(result);
+#ifdef _DEBUG
 		logger.Log("D3D11CreateDeviceAndSwapChain failed: %s", error.ErrorMessage());
+#endif
 		return nullptr;
 	}
-
+#ifdef _DEBUG
 	logger.Log("D3D11CreateDeviceAndSwapChain succeeded");
+#endif
 	return dummySwapChain;
 }
 

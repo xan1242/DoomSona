@@ -10,6 +10,7 @@
 #include "DOOMSona.hpp"
 #include "DoomD3DHook.hpp"
 #include "DoomAPIIntegration.hpp"
+#include "ModPath.hpp"
 
 #include "includes/injector/injector.hpp"
 #include "includes/assembly64.hpp"
@@ -24,6 +25,8 @@ namespace DOOMSona
     uint32_t personaCurrBGM;
 
     bool bUndoCBT;
+
+    std::filesystem::path thisModPath;
 
     //
     // Explanation:
@@ -43,13 +46,6 @@ namespace DOOMSona
     // // assuming DoomPersonaScriptParams enum is also in the flow script
     // int result = TBL_365_VALUE_MD(DoomPersonaScriptParams.DPSP_FILEEXISTS, 0 ,0);
     //
-
-#ifdef _DEBUG
-    #define STRCONST const
-#else
-    #define STRCONST constexpr
-#endif
-
     STRCONST std::string StringParamKeyword = "CACODEMON ";
     STRCONST const char* currModPathStr = "DOOMSona";
     STRCONST std::string argsFilename = "args.txt";
@@ -119,7 +115,8 @@ namespace DOOMSona
         {
             if (!DoomAPI::modHandle)
             {
-                std::filesystem::path libDoomPath = currModPathStr;
+                std::filesystem::path libDoomPath = thisModPath.parent_path();
+                libDoomPath /= currModPathStr;
                 libDoomPath /= "ChocoDoom.dll";
                 if (!DoomAPI::Init(libDoomPath))
                     return false;
@@ -229,6 +226,8 @@ namespace DOOMSona
 
         uint64_t retval = 0;
 
+        std::filesystem::path chkPath = thisModPath.parent_path();
+
         switch (arg0)
         {
         case DPSP_FINISHEDSHAREWARE:
@@ -246,12 +245,28 @@ namespace DOOMSona
             break;
         case DPSP_FILESIZE:
             // #TODO: handle filesystem exceptions
-            retval = std::filesystem::file_size(currStringParam);
+            chkPath /= currStringParam;
+            try
+            {
+                retval = std::filesystem::file_size(chkPath);
+            }
+            catch (const std::exception& e)
+            {
+                retval = 0;
+            }
             currStringParam.clear();
             break;
         case DPSP_FILEEXISTS:
             // #TODO: handle filesystem exceptions
-            retval = std::filesystem::exists(currStringParam);
+            chkPath /= currStringParam;
+            try
+            {
+                retval = std::filesystem::exists(chkPath);
+            }
+            catch (const std::exception& e)
+            {
+                retval = 0;
+            }
             currStringParam.clear();
             break;
         case DPSP_CURRBGM:
@@ -324,8 +339,8 @@ namespace DOOMSona
 
     void Init()
     {
+        thisModPath = ModPath::GetThisModulePath<std::filesystem::path>();
         OpenConsole();
-
         DoomD3DHook::Init();
 
         struct hkGameLoop

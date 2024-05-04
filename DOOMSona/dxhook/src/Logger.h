@@ -1,5 +1,7 @@
 #pragma once
 
+#ifdef _DEBUG
+
 #include <string>
 #include <cstdarg>
 
@@ -48,3 +50,5 @@ private:
 		return logFile;
 	}
 };
+
+#endif

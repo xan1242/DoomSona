@@ -22,6 +22,10 @@
 #include <string>
 #include <sstream>
 
+#include <chrono>
+#include <thread>
+
+
 extern "C" {
 #include "Chocolate DOOM/d_main.h"
 #include "Chocolate DOOM/z_zone.h"
@@ -33,6 +37,7 @@ const char* modPath;
 
 bool doomed = false;
 bool doomedonce = false;
+bool about_to_exit = false;
 bool bDoomErrored = false;
 
 
@@ -55,6 +60,7 @@ static void DoomMode_Init(void)
 	D_DoomInit_Lite();
 }
 
+
 //#pragma runtime_checks( "", off )
 
 bool bIsDoomRunning()
@@ -67,6 +73,25 @@ bool bHasDoomErrored()
     return bDoomErrored;
 }
 
+int bDoomIsAboutToExit()
+{
+    return about_to_exit;
+}
+
+constexpr DWORD DoomExitDelay = 1300;
+void DoomDelayedExit()
+{
+    Sleep(DoomExitDelay);
+    I_Quit();
+}
+
+void DoomDelayedExitSpinup()
+{
+    about_to_exit = true;
+    std::thread threadPostDelay(DoomDelayedExit);
+    threadPostDelay.detach();
+}
+
 void DoomExited()
 {
     for (char* s : sArgs)
@@ -77,7 +102,7 @@ void DoomExited()
     sArgs.clear();
     sArgs.shrink_to_fit();
 
-	doomed = false;
+    doomed = false;
 }
 
 //

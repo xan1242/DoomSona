@@ -36,7 +36,9 @@ namespace OF
 		Box* parentBox = nullptr;
 	};
 
+#ifdef _DEBUG
 	static Logger logger{ "OverlayFramework" };
+#endif
 	static HWND ofWindow = 0;
 	static int ofWindowWidth = 0;
 	static int ofWindowHeight = 0;
@@ -56,7 +58,9 @@ namespace OF
 		std::shared_ptr<DirectX::SpriteBatch> spriteBatch,
 		HWND window)
 	{
+#ifdef _DEBUG
 		logger.Log("Initialized");
+#endif
 		ofDevice = device;
 		ofSpriteBatch = spriteBatch;
 		ofWindow = window;
@@ -92,7 +96,9 @@ namespace OF
 	{
 		if (ofDevice.Get() == nullptr)
 		{
+#ifdef _DEBUG
 			logger.Log("Could not load texture, ofDevice is nullptr! Run InitFramework before attempting to load textures!");
+#endif
 			return -1;
 		}
 
@@ -106,21 +112,24 @@ namespace OF
 		//{
 		//	filepath = "hook_textures\\blank.jpg";
 		//}
-
+#ifdef _DEBUG
 		logger.Log("Loading texture: %s", filepath.string().c_str());
-
+#endif
 		//std::wstring wideString(filepath.length(), ' ');
 		//std::copy(filepath.begin(), filepath.end(), wideString.begin());
 		std::fstream file = std::fstream(filepath);
 		if (file.fail())
 		{
+#ifdef _DEBUG
 			logger.Log("Texture loading failed, file not found: %s", filepath.string().c_str());
+#endif
 			file.close();
 			return -1;
 		}
 		file.close();
 
 		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+#ifdef _DEBUG
 		if (FAILED(hr))
 		{
 			logger.Log("Error %#010x when initializing the COM library", hr);
@@ -129,7 +138,7 @@ namespace OF
 		{
 			logger.Log("Successfully initialized the COM library");
 		}
-
+#endif
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture = nullptr;
 		ID3D11Resource* res = nullptr;
 		HRESULT texResult = 0;
@@ -250,13 +259,17 @@ namespace OF
 
 		if (box == nullptr) 
 		{
+#ifdef _DEBUG
 			logger.Log("Attempted to render a nullptr Box!");
+#endif
 			return;
 		}
 
 		if (ofSpriteBatch == nullptr)
 		{
+#ifdef _DEBUG
 			logger.Log("Attempted to render with ofSpriteBatch as nullptr! Run InitFramework before attempting to draw!");
+#endif
 			return;
 		}
 
@@ -278,7 +291,9 @@ namespace OF
 
 		if (textureID < 0 || textureID > ofTextures.size() - 1) 
 		{
+#ifdef _DEBUG
 			logger.Log("'%i' is an invalid texture ID!", textureID);
+#endif
 			return;
 		}
 	

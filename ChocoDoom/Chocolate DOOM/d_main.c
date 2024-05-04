@@ -284,7 +284,10 @@ boolean D_Display (void)
 
 
     // menus go directly to the screen
-    M_Drawer ();          // menu is drawn even on top of everything
+    if (!bDoomIsAboutToExit())
+    {
+        M_Drawer();          // menu is drawn even on top of everything
+    }
     NetUpdate ();         // send out any new accumulation
 
     return (wipe);
@@ -384,7 +387,8 @@ void D_DoomLoop (void)
 
         wipestart = nowtime;
         wipe = !wipe_ScreenWipe(wipe_Melt, 0, 0, SCREENWIDTH, SCREENHEIGHT, tics);
-        M_Drawer();                            // menu is drawn even on top of wipes
+        if (!bDoomIsAboutToExit())
+            M_Drawer();                            // menu is drawn even on top of wipes
         I_FinishUpdate();                      // page flip or blit buffer
         return;
     }
