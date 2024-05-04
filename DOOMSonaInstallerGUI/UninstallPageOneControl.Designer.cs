@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.labelTitle = new System.Windows.Forms.Label();
-            this.labelDescription = new System.Windows.Forms.Label();
             this.cbASICleanup = new System.Windows.Forms.CheckBox();
+            this.labelDescription = new System.Windows.Forms.Label();
+            this.labelTitle = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,15 +46,16 @@
             this.panel1.Size = new System.Drawing.Size(574, 359);
             this.panel1.TabIndex = 0;
             // 
-            // labelTitle
+            // cbASICleanup
             // 
-            this.labelTitle.AutoSize = true;
-            this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTitle.Location = new System.Drawing.Point(3, 0);
-            this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(217, 32);
-            this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "Uninstall / Cleanup";
+            this.cbASICleanup.AutoSize = true;
+            this.cbASICleanup.Location = new System.Drawing.Point(4, 340);
+            this.cbASICleanup.Name = "cbASICleanup";
+            this.cbASICleanup.Size = new System.Drawing.Size(206, 17);
+            this.cbASICleanup.TabIndex = 4;
+            this.cbASICleanup.Text = "Re&move ASI Loader and Bootstrapper";
+            this.cbASICleanup.UseVisualStyleBackColor = true;
+            this.cbASICleanup.CheckedChanged += new System.EventHandler(this.cbASICleanup_CheckedChanged);
             // 
             // labelDescription
             // 
@@ -63,19 +64,18 @@
             this.labelDescription.Margin = new System.Windows.Forms.Padding(3, 16, 3, 0);
             this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(150, 13);
-            this.labelDescription.TabIndex = 1;
+            this.labelDescription.TabIndex = 99;
             this.labelDescription.Text = "Uninstallation Description Text";
             // 
-            // cbASICleanup
+            // labelTitle
             // 
-            this.cbASICleanup.AutoSize = true;
-            this.cbASICleanup.Location = new System.Drawing.Point(4, 340);
-            this.cbASICleanup.Name = "cbASICleanup";
-            this.cbASICleanup.Size = new System.Drawing.Size(206, 17);
-            this.cbASICleanup.TabIndex = 2;
-            this.cbASICleanup.Text = "Remove ASI Loader and Bootstrapper";
-            this.cbASICleanup.UseVisualStyleBackColor = true;
-            this.cbASICleanup.CheckedChanged += new System.EventHandler(this.cbASICleanup_CheckedChanged);
+            this.labelTitle.AutoSize = true;
+            this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTitle.Location = new System.Drawing.Point(3, 0);
+            this.labelTitle.Name = "labelTitle";
+            this.labelTitle.Size = new System.Drawing.Size(217, 32);
+            this.labelTitle.TabIndex = 99;
+            this.labelTitle.Text = "Uninstall / Cleanup";
             // 
             // UninstallPageOneControl
             // 

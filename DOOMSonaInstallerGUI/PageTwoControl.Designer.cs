@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
-            this.labelTitle = new System.Windows.Forms.Label();
-            this.labelDescription = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxDoom2WAD = new System.Windows.Forms.TextBox();
-            this.btnDoom2WAD = new System.Windows.Forms.Button();
-            this.btnDoom1WAD = new System.Windows.Forms.Button();
-            this.textBoxDoom1WAD = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.textBoxDoom1WAD = new System.Windows.Forms.TextBox();
+            this.btnDoom1WAD = new System.Windows.Forms.Button();
+            this.btnDoom2WAD = new System.Windows.Forms.Button();
+            this.textBoxDoom2WAD = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelDescription = new System.Windows.Forms.Label();
+            this.labelTitle = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.openFileDialog2 = new System.Windows.Forms.OpenFileDialog();
             this.panel1.SuspendLayout();
@@ -58,15 +58,57 @@
             this.panel1.Size = new System.Drawing.Size(574, 359);
             this.panel1.TabIndex = 0;
             // 
-            // labelTitle
+            // label2
             // 
-            this.labelTitle.AutoSize = true;
-            this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelTitle.Location = new System.Drawing.Point(3, 0);
-            this.labelTitle.Name = "labelTitle";
-            this.labelTitle.Size = new System.Drawing.Size(218, 32);
-            this.labelTitle.TabIndex = 0;
-            this.labelTitle.Text = "DOOM WAD Setup";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 310);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(81, 13);
+            this.label2.TabIndex = 99;
+            this.label2.Text = "DOOM 1 WAD:";
+            // 
+            // textBoxDoom1WAD
+            // 
+            this.textBoxDoom1WAD.Location = new System.Drawing.Point(87, 307);
+            this.textBoxDoom1WAD.Name = "textBoxDoom1WAD";
+            this.textBoxDoom1WAD.Size = new System.Drawing.Size(403, 20);
+            this.textBoxDoom1WAD.TabIndex = 4;
+            // 
+            // btnDoom1WAD
+            // 
+            this.btnDoom1WAD.Location = new System.Drawing.Point(496, 304);
+            this.btnDoom1WAD.Name = "btnDoom1WAD";
+            this.btnDoom1WAD.Size = new System.Drawing.Size(75, 23);
+            this.btnDoom1WAD.TabIndex = 5;
+            this.btnDoom1WAD.Text = "Br&owse...";
+            this.btnDoom1WAD.UseVisualStyleBackColor = true;
+            this.btnDoom1WAD.Click += new System.EventHandler(this.btnDoom1WAD_Click);
+            // 
+            // btnDoom2WAD
+            // 
+            this.btnDoom2WAD.Location = new System.Drawing.Point(496, 333);
+            this.btnDoom2WAD.Name = "btnDoom2WAD";
+            this.btnDoom2WAD.Size = new System.Drawing.Size(75, 23);
+            this.btnDoom2WAD.TabIndex = 7;
+            this.btnDoom2WAD.Text = "Bro&wse...";
+            this.btnDoom2WAD.UseVisualStyleBackColor = true;
+            this.btnDoom2WAD.Click += new System.EventHandler(this.btnDoom2WAD_Click);
+            // 
+            // textBoxDoom2WAD
+            // 
+            this.textBoxDoom2WAD.Location = new System.Drawing.Point(87, 336);
+            this.textBoxDoom2WAD.Name = "textBoxDoom2WAD";
+            this.textBoxDoom2WAD.Size = new System.Drawing.Size(403, 20);
+            this.textBoxDoom2WAD.TabIndex = 6;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 339);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(81, 13);
+            this.label1.TabIndex = 99;
+            this.label1.Text = "DOOM 2 WAD:";
             // 
             // labelDescription
             // 
@@ -75,60 +117,18 @@
             this.labelDescription.Margin = new System.Windows.Forms.Padding(3, 16, 3, 0);
             this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(125, 13);
-            this.labelDescription.TabIndex = 1;
+            this.labelDescription.TabIndex = 99;
             this.labelDescription.Text = "DOOM WAD Description";
             // 
-            // label1
+            // labelTitle
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 339);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "DOOM 2 WAD:";
-            // 
-            // textBoxDoom2WAD
-            // 
-            this.textBoxDoom2WAD.Location = new System.Drawing.Point(87, 336);
-            this.textBoxDoom2WAD.Name = "textBoxDoom2WAD";
-            this.textBoxDoom2WAD.Size = new System.Drawing.Size(403, 20);
-            this.textBoxDoom2WAD.TabIndex = 3;
-            // 
-            // btnDoom2WAD
-            // 
-            this.btnDoom2WAD.Location = new System.Drawing.Point(496, 333);
-            this.btnDoom2WAD.Name = "btnDoom2WAD";
-            this.btnDoom2WAD.Size = new System.Drawing.Size(75, 23);
-            this.btnDoom2WAD.TabIndex = 4;
-            this.btnDoom2WAD.Text = "Browse...";
-            this.btnDoom2WAD.UseVisualStyleBackColor = true;
-            this.btnDoom2WAD.Click += new System.EventHandler(this.btnDoom2WAD_Click);
-            // 
-            // btnDoom1WAD
-            // 
-            this.btnDoom1WAD.Location = new System.Drawing.Point(496, 304);
-            this.btnDoom1WAD.Name = "btnDoom1WAD";
-            this.btnDoom1WAD.Size = new System.Drawing.Size(75, 23);
-            this.btnDoom1WAD.TabIndex = 5;
-            this.btnDoom1WAD.Text = "Browse...";
-            this.btnDoom1WAD.UseVisualStyleBackColor = true;
-            this.btnDoom1WAD.Click += new System.EventHandler(this.btnDoom1WAD_Click);
-            // 
-            // textBoxDoom1WAD
-            // 
-            this.textBoxDoom1WAD.Location = new System.Drawing.Point(87, 307);
-            this.textBoxDoom1WAD.Name = "textBoxDoom1WAD";
-            this.textBoxDoom1WAD.Size = new System.Drawing.Size(403, 20);
-            this.textBoxDoom1WAD.TabIndex = 6;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 310);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(81, 13);
-            this.label2.TabIndex = 7;
-            this.label2.Text = "DOOM 1 WAD:";
+            this.labelTitle.AutoSize = true;
+            this.labelTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelTitle.Location = new System.Drawing.Point(3, 0);
+            this.labelTitle.Name = "labelTitle";
+            this.labelTitle.Size = new System.Drawing.Size(218, 32);
+            this.labelTitle.TabIndex = 99;
+            this.labelTitle.Text = "DOOM WAD Setup";
             // 
             // openFileDialog1
             // 

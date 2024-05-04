@@ -218,19 +218,19 @@ namespace DOOMSonaInstallerGUI
             {
                 if (gameModVersion.Length < 1)
                 {
-                    btnNext.Text = "Next";
+                    btnNext.Text = "&Next";
                     return;
                 }
 
                 string modVersion = InstallerLogic.GetModVersion();
                 if (modVersion != gameModVersion)
-                    btnNext.Text = "Update";
+                    btnNext.Text = "U&pdate";
                 else
-                    btnNext.Text = "Reinstall";
+                    btnNext.Text = "&Reinstall";
                 return;
             }
 
-            btnNext.Text = "Next";
+            btnNext.Text = "&Next";
         }
 
         private void btnNext_Click(object sender, EventArgs e)
@@ -265,7 +265,7 @@ namespace DOOMSonaInstallerGUI
             btnNext.Enabled = nextEnabled;
             btnNext.Visible = true;
 
-            btnNext.Text = "Finish";
+            btnNext.Text = "Fi&nish";
         }
 
         private void ShowCurrentUninstallPage()
@@ -284,10 +284,10 @@ namespace DOOMSonaInstallerGUI
                     break;
                 case 0:
                     btnBack.Enabled = true;
-                    btnNext.Text = "Uninstall";
+                    btnNext.Text = "U&ninstall";
                     break;
                 default:
-                    btnNext.Text = "Next";
+                    btnNext.Text = "&Next";
                     break;
             }
         }
@@ -313,14 +313,14 @@ namespace DOOMSonaInstallerGUI
                     SetFinalButtonFlow(false);
                     break;
                 case 1:
-                    btnNext.Text = "Install";
+                    btnNext.Text = "I&nstall";
                     break;
                 case 0:
                     SetBtnNextTextForFirstPage();
                     btnBack.Enabled = false;
                     break;
                 default:
-                    btnNext.Text = "Next";
+                    btnNext.Text = "&Next";
                     break;
             }
         }

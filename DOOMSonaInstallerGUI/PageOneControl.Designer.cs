@@ -61,8 +61,8 @@
             this.btnConfig.Location = new System.Drawing.Point(4, 304);
             this.btnConfig.Name = "btnConfig";
             this.btnConfig.Size = new System.Drawing.Size(118, 23);
-            this.btnConfig.TabIndex = 8;
-            this.btnConfig.Text = "Configure DOOM";
+            this.btnConfig.TabIndex = 4;
+            this.btnConfig.Text = "C&onfigure DOOM";
             this.btnConfig.UseVisualStyleBackColor = true;
             this.btnConfig.Click += new System.EventHandler(this.btnConfig_Click);
             // 
@@ -86,7 +86,7 @@
             this.labelGamePathTitle.Location = new System.Drawing.Point(3, 42);
             this.labelGamePathTitle.Name = "labelGamePathTitle";
             this.labelGamePathTitle.Size = new System.Drawing.Size(73, 13);
-            this.labelGamePathTitle.TabIndex = 10;
+            this.labelGamePathTitle.TabIndex = 99;
             this.labelGamePathTitle.Text = "Game Path:";
             // 
             // labelInstalledModVersion
@@ -95,7 +95,7 @@
             this.labelInstalledModVersion.Location = new System.Drawing.Point(3, 29);
             this.labelInstalledModVersion.Name = "labelInstalledModVersion";
             this.labelInstalledModVersion.Size = new System.Drawing.Size(176, 13);
-            this.labelInstalledModVersion.TabIndex = 9;
+            this.labelInstalledModVersion.TabIndex = 99;
             this.labelInstalledModVersion.Text = "Installed mod version text goes here";
             // 
             // labelGamePath
@@ -104,7 +104,7 @@
             this.labelGamePath.Location = new System.Drawing.Point(3, 55);
             this.labelGamePath.Name = "labelGamePath";
             this.labelGamePath.Size = new System.Drawing.Size(339, 13);
-            this.labelGamePath.TabIndex = 8;
+            this.labelGamePath.TabIndex = 99;
             this.labelGamePath.Text = "Game Path Unknown !!! Pass the path as an argument to this app first!";
             // 
             // labelModVersionTitle
@@ -114,7 +114,7 @@
             this.labelModVersionTitle.Location = new System.Drawing.Point(3, 0);
             this.labelModVersionTitle.Name = "labelModVersionTitle";
             this.labelModVersionTitle.Size = new System.Drawing.Size(81, 13);
-            this.labelModVersionTitle.TabIndex = 8;
+            this.labelModVersionTitle.TabIndex = 99;
             this.labelModVersionTitle.Text = "Mod Version:";
             // 
             // labelModVersion
@@ -123,7 +123,7 @@
             this.labelModVersion.Location = new System.Drawing.Point(3, 16);
             this.labelModVersion.Name = "labelModVersion";
             this.labelModVersion.Size = new System.Drawing.Size(135, 13);
-            this.labelModVersion.TabIndex = 6;
+            this.labelModVersion.TabIndex = 99;
             this.labelModVersion.Text = "Mod version text goes here";
             // 
             // btnUninstall
@@ -131,8 +131,8 @@
             this.btnUninstall.Location = new System.Drawing.Point(4, 333);
             this.btnUninstall.Name = "btnUninstall";
             this.btnUninstall.Size = new System.Drawing.Size(118, 23);
-            this.btnUninstall.TabIndex = 2;
-            this.btnUninstall.Text = "Uninstall / Cleanup";
+            this.btnUninstall.TabIndex = 5;
+            this.btnUninstall.Text = "&Uninstall / Cleanup";
             this.btnUninstall.UseVisualStyleBackColor = true;
             this.btnUninstall.Click += new System.EventHandler(this.btnUninstall_Click);
             // 
@@ -143,7 +143,7 @@
             this.labelTitle.Location = new System.Drawing.Point(3, 0);
             this.labelTitle.Name = "labelTitle";
             this.labelTitle.Size = new System.Drawing.Size(284, 32);
-            this.labelTitle.TabIndex = 1;
+            this.labelTitle.TabIndex = 99;
             this.labelTitle.Text = "Welcome to DOOMSona!";
             // 
             // labelDescription
@@ -154,7 +154,7 @@
             this.labelDescription.Margin = new System.Windows.Forms.Padding(3, 16, 3, 0);
             this.labelDescription.Name = "labelDescription";
             this.labelDescription.Size = new System.Drawing.Size(137, 13);
-            this.labelDescription.TabIndex = 0;
+            this.labelDescription.TabIndex = 99;
             this.labelDescription.Text = "Installation Description Text";
             this.labelDescription.UseMnemonic = false;
             // 
