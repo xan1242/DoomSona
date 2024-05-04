@@ -86,6 +86,7 @@ namespace DOOMSonaInstallerGUI
         }
 
         private const string versionTagFilename = "DOOMSonaVersion.tag";
+        private const string zmenuFilename = "ZMenuP5R.asi";
         private const string cleanupFileListFilename = "CleanupList.txt";
         public static string[] cleanupFileList;
 
@@ -558,6 +559,16 @@ namespace DOOMSonaInstallerGUI
                     }
                     else if (File.Exists(fullPath))
                     {
+                        if (path == "bass.dll")
+                        {
+                            string pathZMenu = Path.Combine(destPath, zmenuFilename);
+                            if (File.Exists(pathZMenu))
+                            {
+                                Log("Skipping because of ZMenu: " + fullPath);
+                                continue;
+                            }
+                        }
+
                         Log("Removing: " + fullPath);
                         File.Delete(fullPath);
                     }
