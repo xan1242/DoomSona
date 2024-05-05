@@ -1,6 +1,3 @@
 [submodule "DOOMSona/dxhook/DirectXTK"]
 	path = DOOMSona/dxhook/DirectXTK
 	url = https://github.com/microsoft/DirectXTK
-[submodule "DOOMSona/includes/asmjit"]
-	path = DOOMSona/includes/asmjit
-	url = https://github.com/asmjit/asmjit
