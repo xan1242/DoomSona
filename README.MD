@@ -1,4 +1,4 @@
-# DOOMSona (aka DOOM in Persona 5 Royale)
+# DOOMSona (aka DOOM in Persona 5 Royal)
 
 This is a heavily modified and extended fork of DOOM in Sonic Mania by TheStoneBanana.
 
