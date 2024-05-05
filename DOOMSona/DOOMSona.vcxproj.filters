@@ -86,6 +86,42 @@
     <ClCompile Include="DOOMSona.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DoomD3DHook.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\src\DirectXHook.cpp">
+      <Filter>Source Files\dxhook</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\src\Renderer.cpp">
+      <Filter>Source Files\dxhook</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\overlays\Example.cpp">
+      <Filter>Source Files\dxhook\overlays</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\CommonStates.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\DDSTextureLoader.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\DirectXHelpers.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\SpriteBatch.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\VertexTypes.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\BufferHelpers.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
+    <ClCompile Include="ModPath.hpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dxhook\DirectXTK\Src\WICTextureLoader.cpp">
+      <Filter>Source Files\dxhook\DirectXTK</Filter>
+    </ClCompile>
     <ClCompile Include="includes\asmjit\src\asmjit\x86\x86assembler.cpp">
       <Filter>Source Files\asmjit</Filter>
     </ClCompile>
@@ -262,42 +298,6 @@
     </ClCompile>
     <ClCompile Include="includes\asmjit\src\asmjit\core\zonevector.cpp">
       <Filter>Source Files\asmjit</Filter>
-    </ClCompile>
-    <ClCompile Include="DoomD3DHook.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\src\DirectXHook.cpp">
-      <Filter>Source Files\dxhook</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\src\Renderer.cpp">
-      <Filter>Source Files\dxhook</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\overlays\Example.cpp">
-      <Filter>Source Files\dxhook\overlays</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\CommonStates.cpp">
-      <Filter>Source Files\dxhook\DirectXTK</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\DDSTextureLoader.cpp">
-      <Filter>Source Files\dxhook\DirectXTK</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\DirectXHelpers.cpp">
-      <Filter>Source Files\dxhook\DirectXTK</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\SpriteBatch.cpp">
-      <Filter>Source Files\dxhook\DirectXTK</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\VertexTypes.cpp">
-      <Filter>Source Files\dxhook\DirectXTK</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\BufferHelpers.cpp">
-      <Filter>Source Files\dxhook\DirectXTK</Filter>
-    </ClCompile>
-    <ClCompile Include="ModPath.hpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dxhook\DirectXTK\Src\WICTextureLoader.cpp">
-      <Filter>Source Files\dxhook\DirectXTK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
