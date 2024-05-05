@@ -67,7 +67,7 @@
       <AdditionalDependencies>d3d11.lib;d3d12.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMSona.asi" "D:\Program Files (x86)\Steam\steamapps\common\P5R"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMSona.asi" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.addon.doomsona"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>@cd  "dxhook\DirectXTK\Src\Shaders"
