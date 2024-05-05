@@ -2,7 +2,7 @@
 
 This is a heavily modified and extended fork of DOOM in Sonic Mania by TheStoneBanana.
 
-You can find more info and download links on the [GameBanana page](TheStoneBanana).
+You can find more info and download links on the [GameBanana page](https://gamebanana.com/mods/511278).
 
 ## Fork Info
 
