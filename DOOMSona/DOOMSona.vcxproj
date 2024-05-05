@@ -69,6 +69,10 @@
     <PostBuildEvent>
       <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMSona.asi" "D:\Program Files (x86)\Steam\steamapps\common\P5R"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>@cd  "dxhook\DirectXTK\Src\Shaders"
+@CompileShaders.cmd</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -94,6 +98,10 @@
     <PostBuildEvent>
       <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\DOOMSona.asi" "D:\Program Files (x86)\Steam\steamapps\common\P5R"</Command>
     </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>@cd  "dxhook\DirectXTK\Src\Shaders"
+@CompileShaders.cmd</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DoomAPIIntegration.hpp" />
