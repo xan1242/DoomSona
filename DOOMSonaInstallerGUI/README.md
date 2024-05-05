@@ -40,8 +40,6 @@ It will only remove the files that are found from the list.
 
 You may launch the cleanup process at any time (even if the mod isn't installed).
 
-You may also optionally 
-
 NOTE: If ZMenu is detected as installed, `bass.dll` will not be touched.
 
 ## Reinstall / update process
