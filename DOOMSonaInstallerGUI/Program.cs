@@ -42,7 +42,9 @@ namespace DOOMSonaInstallerGUI
                 "--path PathToGame = Define the destination/game path\n\n" +
                 "--launchGame = Launches Persona 5 Royale through Reloaded-II after finishing the installation\n\n" +
                 "--disableGameRunningCheck = Disables checks if the game is already running or not\n\n" +
-                "--disableRldRunningCheck = Disables checks if Reloaded-II is already running or not", 
+                "--disableRldRunningCheck = Disables checks if Reloaded-II is already running or not\n\n" +
+                "--cleanup = Immediately starts the cleanup procedure (removes v1.0.0 old files)\n\n" +
+                "--autoProceed = Automatically closes when finished with cleanup/install/etc.", 
                 "Commandline Help", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
@@ -68,23 +70,31 @@ namespace DOOMSonaInstallerGUI
                     return;
                 }
 
-                    string GamePath = InstallerLogic.GetGamePath();
+                string GamePath = InstallerLogic.GetGamePath();
                 if (GamePath == null)
                 {
                     ShowNoArgError();
                     return;
                 }
 
-                if (InstallerLogic.GetModVersion() == null)
+                if (InstallerLogic.IsCmdFlagPresent("--cleanup"))
                 {
-                    ShowNoModVerError();
-                    return;
+                    InstallerLogic.bGotoUninstall = true;
+                    InstallerLogic.bUninstallMode = true;
                 }
-
-                if (!File.Exists("DOOMSona.zip"))
+                else
                 {
-                    ShowMissingFilesError();
-                    return;
+                    if (InstallerLogic.GetModVersion() == null)
+                    {
+                        ShowNoModVerError();
+                        return;
+                    }
+
+                    if (!File.Exists("DOOMSona.zip"))
+                    {
+                        ShowMissingFilesError();
+                        return;
+                    }
                 }
 
                 Application.EnableVisualStyles();

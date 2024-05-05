@@ -14,6 +14,7 @@ namespace DoomAPI
 {
 	inline HMODULE modHandle;
 	typedef void (*atexit_func_t)(void);
+	inline bool bAddedDllDir;
 
 
 	inline bool(*_bIsDoomRunning)();
@@ -246,7 +247,13 @@ namespace DoomAPI
 		if (modHandle)
 			Deinit();
 
-		modHandle = LoadLibrary(name.wstring().c_str());
+		if (!bAddedDllDir)
+		{
+			bAddedDllDir = true;
+			AddDllDirectory(name.parent_path().wstring().c_str());
+		}
+
+		modHandle = LoadLibraryEx(name.filename().wstring().c_str(), NULL, LOAD_LIBRARY_SEARCH_USER_DIRS);
 		if (!modHandle)
 			return false;
 

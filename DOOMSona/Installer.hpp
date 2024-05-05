@@ -5,7 +5,7 @@
 
 namespace Installer
 {
-	void Init();
+	void CleanupOldFiles();
 }
 
 #endif

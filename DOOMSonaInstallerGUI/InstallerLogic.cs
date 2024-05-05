@@ -6,11 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO.Compression;
 using Newtonsoft.Json;
-using static System.Net.Mime.MediaTypeNames;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using System.ComponentModel;
 using System.Runtime.Remoting.Contexts;
+using System.Windows.Forms;
 
 namespace DOOMSonaInstallerGUI
 {
@@ -85,7 +85,50 @@ namespace DOOMSonaInstallerGUI
             }
         }
 
+        private static void OptionallyLaunchGame()
+        {
+            if (IsCmdFlagPresent("--launchGame"))
+            {
+                try
+                {
+                    string pathConfigJson = Reloaded_GetCfgPath();
+                    if (pathConfigJson == null)
+                        return;
+
+                    dynamic jsonObject = Reloaded_ParseJSON(pathConfigJson);
+                    if (jsonObject == null)
+                        return;
+
+                    string pathLauncher = Reloaded_GetLauncherPath(jsonObject);
+                    if (pathLauncher == null)
+                        return;
+
+                    string pathGameExe = Path.Combine(GetGamePath(), "P5R.exe");
+
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.FileName = pathLauncher;
+                    startInfo.Arguments = "--launch \"" + pathGameExe + "\"";
+
+                    // Start the process
+                    Process.Start(startInfo);
+
+                }
+                catch (Exception)
+                {
+                    return;
+                }
+            }
+            return;
+        }
+
+        public static void DoExit()
+        {
+            OptionallyLaunchGame();
+            Application.Exit();
+        }
+
         private const string versionTagFilename = "DOOMSonaVersion.tag";
+        private const string ignoreTagFilename = "DOOMSonaIgnore.tag";
         private const string zmenuFilename = "ZMenuP5R.asi";
         private const string cleanupFileListFilename = "CleanupList.txt";
         public static string[] cleanupFileList;
@@ -101,6 +144,7 @@ namespace DOOMSonaInstallerGUI
         public static bool bInstallCompleted = false;
 
         public static bool bUninstallMode = false;
+        public static bool bGotoUninstall = false;
         public static bool bCleanupASILoader = false;
 
         public static void SetDoom1WADPath(string path)
@@ -546,6 +590,13 @@ namespace DOOMSonaInstallerGUI
                 {
                     Log("Removing: " + tagPath);
                     File.Delete(tagPath);
+                }
+
+                string tag2Path = Path.Combine(destPath, ignoreTagFilename);
+                if (File.Exists(tag2Path))
+                {
+                    Log("Removing: " + tag2Path);
+                    File.Delete(tag2Path);
                 }
 
                 foreach (string path in cleanupFileList)

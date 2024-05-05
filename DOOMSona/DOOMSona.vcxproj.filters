@@ -75,7 +75,7 @@
     <ClInclude Include="DoomAPIIntegration.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ReloadedPathIntegration.hpp">
+    <ClInclude Include="Installer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -298,6 +298,9 @@
     </ClCompile>
     <ClCompile Include="includes\asmjit\src\asmjit\core\zonevector.cpp">
       <Filter>Source Files\asmjit</Filter>
+    </ClCompile>
+    <ClCompile Include="Installer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

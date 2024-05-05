@@ -11,7 +11,8 @@
 #include "DOOMSona.hpp"
 #include "DoomD3DHook.hpp"
 #include "DoomAPIIntegration.hpp"
-#include "ReloadedPathIntegration.hpp"
+//#include "ReloadedPathIntegration.hpp"
+#include "Installer.hpp"
 #include "ModPath.hpp"
 
 #include "includes/injector/injector.hpp"
@@ -29,7 +30,7 @@ namespace DOOMSona
     bool bUndoCBT;
 
     std::filesystem::path thisModPath;
-    std::filesystem::path rldModPath;
+    //std::filesystem::path rldModPath;
     std::filesystem::path currRootPath;
 
     //
@@ -53,6 +54,7 @@ namespace DOOMSona
     STRCONST std::string StringParamKeyword = "CACODEMON ";
     STRCONST const char* currModPathStr = "DOOMSona";
     STRCONST std::string argsFilename = "args.txt";
+    const std::string overrideArgsFilename = "override-args.txt";
 
     std::string currStringParam;
     std::string currChocoDoomArgs = "";
@@ -85,12 +87,8 @@ namespace DOOMSona
             bFinishedShareware = false;
         }
 
-        static void ReadLaunchParamsOptFile()
+        static void ReadLaunchParamsOptFile(std::filesystem::path pathArgs, bool bOverride)
         {
-            std::filesystem::path pathArgs = currRootPath;
-            pathArgs /= currModPathStr;
-            pathArgs /= argsFilename;
-
             try
             {
                 if (!std::filesystem::exists(pathArgs))
@@ -124,9 +122,9 @@ namespace DOOMSona
 
             ifile.close();
 
-            if (currChocoDoomArgs.empty())
+            if (currChocoDoomArgs.empty() || bOverride)
                 currChocoDoomArgs = collectedArgs;
-            else
+            else if (currChocoDoomArgs != collectedArgs)
                 currChocoDoomArgs += collectedArgs;
         }
 
@@ -145,7 +143,19 @@ namespace DOOMSona
 
 
             DoomAPI::SetModPathW(baseDoomSona.wstring().c_str());
-            ReadLaunchParamsOptFile();
+
+            // read override-args.txt -- overrides anything set by the GFD script
+            std::filesystem::path pathArgs = currRootPath;
+            pathArgs /= currModPathStr;
+            pathArgs /= overrideArgsFilename;
+            ReadLaunchParamsOptFile(pathArgs, true);
+
+            // read args.txt
+            pathArgs = currRootPath;
+            pathArgs /= currModPathStr;
+            pathArgs /= argsFilename;
+            ReadLaunchParamsOptFile(pathArgs, false);
+
             DoomD3DHook::SetFramebufferEnabled(true);
 
             printf("DOOMSona: Launching DOOM with args: %s\n", currChocoDoomArgs.c_str());
@@ -266,8 +276,10 @@ namespace DOOMSona
             currStringParam.clear();
             break;
         case DPSP_FILESIZE:
-            // #TODO: handle filesystem exceptions
-            chkPath /= currStringParam;
+            if (std::filesystem::path(currRootPath).is_absolute())
+                chkPath = currRootPath;
+            else
+                chkPath /= currRootPath;
             try
             {
                 retval = std::filesystem::file_size(chkPath);
@@ -279,8 +291,10 @@ namespace DOOMSona
             currStringParam.clear();
             break;
         case DPSP_FILEEXISTS:
-            // #TODO: handle filesystem exceptions
-            chkPath /= currStringParam;
+            if (std::filesystem::path(currRootPath).is_absolute())
+                chkPath = currRootPath;
+            else
+                chkPath /= currRootPath;
             try
             {
                 retval = std::filesystem::exists(chkPath);
@@ -359,39 +373,39 @@ namespace DOOMSona
         return 1;
     }
 
-    static void GetPathFromReloadedModule()
-    {
-        int c = 0;
-
-        // wait for the module to appear
-        while (!ReloadedPath::modHandle)
-        {
-            ReloadedPath::Init("Reloaded-DOOMSonaLib.dll");
-            Sleep(1);
-            c++;
-
-            // stop after 5s
-            if (c >= 5000)
-                break;
-        }
-
-        if (!ReloadedPath::modHandle)
-        {
-            return;
-        }
-
-        size_t len = (ReloadedPath::GetModPathLength() + 1) * sizeof(char16_t);
-        char16_t* tmp = (char16_t*)(malloc(len));
-        if (tmp != nullptr)
-        {
-            memset(tmp, 0, len);
-            ReloadedPath::GetModPathW(tmp);
-            rldModPath = tmp;
-            free(tmp);
-
-            currRootPath = rldModPath.parent_path();
-        }
-    }
+    // static void GetPathFromReloadedModule()
+    // {
+    //     int c = 0;
+    // 
+    //     // wait for the module to appear
+    //     while (!ReloadedPath::modHandle)
+    //     {
+    //         ReloadedPath::Init("Reloaded-DOOMSonaLib.dll");
+    //         Sleep(1);
+    //         c++;
+    // 
+    //         // stop after 5s
+    //         if (c >= 5000)
+    //             break;
+    //     }
+    // 
+    //     if (!ReloadedPath::modHandle)
+    //     {
+    //         return;
+    //     }
+    // 
+    //     size_t len = (ReloadedPath::GetModPathLength() + 1) * sizeof(char16_t);
+    //     char16_t* tmp = (char16_t*)(malloc(len));
+    //     if (tmp != nullptr)
+    //     {
+    //         memset(tmp, 0, len);
+    //         ReloadedPath::GetModPathW(tmp);
+    //         rldModPath = tmp;
+    //         free(tmp);
+    // 
+    //         currRootPath = rldModPath.parent_path();
+    //     }
+    // }
 
     void Init()
     {
@@ -399,6 +413,7 @@ namespace DOOMSona
         currRootPath = thisModPath.parent_path();
 
         OpenConsole();
+        Installer::CleanupOldFiles();
         DoomD3DHook::Init();
 
         struct hkGameLoop
@@ -452,7 +467,7 @@ namespace DOOMSona
         injector::WriteMemory<uint8_t>(0x0000000140C8993B + 2, 0x7F, true); 
 
         // spin up a thread to wait for the reloaded module...
-        std::thread rldWaitThread(GetPathFromReloadedModule);
-        rldWaitThread.detach();
+        // std::thread rldWaitThread(GetPathFromReloadedModule);
+        // rldWaitThread.detach();
     }
 }

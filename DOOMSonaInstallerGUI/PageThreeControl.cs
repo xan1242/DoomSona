@@ -204,6 +204,12 @@ namespace DOOMSonaInstallerGUI
             }
 
             InstallerLogic.bInstallCompleted = true;
+
+            if (InstallerLogic.IsCmdFlagPresent("--autoProceed"))
+            {
+                InstallerLogic.DoExit();
+            }
+
             btnNotifier?.Invoke(true);
         }
 

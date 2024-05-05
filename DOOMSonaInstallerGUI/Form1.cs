@@ -81,43 +81,16 @@ namespace DOOMSonaInstallerGUI
         {
             InitializeComponent();
             InitializePagesList();
-        }
 
-        private void OptionallyLaunchGame()
-        {
-            if (InstallerLogic.IsCmdFlagPresent("--launchGame"))
+            if (InstallerLogic.bGotoUninstall)
             {
-                try
-                {
-                    string pathConfigJson = InstallerLogic.Reloaded_GetCfgPath();
-                    if (pathConfigJson == null)
-                        return;
-
-                    dynamic jsonObject = InstallerLogic.Reloaded_ParseJSON(pathConfigJson);
-                    if (jsonObject == null)
-                        return;
-
-                    string pathLauncher = InstallerLogic.Reloaded_GetLauncherPath(jsonObject);
-                    if (pathLauncher == null)
-                        return;
-
-                    string pathGameExe = Path.Combine(InstallerLogic.GetGamePath(), "P5R.exe");
-
-                    ProcessStartInfo startInfo = new ProcessStartInfo();
-                    startInfo.FileName = pathLauncher;
-                    startInfo.Arguments = "--launch \"" + pathGameExe + "\"";
-
-                    // Start the process
-                    Process.Start(startInfo);
-
-                }
-                catch (Exception)
-                {
-                    return;
-                }
+                bInUninstallFlow = true;
+                currentUninstallPageIndex = uninstallPagesList.Count - 1;
             }
-            return;
+
         }
+
+        
 
         private void AdvancePage()
         {
@@ -125,7 +98,7 @@ namespace DOOMSonaInstallerGUI
             {
                 if (currentUninstallPageIndex == uninstallPagesList.Count - 1)
                 {
-                    Application.Exit();
+                    InstallerLogic.DoExit();
                 }
 
                 if (currentUninstallPageIndex == 0)
@@ -153,8 +126,7 @@ namespace DOOMSonaInstallerGUI
 
             if (currentPageIndex == pagesList.Count - 1)
             {
-                OptionallyLaunchGame();
-                Application.Exit();
+                InstallerLogic.DoExit();
             }
 
             if (currentPageIndex == 0)
@@ -341,7 +313,7 @@ namespace DOOMSonaInstallerGUI
         {
             if (ShowCancelDialog() == DialogResult.Yes)
             {
-                Application.Exit();
+                InstallerLogic.DoExit();
             }
         }
 

@@ -43,12 +43,8 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <TargetExt>.asi</TargetExt>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <TargetExt>.asi</TargetExt>
-  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -67,7 +63,7 @@
       <AdditionalDependencies>d3d11.lib;d3d12.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMSona.asi" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.addon.doomsona"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Debug\DOOMSona.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.addon.doomsona"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>@cd  "dxhook\DirectXTK\Src\Shaders"
@@ -96,7 +92,7 @@
       <AdditionalDependencies>d3d11.lib;d3d12.lib;d3dcompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\DOOMSona.asi" "D:\Program Files (x86)\Steam\steamapps\common\P5R"</Command>
+      <Command>@copy /Y "D:\Temp\mania-doom\x64\Release\DOOMSona.dll" "D:\Temp\p5thing\Reloaded2\Mods\p5rpc.addon.doomsona"</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>@cd  "dxhook\DirectXTK\Src\Shaders"
@@ -117,7 +113,7 @@
     <ClInclude Include="dxhook\src\OverlayFramework.h" />
     <ClInclude Include="dxhook\src\Renderer.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="ReloadedPathIntegration.hpp" />
+    <ClInclude Include="Installer.hpp" />
     <ClInclude Include="UALCheck.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +189,7 @@
     <ClCompile Include="includes\asmjit\src\asmjit\x86\x86instdb.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\x86\x86operand.cpp" />
     <ClCompile Include="includes\asmjit\src\asmjit\x86\x86rapass.cpp" />
+    <ClCompile Include="Installer.cpp" />
     <ClCompile Include="ModPath.hpp" />
   </ItemGroup>
   <ItemGroup>
