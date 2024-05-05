@@ -433,7 +433,7 @@ namespace Installer
         cmd += "\"";
         cmd += installerPath.string().c_str();
         cmd += "\"";
-        cmd += " --launchGame";
+        cmd += " --launchGame --disableGameRunningCheck";
 
         std::system(cmd.c_str());
 

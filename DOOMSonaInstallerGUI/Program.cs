@@ -40,7 +40,9 @@ namespace DOOMSonaInstallerGUI
         {
             return MessageBox.Show("--help = Show this help\n\n" +
                 "--path PathToGame = Define the destination/game path\n\n" +
-                "--launchGame = Launches Persona 5 Royale through Reloaded-II after finishing the installation\n\n", 
+                "--launchGame = Launches Persona 5 Royale through Reloaded-II after finishing the installation\n\n" +
+                "--disableGameRunningCheck = Disables checks if the game is already running or not\n\n" +
+                "--disableRldRunningCheck = Disables checks if Reloaded-II is already running or not", 
                 "Commandline Help", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
 
@@ -60,7 +62,7 @@ namespace DOOMSonaInstallerGUI
                     return;
                 }
 
-                if (InstallerLogic.IsProcessRunning("P5R"))
+                if (InstallerLogic.IsProcessRunning("P5R") && !InstallerLogic.IsCmdFlagPresent("--disableGameRunningCheck"))
                 {
                     ShowGameRunningError();
                     return;

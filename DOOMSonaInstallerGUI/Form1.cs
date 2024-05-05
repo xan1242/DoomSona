@@ -159,13 +159,13 @@ namespace DOOMSonaInstallerGUI
 
             if (currentPageIndex == 0)
             {
-                if (InstallerLogic.IsProcessRunning("Reloaded-II"))
+                if (InstallerLogic.IsProcessRunning("Reloaded-II") && !InstallerLogic.IsCmdFlagPresent("--disableRldRunningCheck"))
                 {
                     ShowRldRunningError();
                     return;
                 }
 
-                if (InstallerLogic.IsProcessRunning("Reloaded-II32"))
+                if (InstallerLogic.IsProcessRunning("Reloaded-II32") && !InstallerLogic.IsCmdFlagPresent("--disableRldRunningCheck"))
                 {
                     ShowRld32RunningError();
                     return;
