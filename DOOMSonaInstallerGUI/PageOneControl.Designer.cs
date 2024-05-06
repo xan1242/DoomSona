@@ -28,17 +28,19 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnConfig = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.labelGamePathTitle = new System.Windows.Forms.Label();
-            this.labelInstalledModVersion = new System.Windows.Forms.Label();
             this.labelGamePath = new System.Windows.Forms.Label();
             this.labelModVersionTitle = new System.Windows.Forms.Label();
             this.labelModVersion = new System.Windows.Forms.Label();
-            this.btnUninstall = new System.Windows.Forms.Button();
+            this.btnOpenDir = new System.Windows.Forms.Button();
             this.labelTitle = new System.Windows.Forms.Label();
             this.labelDescription = new System.Windows.Forms.Label();
+            this.toolTipRootDir = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTipConfig = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -47,7 +49,7 @@
             // 
             this.panel1.Controls.Add(this.btnConfig);
             this.panel1.Controls.Add(this.panel2);
-            this.panel1.Controls.Add(this.btnUninstall);
+            this.panel1.Controls.Add(this.btnOpenDir);
             this.panel1.Controls.Add(this.labelTitle);
             this.panel1.Controls.Add(this.labelDescription);
             this.panel1.Location = new System.Drawing.Point(16, 16);
@@ -70,7 +72,6 @@
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel2.Controls.Add(this.labelGamePathTitle);
-            this.panel2.Controls.Add(this.labelInstalledModVersion);
             this.panel2.Controls.Add(this.labelGamePath);
             this.panel2.Controls.Add(this.labelModVersionTitle);
             this.panel2.Controls.Add(this.labelModVersion);
@@ -89,23 +90,14 @@
             this.labelGamePathTitle.TabIndex = 99;
             this.labelGamePathTitle.Text = "Game Path:";
             // 
-            // labelInstalledModVersion
-            // 
-            this.labelInstalledModVersion.AutoSize = true;
-            this.labelInstalledModVersion.Location = new System.Drawing.Point(3, 29);
-            this.labelInstalledModVersion.Name = "labelInstalledModVersion";
-            this.labelInstalledModVersion.Size = new System.Drawing.Size(176, 13);
-            this.labelInstalledModVersion.TabIndex = 99;
-            this.labelInstalledModVersion.Text = "Installed mod version text goes here";
-            // 
             // labelGamePath
             // 
             this.labelGamePath.AutoSize = true;
             this.labelGamePath.Location = new System.Drawing.Point(3, 55);
             this.labelGamePath.Name = "labelGamePath";
-            this.labelGamePath.Size = new System.Drawing.Size(339, 13);
+            this.labelGamePath.Size = new System.Drawing.Size(320, 13);
             this.labelGamePath.TabIndex = 99;
-            this.labelGamePath.Text = "Game Path Unknown !!! Pass the path as an argument to this app first!";
+            this.labelGamePath.Text = "Game Path Unknown !!! Pass the path as an argument to this app!";
             // 
             // labelModVersionTitle
             // 
@@ -126,15 +118,15 @@
             this.labelModVersion.TabIndex = 99;
             this.labelModVersion.Text = "Mod version text goes here";
             // 
-            // btnUninstall
+            // btnOpenDir
             // 
-            this.btnUninstall.Location = new System.Drawing.Point(4, 333);
-            this.btnUninstall.Name = "btnUninstall";
-            this.btnUninstall.Size = new System.Drawing.Size(118, 23);
-            this.btnUninstall.TabIndex = 5;
-            this.btnUninstall.Text = "&Uninstall / Cleanup";
-            this.btnUninstall.UseVisualStyleBackColor = true;
-            this.btnUninstall.Click += new System.EventHandler(this.btnUninstall_Click);
+            this.btnOpenDir.Location = new System.Drawing.Point(4, 333);
+            this.btnOpenDir.Name = "btnOpenDir";
+            this.btnOpenDir.Size = new System.Drawing.Size(118, 23);
+            this.btnOpenDir.TabIndex = 5;
+            this.btnOpenDir.Text = "&DOOM Root Dir...";
+            this.btnOpenDir.UseVisualStyleBackColor = true;
+            this.btnOpenDir.Click += new System.EventHandler(this.btnOpenDir_Click);
             // 
             // labelTitle
             // 
@@ -178,13 +170,14 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label labelDescription;
         private System.Windows.Forms.Label labelTitle;
-        private System.Windows.Forms.Button btnUninstall;
+        private System.Windows.Forms.Button btnOpenDir;
         private System.Windows.Forms.Label labelModVersion;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Label labelModVersionTitle;
         private System.Windows.Forms.Label labelGamePath;
-        private System.Windows.Forms.Label labelInstalledModVersion;
         private System.Windows.Forms.Label labelGamePathTitle;
         private System.Windows.Forms.Button btnConfig;
+        private System.Windows.Forms.ToolTip toolTipRootDir;
+        private System.Windows.Forms.ToolTip toolTipConfig;
     }
 }

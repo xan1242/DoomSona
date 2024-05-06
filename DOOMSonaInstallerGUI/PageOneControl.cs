@@ -15,42 +15,24 @@ namespace DOOMSonaInstallerGUI
 {
     public partial class PageOneControl : UserControl
     {
-        public event UninstallFlowStarter uninstallStarter;
-
         public PageOneControl()
         {
             InitializeComponent();
-            labelDescription.Text = 
-                "Welcome to DOOMSona! Please follow the instructions carefully:\n\n" +
-                "- Make sure that Reloaded-II is closed while installing DOOMSona.\n\n" +
-                "   - In the background, we will be setting a flag that disables R2's loader injection so that it uses\n" +
-                "     ThirteenAG's Ultimate ASI Loader to ensure maximum compatibility\n\n" +
-                "- Once the installation finishes, you can open Reloaded-II and launch Persona 5 Royal.\n\n" +
-                "You only need to go through this procedure once.\n\n" +
-                "For uninstallation, you can relaunch this utility via Reloaded-II's \"Configure Mod\" option.";
+            labelDescription.Text =
+                "On this page, you can:\n\n" +
+                "- Configure Chocolate DOOM by pressing \"Configure DOOM\"\n" +
+                "- Open the DOOMSona root directory by pressing \"DOOM Root Dir...\"\n\n" +
+                "On the next page, you can manage the installed WADs in your game as well as the command-line parameters.";
 
             labelModVersion.Text = "Mod version: ";
             string modVersion = InstallerLogic.GetModVersion();
             if (modVersion == null)
             {
                 labelModVersion.Text += "None";
-                btnUninstall.Enabled = false;
+                btnOpenDir.Enabled = false;
             }
             else
                 labelModVersion.Text += modVersion;
-
-
-            labelInstalledModVersion.Text = "Installed version: ";
-
-            string GameVersion = InstallerLogic.GetGameVersion();
-            if (GameVersion == null)
-            {
-                labelInstalledModVersion.Text += "None";
-            }
-            else
-            {
-                labelInstalledModVersion.Text += GameVersion;
-            }
 
             string GamePath = InstallerLogic.GetGamePath();
             if (GamePath != null)
@@ -60,8 +42,11 @@ namespace DOOMSonaInstallerGUI
             else
             {
                 btnConfig.Enabled = false;
-                btnUninstall.Enabled = false;
+                btnOpenDir.Enabled = false;
             }
+
+            toolTipRootDir.SetToolTip(btnOpenDir, "Opens the DOOMSona root directory in your file browser.");
+            toolTipConfig.SetToolTip(btnConfig, "Opens the Chocolate DOOM configurator.");
         }
 
         private void btnConfig_Click(object sender, EventArgs e)
@@ -92,9 +77,10 @@ namespace DOOMSonaInstallerGUI
             process.Start();
         }
 
-        private void btnUninstall_Click(object sender, EventArgs e)
+        private void btnOpenDir_Click(object sender, EventArgs e)
         {
-            uninstallStarter?.Invoke();
+            if (Directory.Exists("DOOMSona"))
+                Process.Start("DOOMSona");
         }
     }
 }

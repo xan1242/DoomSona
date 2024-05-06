@@ -25,14 +25,16 @@ namespace DOOMSonaInstallerGUI
         List<UserControl> uninstallPagesList = new List<UserControl>();
 
         private int currentPageIndex = 0;
+        private int prevPageIndex = -1;
         private int currentUninstallPageIndex = 0;
+        private int prevUninstallPageIndex = -1;
 
         private PageOneControl page1;
         private PageTwoControl page2;
         private PageThreeControl page3;
         //private PageFourControl page4;
 
-        private UninstallPageOneControl uninstallPage1;
+        //private UninstallPageOneControl uninstallPage1;
 
         private void InitializePagesList()
         {
@@ -41,19 +43,21 @@ namespace DOOMSonaInstallerGUI
             page3 = new PageThreeControl();
             //page4 = new PageFourControl();
 
-            uninstallPage1 = new UninstallPageOneControl();
+            //uninstallPage1 = new UninstallPageOneControl();
 
             //page1.pageAdv += AdvancePage;
             page3.btnNotifier += SetFinalButtonFlow;
             //page3.pageAdv += AdvancePage;
-            page1.uninstallStarter += StartUninstallFlow;
+
+            page1.Visible = false;
+            page2.Visible = false;
 
             pagesList.Add(page1);
             pagesList.Add(page2);
-            pagesList.Add(page3);
+            //pagesList.Add(page3);
             //pagesList.Add(page4);
 
-            uninstallPagesList.Add(uninstallPage1);
+            //uninstallPagesList.Add(uninstallPage1);
             uninstallPagesList.Add(page3);
         }
 
@@ -64,17 +68,7 @@ namespace DOOMSonaInstallerGUI
                 return DialogResult.Yes;
             }
 
-            return MessageBox.Show("Are you sure you want to cancel the installation?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-        }
-
-        private DialogResult ShowRldRunningError()
-        {
-            return MessageBox.Show("An application with the name \"Reloaded-II\" is found to be running.\n\nPlease close the application first before proceeding.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private DialogResult ShowRld32RunningError()
-        {
-            return MessageBox.Show("An application with the name \"Reloaded-II32\" is found to be running.\n\nPlease close the application first before proceeding.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return MessageBox.Show("Are you sure you want to cancel the setup?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
         }
 
         public Form1()
@@ -87,10 +81,7 @@ namespace DOOMSonaInstallerGUI
                 bInUninstallFlow = true;
                 currentUninstallPageIndex = uninstallPagesList.Count - 1;
             }
-
         }
-
-        
 
         private void AdvancePage()
         {
@@ -103,21 +94,11 @@ namespace DOOMSonaInstallerGUI
 
                 if (currentUninstallPageIndex == 0)
                 {
-                    if (InstallerLogic.IsProcessRunning("Reloaded-II"))
-                    {
-                        ShowRldRunningError();
-                        return;
-                    }
-
-                    if (InstallerLogic.IsProcessRunning("Reloaded-II32"))
-                    {
-                        ShowRld32RunningError();
-                        return;
-                    }
 
                     if (currentUninstallPageIndex < uninstallPagesList.Count - 1)
                     {
                         EnableAllFlowButtons();
+                        prevUninstallPageIndex = currentUninstallPageIndex;
                         currentUninstallPageIndex++;
                         ShowCurrentPage();
                     }
@@ -126,27 +107,16 @@ namespace DOOMSonaInstallerGUI
 
             if (currentPageIndex == pagesList.Count - 1)
             {
+                InstallerLogic.WriteTextToFile(Path.Combine("DOOMSona", "args.txt"), InstallerLogic.DOOMArgs);
+                InstallerLogic.WriteTextToFile(Path.Combine("DOOMSona", "override-args.txt"), InstallerLogic.DOOMOverrideArgs);
+
                 InstallerLogic.DoExit();
-            }
-
-            if (currentPageIndex == 0)
-            {
-                if (InstallerLogic.IsProcessRunning("Reloaded-II") && !InstallerLogic.IsCmdFlagPresent("--disableRldRunningCheck"))
-                {
-                    ShowRldRunningError();
-                    return;
-                }
-
-                if (InstallerLogic.IsProcessRunning("Reloaded-II32") && !InstallerLogic.IsCmdFlagPresent("--disableRldRunningCheck"))
-                {
-                    ShowRld32RunningError();
-                    return;
-                }
             }
 
             if (currentPageIndex < pagesList.Count - 1)
             {
                 EnableAllFlowButtons();
+                prevPageIndex = currentPageIndex;
                 currentPageIndex++;
                 ShowCurrentPage();
             }
@@ -158,12 +128,14 @@ namespace DOOMSonaInstallerGUI
             {
                 if (currentUninstallPageIndex > 0)
                 {
+                    prevUninstallPageIndex = currentUninstallPageIndex;
                     currentUninstallPageIndex--;
                     ShowCurrentPage();
                 }
                 else
                 {
                     bInUninstallFlow = false;
+                    prevPageIndex = currentPageIndex;
                     currentPageIndex = 0;
                     InstallerLogic.bUninstallMode = false;
                     ShowCurrentPage();
@@ -172,6 +144,7 @@ namespace DOOMSonaInstallerGUI
 
             if (currentPageIndex > 0)
             {
+                prevPageIndex = currentPageIndex;
                 currentPageIndex--;
                 ShowCurrentPage();
             }
@@ -180,30 +153,30 @@ namespace DOOMSonaInstallerGUI
         private void Form1_Load(object sender, EventArgs e)
         {
             ShowCurrentPage();
-            SetBtnNextTextForFirstPage();
+            //SetBtnNextTextForFirstPage();
         }
 
-        private void SetBtnNextTextForFirstPage()
-        {
-            string gameModVersion = InstallerLogic.GetGameVersion();
-            if (gameModVersion != null)
-            {
-                if (gameModVersion.Length < 1)
-                {
-                    btnNext.Text = "&Next";
-                    return;
-                }
-
-                string modVersion = InstallerLogic.GetModVersion();
-                if (modVersion != gameModVersion)
-                    btnNext.Text = "U&pdate";
-                else
-                    btnNext.Text = "&Reinstall";
-                return;
-            }
-
-            btnNext.Text = "&Next";
-        }
+        // private void SetBtnNextTextForFirstPage()
+        // {
+        //     string gameModVersion = InstallerLogic.GetGameVersion();
+        //     if (gameModVersion != null)
+        //     {
+        //         if (gameModVersion.Length < 1)
+        //         {
+        //             btnNext.Text = "&Next";
+        //             return;
+        //         }
+        // 
+        //         string modVersion = InstallerLogic.GetModVersion();
+        //         if (modVersion != gameModVersion)
+        //             btnNext.Text = "U&pdate";
+        //         else
+        //             btnNext.Text = "&Reinstall";
+        //         return;
+        //     }
+        // 
+        //     btnNext.Text = "&Next";
+        // }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
@@ -248,19 +221,22 @@ namespace DOOMSonaInstallerGUI
             UserControl currentPage = uninstallPagesList[currentUninstallPageIndex];
             panel1.Controls.Add(currentPage);
             currentPage.Visible = true;
+            if (prevUninstallPageIndex > 0)
+            {
+                UserControl prevPage = uninstallPagesList[prevUninstallPageIndex];
+                prevPage.Visible = false;
+            }
 
             switch (currentUninstallPageIndex)
             {
-                case 1:
-                    SetFinalButtonFlow(false);
-                    break;
-                case 0:
-                    btnBack.Enabled = true;
-                    btnNext.Text = "U&ninstall";
-                    break;
                 default:
                     btnNext.Text = "&Next";
                     break;
+            }
+
+            if (currentPageIndex == pagesList.Count - 1)
+            {
+                SetFinalButtonFlow(false);
             }
         }
 
@@ -279,21 +255,32 @@ namespace DOOMSonaInstallerGUI
             panel1.Controls.Add(currentPage);
             currentPage.Visible = true;
 
-            switch(currentPageIndex)
+            if (prevPageIndex > 0)
             {
-                case 2:
-                    SetFinalButtonFlow(false);
-                    break;
-                case 1:
-                    btnNext.Text = "I&nstall";
-                    break;
-                case 0:
-                    SetBtnNextTextForFirstPage();
-                    btnBack.Enabled = false;
-                    break;
+                UserControl prevPage = pagesList[prevPageIndex];
+                prevPage.Visible = false;
+            }
+
+            switch (currentPageIndex)
+            {
+                //case 2:
+                //    SetFinalButtonFlow(false);
+                //    break;
+                //case 1:
+                //    btnNext.Text = "I&nstall";
+                //    break;
+                //case 0:
+                //    SetBtnNextTextForFirstPage();
+                //    btnBack.Enabled = false;
+                //    break;
                 default:
                     btnNext.Text = "&Next";
                     break;
+            }
+
+            if (currentPageIndex == pagesList.Count - 1)
+            {
+                btnNext.Text = "Fi&nish";
             }
         }
 

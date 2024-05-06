@@ -24,16 +24,16 @@ namespace DOOMSonaInstallerGUI
             InitializeComponent();
             InitializeInstallerWorker();
 
-            if (InstallerLogic.bUninstallMode)
-            {
-                labelTitle.Text = "Uninstalling...";
-                labelDescription.Text = "Uninstalling, please wait...";
-            }
-            else
-            {
-                labelTitle.Text = "Installing...";
-                labelDescription.Text = "Installing, please wait...";
-            }
+            //if (InstallerLogic.bUninstallMode)
+            //{
+                labelTitle.Text = "Cleaning up old files...";
+                labelDescription.Text = "Cleaning up old files, please wait...";
+            //}
+            //else
+            //{
+            //    labelTitle.Text = "Installing...";
+            //    labelDescription.Text = "Installing, please wait...";
+            //}
 
             try
             {
@@ -68,7 +68,7 @@ namespace DOOMSonaInstallerGUI
             }
 
             float pct = (1.0f / 4.0f) * 100.0f;
-            worker.ReportProgress(Convert.ToInt32(pct), $"Uninstalling... {pct}%");
+            worker.ReportProgress(Convert.ToInt32(pct), $"Cleaning... {pct}%");
 
             if (InstallerLogic.bCleanupASILoader)
             {
@@ -79,7 +79,7 @@ namespace DOOMSonaInstallerGUI
                 }
 
                 pct = (2.0f / 4.0f) * 100.0f;
-                worker.ReportProgress(Convert.ToInt32(pct), $"Uninstalling... {pct}%");
+                worker.ReportProgress(Convert.ToInt32(pct), $"Cleaning... {pct}%");
 
                 int clnBootResult = InstallerLogic.PerformASIBootstrapperCleanup(InstallerLogic.GetGamePath());
                 if (clnBootResult != 0)
@@ -88,81 +88,81 @@ namespace DOOMSonaInstallerGUI
                 }
 
                 pct = (3.0f / 4.0f) * 100.0f;
-                worker.ReportProgress(Convert.ToInt32(pct), $"Uninstalling... {pct}%");
+                worker.ReportProgress(Convert.ToInt32(pct), $"Cleaning... {pct}%");
             }
 
             pct = (4.0f / 4.0f) * 100.0f;
-            worker.ReportProgress(Convert.ToInt32(pct), $"Uninstalling... {pct}%");
+            worker.ReportProgress(Convert.ToInt32(pct), $"Cleaning... {pct}%");
 
-            LogMessage("Uninstall / cleanup completed.");
+            LogMessage("Cleanup completed.");
         }
 
         private void InstallerWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker worker = sender as BackgroundWorker;
 
-            if (InstallerLogic.bUninstallMode)
-                LogMessage("Starting uninstallation...");
-            else
-                LogMessage("Starting installation...");
+            //if (InstallerLogic.bUninstallMode)
+                LogMessage("Starting cleanup...");
+            //else
+            //    LogMessage("Starting installation...");
 
             LogMessage("Destination: " + InstallerLogic.GetGamePath());
 
-            if (InstallerLogic.bUninstallMode)
-            {
+            //if (InstallerLogic.bUninstallMode)
+            //{
                 InstallerWorker_DoUninstallWork(sender, e, worker);
                 return;
-            }
-            else
-            {
-                if (InstallerLogic.GetGameVersion() != null)
-                {
-                    InstallerLogic.bCleanupASILoader = true;
-                    InstallerWorker_DoUninstallWork(sender, e, worker);
-                }
-
-                LogMessage("Extracting DOOMSona ZIP...");
-                int installResult = InstallerLogic.PerformInstall("DOOMSona.zip", InstallerLogic.GetGamePath(), ".");
-                if (installResult != 0)
-                {
-                    e.Result = installResult;
-                    e.Cancel = true;
-                    LogMessage("Installation failed. PerformInstall result: " + installResult);
-                    return;
-                }
-
-                float pct = (1.0f / 3.0f) * 100.0f;
-                worker.ReportProgress(Convert.ToInt32(pct), $"Installing... {pct}%");
-
-
-                LogMessage("Tagging installation with mod version...");
-                int tagResult = InstallerLogic.TagInstallationVersion(InstallerLogic.GetGamePath());
-                if (tagResult != 0)
-                {
-                    e.Result = tagResult;
-                    e.Cancel = true;
-                    LogMessage("Installation failed. TagInstallationVersion result: " + tagResult);
-                    return;
-                }
-
-                pct = (2.0f / 3.0f) * 100.0f;
-                worker.ReportProgress(Convert.ToInt32(pct), $"Installing... {pct}%");
-
-                LogMessage("Installing Reloaded-II Bootstrapper ASI & setting DontInject flag...");
-                int rldResult = InstallerLogic.Reloaded_InstallBootstrap(InstallerLogic.GetGamePath());
-                if (rldResult != 0)
-                {
-                    e.Result = rldResult;
-                    e.Cancel = true;
-                    LogMessage("Installation failed. Reloaded_InstallBootstrap result: " + rldResult);
-                    return;
-                }
-
-                pct = (3.0f / 3.0f) * 100.0f;
-                worker.ReportProgress(Convert.ToInt32(pct), $"Installing... {pct}%");
-
-                LogMessage("Installation completed.");
-            }
+            //}
+            // else
+            // {
+            //     if (InstallerLogic.GetGameVersion() != null)
+            //     {
+            //         InstallerLogic.bCleanupASILoader = true;
+            //         InstallerWorker_DoUninstallWork(sender, e, worker);
+            //     }
+            // 
+            //     LogMessage("Extracting DOOMSona ZIP...");
+            //     int installResult = InstallerLogic.PerformInstall("DOOMSona.zip", InstallerLogic.GetGamePath(), ".");
+            //     if (installResult != 0)
+            //     {
+            //         e.Result = installResult;
+            //         e.Cancel = true;
+            //         LogMessage("Installation failed. PerformInstall result: " + installResult);
+            //         return;
+            //     }
+            // 
+            //     float pct = (1.0f / 3.0f) * 100.0f;
+            //     worker.ReportProgress(Convert.ToInt32(pct), $"Installing... {pct}%");
+            // 
+            // 
+            //     LogMessage("Tagging installation with mod version...");
+            //     int tagResult = InstallerLogic.TagInstallationVersion(InstallerLogic.GetGamePath());
+            //     if (tagResult != 0)
+            //     {
+            //         e.Result = tagResult;
+            //         e.Cancel = true;
+            //         LogMessage("Installation failed. TagInstallationVersion result: " + tagResult);
+            //         return;
+            //     }
+            // 
+            //     pct = (2.0f / 3.0f) * 100.0f;
+            //     worker.ReportProgress(Convert.ToInt32(pct), $"Installing... {pct}%");
+            // 
+            //     LogMessage("Installing Reloaded-II Bootstrapper ASI & setting DontInject flag...");
+            //     int rldResult = InstallerLogic.Reloaded_InstallBootstrap(InstallerLogic.GetGamePath());
+            //     if (rldResult != 0)
+            //     {
+            //         e.Result = rldResult;
+            //         e.Cancel = true;
+            //         LogMessage("Installation failed. Reloaded_InstallBootstrap result: " + rldResult);
+            //         return;
+            //     }
+            // 
+            //     pct = (3.0f / 3.0f) * 100.0f;
+            //     worker.ReportProgress(Convert.ToInt32(pct), $"Installing... {pct}%");
+            // 
+            //     LogMessage("Installation completed.");
+            // }
         }
 
         private void InstallerWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -177,30 +177,30 @@ namespace DOOMSonaInstallerGUI
         {
             if ((e.Error != null) || (e.Cancelled))
             {
-                labelDescription.Text = "";
-                if (InstallerLogic.bUninstallMode)
-                {
-                    labelTitle.Text = "Uninstall Failed";
-                    LogMessage("Uninstall failed.");
-                }
-                else
-                {
-                    labelTitle.Text = "Installation Failed";
-                    LogMessage("Installation failed.");
-                }
+                //labelDescription.Text = "";
+                //if (InstallerLogic.bUninstallMode)
+                //{
+                    labelTitle.Text = "Cleanup Failed";
+                    LogMessage("Cleanup failed.");
+                //}
+                //else
+                //{
+                //    labelTitle.Text = "Installation Failed";
+                //    LogMessage("Installation failed.");
+                //}
             }
             else
             {
-                if (InstallerLogic.bUninstallMode)
-                {
+                //if (InstallerLogic.bUninstallMode)
+                //{
                     labelDescription.Text = "";
-                    labelTitle.Text = "Uninstall Complete";
-                }
-                else
-                {
-                    labelDescription.Text = "";
-                    labelTitle.Text = "Installation Complete";
-                }
+                    labelTitle.Text = "Cleanup Complete";
+               // }
+                //else
+               // {
+                //    labelDescription.Text = "";
+                //    labelTitle.Text = "Installation Complete";
+                //}
             }
 
             InstallerLogic.bInstallCompleted = true;

@@ -123,7 +123,8 @@ namespace DOOMSona
             ifile.close();
 
             if (currChocoDoomArgs.empty() || bOverride)
-                currChocoDoomArgs = collectedArgs;
+                if (!collectedArgs.empty())
+                    currChocoDoomArgs = collectedArgs;
             else if (currChocoDoomArgs != collectedArgs)
                 currChocoDoomArgs += collectedArgs;
         }

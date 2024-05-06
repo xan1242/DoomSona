@@ -43,7 +43,7 @@ namespace Installer
         exitApplicationImmediately();
     }
 
-    // Temporary v1.0.0 cleaner - we switched to containing the files fully within DOOM's directory now
+    // Temporary v1.0.0 cleaner - we switched to containing the files fully within DOOMSona's directory now
     // This should be removed with the next version release after this one ships
 	void CleanupOldFiles()
 	{
