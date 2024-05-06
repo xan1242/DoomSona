@@ -6,7 +6,7 @@ You can find more info and download links on the [GameBanana page](https://gameb
 
 ## Fork Info
 
-This repo contains 5 projects
+This repo contains 4 projects
 
 - ChocoDoom - the modified Chocolate DOOM Sonic Mania fork to work with D3D11
 
@@ -50,17 +50,13 @@ There are a few modifications applied to the DOOM fork, namely:
 
 ## Building
 
-1. Ensure that you have `7z` in your PATH
+1. Build the entire solution in Visual Studio
 
-2. Get [ThirteenAG's Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader/releases/latest) and place the x64 DLL as `dinput8.dll` in the `post-install` directory (you only need to do this once)
+2. Open the repository as the work directory in a cmd window
 
-3. Build the entire solution in Visual Studio
+3. Launch `post-install\GatherFiles.bat <build_type>` where `<build_type>` can be `Release` or `Debug`
 
-4. Open the repository as the work directory in a cmd window
-
-5. Launch `post-install\GatherFiles.bat <build_type>` where `<build_type>` can be `Release` or `Debug`
-
-6. You can find the files in the `.Debug Package` or `.Release Package` directory
+4. You can find the files in the `.Debug Package` or `.Release Package` directory
 
 ## Credits
 
