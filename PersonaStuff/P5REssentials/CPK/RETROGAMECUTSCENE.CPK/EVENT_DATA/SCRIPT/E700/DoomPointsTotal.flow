@@ -1,0 +1,82 @@
+int SUB_DoomPointsBaby()
+{
+    int LevelsCompleted = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.BABY, 0);
+    
+    if (LevelsCompleted >= 3)
+    {
+        return LevelsCompleted / 3;
+    }
+                   
+    return 0;
+}
+
+int SUB_DoomPointsEasy()
+{
+    int LevelsCompleted = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.EASY, 0);
+    
+    if (LevelsCompleted >= 2)
+    {
+        return LevelsCompleted / 2;
+    }
+
+    return 0;
+}
+
+int SUB_DoomPointsMedium()
+{
+    int LevelsCompleted = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.MEDIUM, 0);
+
+    return LevelsCompleted;
+}
+
+int SUB_DoomPointsHard()
+{
+    int LevelsCompleted = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.HARD, 0);
+
+    return LevelsCompleted * 2;
+}
+
+int SUB_DoomPointsNightmare()
+{
+    int LevelsCompleted = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.NIGHTMARE, 0);
+
+    return LevelsCompleted * 5;
+}
+
+
+int SUB_DoomPointsTotal()
+{
+    return SUB_DoomPointsBaby() + SUB_DoomPointsEasy() + SUB_DoomPointsMedium() + SUB_DoomPointsHard() + SUB_DoomPointsNightmare();
+}
+
+int SUB_DoomGetMostPlayedDifficulty()
+{
+    int difficulty = DoomSkill.BABY;
+    
+    int LevelsCompletedBaby = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.BABY, 0);
+    int LevelsCompletedEasy = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.EASY, 0);
+    int LevelsCompletedMedium = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.MEDIUM, 0);
+    int LevelsCompletedHard = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.HARD, 0);
+    int LevelsCompletedNightmare = TBL_365_VALUE_MD(DPSP.COMPLETEDLEVELSBYSKILL, DoomSkill.NIGHTMARE, 0);
+    
+    int maxLevel = LevelsCompletedBaby;
+    
+    if (LevelsCompletedEasy > maxLevel) 
+    {
+        difficulty = DoomSkill.EASY;
+    }
+    if (LevelsCompletedMedium > maxLevel) 
+    {
+        difficulty = DoomSkill.MEDIUM;
+    }
+    if (LevelsCompletedHard > maxLevel) 
+    {
+        difficulty = DoomSkill.HARD;
+    }
+    if (LevelsCompletedNightmare > maxLevel) 
+    {
+        difficulty = DoomSkill.NIGHTMARE;
+    }
+    
+    return difficulty;
+}

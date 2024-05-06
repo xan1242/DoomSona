@@ -1,0 +1,145 @@
+int CallDOOM( int WAD_Enumerator )
+{
+	int ErrorType = 0;
+
+	if ( WAD_Enumerator == DOOMWAD.DOOMFull )
+    {
+        if ( !Check_DOOMFullExists() )
+        {
+            ErrorType = ErrorLevels.FileNotFound;
+		    goto _exit_DOOM;
+        }
+
+        int DOOMFullTutFlag = 12463;
+    
+        if ( BIT_CHK( DOOMFullTutFlag ) == 0 )
+	    {
+            BIT_ON( DOOMFullTutFlag );
+            CALL_TUTORIAL( 2, 111 );
+        }
+
+	    WAIT( 10 );
+
+        DBG_PUTS( "CACODEMON -iwad DOOM.WAD" );
+    }
+    else if ( WAD_Enumerator == DOOMWAD.DOOM2 )
+    {
+        if ( !Check_DOOM2Exists() )
+        {
+            ErrorType = ErrorLevels.FileNotFound;
+		    goto _exit_DOOM;
+        }
+
+        int DOOM2TutFlag = 12464;
+    
+        if ( BIT_CHK( DOOM2TutFlag ) == 0 )
+	    {
+            BIT_ON( DOOM2TutFlag );
+            CALL_TUTORIAL( 2, 112 );
+        }
+
+	    WAIT( 10 );
+
+        DBG_PUTS( "CACODEMON -iwad DOOM2.WAD" );
+    }
+    else if ( WAD_Enumerator == DOOMWAD.FREEDOOM1 )
+    {
+        if ( !Check_FreeDOOM1Exists() )
+        {
+            ErrorType = ErrorLevels.FileNotFound;
+		    goto _exit_DOOM;
+        }
+
+        int FreeDOOM1TutFlag = 12465;
+    
+        if ( BIT_CHK( FreeDOOM1TutFlag ) == 0 )
+	    {
+            BIT_ON( FreeDOOM1TutFlag );
+            CALL_TUTORIAL( 2, 113 );
+        }
+
+	    WAIT( 10 );
+
+        DBG_PUTS( "CACODEMON -iwad freedoom1.wad" );
+    }
+    else if ( WAD_Enumerator == DOOMWAD.FREEDOOM2 )
+    {
+        if ( !Check_FreeDOOM2Exists() )
+        {
+            ErrorType = ErrorLevels.FileNotFound;
+		    goto _exit_DOOM;
+        }
+
+        int FreeDOOM2TutFlag = 12466;
+    
+        if ( BIT_CHK( FreeDOOM2TutFlag ) == 0 )
+	    {
+            BIT_ON( FreeDOOM2TutFlag );
+            CALL_TUTORIAL( 2, 114 );
+        }
+
+	    WAIT( 10 );
+
+        DBG_PUTS( "CACODEMON -iwad freedoom2.wad" );
+    }
+    else if ( WAD_Enumerator == DOOMWAD.CHEXQUEST1 )
+    {
+        if ( !Check_ChexQuestExists() )
+        {
+            ErrorType = ErrorLevels.FileNotFound;
+		    goto _exit_DOOM;
+        }
+
+        int ChexQuest1TutFlag = 12467;
+    
+        if ( BIT_CHK( ChexQuest1TutFlag ) == 0 )
+	    {
+            BIT_ON( ChexQuest1TutFlag );
+            CALL_TUTORIAL( 2, 115 );
+        }
+
+	    WAIT( 10 );
+
+        DBG_PUTS( "CACODEMON -iwad chex.wad" );
+    }
+    else
+    {        
+        if ( !Check_DOOMSharewareExists() )
+        {
+            ErrorType = ErrorLevels.FileNotFound;
+		    goto _exit_DOOM;
+        }
+        
+        int DOOMSharewareTutFlag = 12462;
+    
+        if ( BIT_CHK( DOOMSharewareTutFlag ) == 0 )
+	    {
+            BIT_ON( DOOMSharewareTutFlag );
+            CALL_TUTORIAL( 2, 110 );
+        }
+
+	    WAIT( 10 );
+
+        DBG_PUTS( "CACODEMON -iwad DOOM1.WAD" );
+    }
+
+    TBL_365_VALUE_MD( DPSP.APPLYDOOMARGS, 0, 0 );
+
+	int sharePlayResult;
+	sharePlayResult = CHECK_DISABLE_SHARE_PLAY( 1 );
+	
+	if ( sharePlayResult == 0 )
+	{
+        ErrorType = ErrorLevels.GameNotLoaded;
+		goto _exit_DOOM;
+	}
+	
+	while ( TBL_365_VALUE_MD( DPSP.ISGAMERUNNING, 0, 0 ) == 1 )
+	{
+		WAIT( 1 );
+	}
+	
+	_exit_DOOM:
+    PUT( TBL_365_VALUE_MD( DPSP.COMPLETEDLEVELS, 0, 0 ) );
+    return ErrorType;
+}

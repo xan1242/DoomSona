@@ -1,0 +1,41 @@
+bool Check_DOOMSharewareExists()
+{
+    DBG_PUTS( "CACODEMON DOOMSona\\DOOM1.WAD" );
+    
+    return TBL_365_VALUE_MD( DPSP.FILEEXISTS, 0, 0 ) == 1;
+}
+
+bool Check_DOOMFullExists()
+{
+    DBG_PUTS( "CACODEMON DOOMSona\\DOOM.WAD" );
+    
+    return TBL_365_VALUE_MD( DPSP.FILEEXISTS, 0, 0 ) == 1;
+}
+
+bool Check_DOOM2Exists()
+{
+    DBG_PUTS( "CACODEMON DOOMSona\\DOOM2.WAD" );
+    
+    return TBL_365_VALUE_MD( DPSP.FILEEXISTS, 0, 0 ) == 1;
+}
+
+bool Check_FreeDOOM1Exists()
+{
+    DBG_PUTS( "CACODEMON DOOMSona\\freedoom1.wad" );
+    
+    return TBL_365_VALUE_MD( DPSP.FILEEXISTS, 0, 0 ) == 1;
+}
+
+bool Check_FreeDOOM2Exists()
+{
+    DBG_PUTS( "CACODEMON DOOMSona\\freedoom2.wad" );
+    
+    return TBL_365_VALUE_MD( DPSP.FILEEXISTS, 0, 0 ) == 1;
+}
+
+bool Check_ChexQuestExists()
+{
+    DBG_PUTS( "CACODEMON DOOMSona\\chex.wad" );
+    
+    return TBL_365_VALUE_MD( DPSP.FILEEXISTS, 0, 0 ) == 1;
+}

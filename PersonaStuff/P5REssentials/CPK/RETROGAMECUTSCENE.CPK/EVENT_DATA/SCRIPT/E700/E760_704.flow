@@ -1,0 +1,491 @@
+
+// 
+// FlowScript decompiled using Atlus Script Tools by TGE (2017-2021)
+// In the unfortunate case of any bugs, please report them back to me.
+// 
+
+
+
+// 
+// Imports
+// 
+
+import( "E760_704.msg" );
+import( "CallDOOM.flow" ); // Main procedure that plays the selected WAD
+import( "DoomPersonaScriptParams.flow" ); // Enumerator for the first parameter in the TBL_365_VALUE_MD command
+import( "DOOM_WAD_Params.flow" ); // Enumerator for the different supported WADs
+import( "CheckFileExists.flow" ); // Sanity check to see if the WAD exists in the root directory to begin with
+import( "FileFailedToLoad.flow" ); // Quick message to tell the player that the WAD doesn't exist
+import( "FileFailedToLoad_message.msg" ); // Text for the messages in FileFailedToLoad.flow
+import( "ErrorLevels.flow" ); // Enumerator for different error levels
+import( "DoomPointsTotal.flow" ); // Procedure to calculate total unique levels completed, plus which difficulty was played the most.
+
+// 
+// Procedure declarations
+// 
+
+// Procedure Index: 0
+void e760_721_00_init()
+{
+    BIT_OFF( 3824 );
+    BIT_OFF( 3825 );
+    BIT_OFF( 3826 );
+    BIT_OFF( 3827 );
+    BIT_OFF( 3828 );
+    BIT_OFF( 3829 );
+    BIT_OFF( 3830 );
+    BIT_OFF( 3831 );
+    BIT_OFF( 3832 );
+    BIT_OFF( 3833 );
+    BIT_OFF( 3834 );
+    BIT_OFF( 3835 );
+    BIT_OFF( 3836 );
+    BIT_OFF( 3837 );
+    BIT_OFF( 3838 );
+    BIT_OFF( 3839 );
+    SET_COUNT( 60, 0 );
+    RESET_PC_PARAM_UP();
+    SET_COUNT( 60, GET_COUNT( 245 ) );
+    BIT_ON( 452 );
+    FLD_OBJ_POL_RELOAD();
+    SUB_DUMMY();
+}
+
+
+// Procedure Index: 1
+void e760_721_01()
+{
+    
+    EVT_SET_LOCAL_COUNT( 0, 1 );
+
+}
+
+
+// Procedure Index: 2
+void e760_721_02()
+{
+    int var1;
+    int var0;
+    var1 = EVT_GET_ASSET_RESHND( 3 );
+    MSG_WND_DSP();
+    
+    if ( BIT_CHK( 66 ) == 1 )
+    {
+        MSG( MSG_GAMESTART );
+    }
+    else 
+    {
+        MSG_MIND( MSG_GAMESTART_NULL, 0 );
+    }
+
+    MSG_WND_CLS();
+    MDL_SET_LOOKAT_MOTION( var1, 2, 2, 0 );
+
+}
+
+
+// Procedure Index: 3
+void e760_721_03()
+{
+
+}
+
+
+// Procedure Index: 4
+void e760_721_04()
+{    
+
+}
+
+
+// Procedure Index: 5
+void e760_721_05()
+{
+    
+}
+
+
+// Procedure Index: 6
+void e760_721_06()
+{
+    
+}
+
+
+// Procedure Index: 7
+void e760_721_07()
+{
+        
+}
+
+
+// Procedure Index: 8
+void e760_721_08()
+{
+    
+}
+
+
+// Procedure Index: 9
+void e760_721_09()
+{
+
+}
+
+
+// Procedure Index: 10
+void e760_721_10()
+{   
+
+}
+
+
+// Procedure Index: 11
+void e760_721_11()
+{
+    int var8;
+    var8 = EVT_GET_ASSET_RESHND( 3 );
+    int TotalPoints = SUB_DoomPointsTotal();
+    int MostPlayedDifficulty = SUB_DoomGetMostPlayedDifficulty();
+
+    if ( TotalPoints > 0 )
+    {
+        BIT_ON( 3832 );
+    }
+    
+    if ( EVT_GET_LOCAL_COUNT( 0 ) == 1 )
+    {
+        
+        if ( TBL_365_VALUE_MD( DPSP.COMPLETEDLEVELS, 0, 0 ) != 0 )
+        {
+            MSG_WND_DSP();
+            
+            if ( BIT_CHK( 66 ) == 1 )
+            {
+                if ( ( MostPlayedDifficulty == DoomSkill.BABY ) || ( MostPlayedDifficulty == DoomSkill.EASY ) )
+                {
+                    MSG( MSG_MorganaSass );
+                }
+                else if ( MostPlayedDifficulty == DoomSkill.MEDIUM )
+                {
+                    MSG( MSG_StageClear );
+                }
+                else if ( MostPlayedDifficulty == DoomSkill.HARD )
+                {
+                    MSG( MSG_MorganaImpressed );
+                }
+                else if ( MostPlayedDifficulty == DoomSkill.NIGHTMARE )
+                {
+                    MSG( MSG_MorganaShocked );
+                }
+            }
+            else 
+            {
+                if ( ( MostPlayedDifficulty == DoomSkill.BABY ) || ( MostPlayedDifficulty == DoomSkill.EASY ) )
+                {
+                    MSG_MIND( MND_Unimpressed, 0 );
+                }
+                else if ( MostPlayedDifficulty == DoomSkill.MEDIUM )
+                {
+                    MSG_MIND( MND_StageClear, 0 );
+                }
+                else if ( MostPlayedDifficulty == DoomSkill.HARD )
+                {
+                    MSG_MIND( MND_Impressed, 0 );
+                }
+                else if ( MostPlayedDifficulty == DoomSkill.NIGHTMARE )
+                {
+                    MSG_MIND( MND_Shocked, 0 );
+                }
+            }
+
+            MSG_WND_CLS();
+        }
+        else 
+        {
+            MSG_WND_DSP();
+            
+            if ( BIT_CHK( 66 ) == 1 )
+            {
+                MSG( MSG_StageGameOver );
+            }
+            else 
+            {
+                MSG_MIND( MND_StageGameOver, 0 );
+            }
+
+            MSG_WND_CLS();
+        }
+
+    }
+}
+
+
+// Procedure Index: 12
+void e760_721_12()
+{
+    int TotalPoints = SUB_DoomPointsTotal();
+
+    if ( ( BIT_CHK( 3832 ) == 1 ) && ( ( TotalPoints ) !=0 ) )
+    {
+        
+        if ( EVT_GET_LOCAL_COUNT( 0 ) == 1 )
+        {
+            MSG_WND_DSP();
+            
+            if ( TBL_365_VALUE_MD( DPSP.COMPLETEDLEVELS, 0, 0 ) != 0 )
+            {
+                if ( BIT_CHK( 66 ) == 1 )
+                {
+                    if ( ( TotalPoints ) >= 5  )
+                    {
+                        MSG( MSG_018_PROFGUTS_0 );
+                    }
+                    else if ( ( TotalPoints ) >= 1 )
+                    {
+                        MSG( MSG_018_GUTS_0 );
+                    }                    
+                }
+                else
+                {
+                    if ( ( TotalPoints ) >= 5 )
+                    {
+                        MSG_MIND( MND_018_PROFGUTS_0, 0 );
+                    }
+                    else if ( ( TotalPoints ) >= 1 )
+                    {
+                        MSG_MIND( MND_018_GUTS_0, 0 );
+                    }
+                }
+            }
+
+            MSG_WND_CLS();
+        }
+                
+    }    
+
+}
+
+
+// Procedure Index: 13
+void e760_721_13()
+{
+    int var10;
+    var10 = EVT_GET_ASSET_RESHND( 3 );
+
+    VOICE3_PLAY( 41 );
+    MDL_ANIM( var10, 74, 0, 10, 1 );
+    WAIT( 30 );
+
+    int TotalPoints = SUB_DoomPointsTotal();
+    
+    int RNGItem;
+    int RNGNumber = RND( 4 );
+
+    if ( RNGNumber == 0 )
+    {
+        RNGItem = 12288 + 6;
+    }
+    else if ( RNGNumber == 1 )
+    { 
+        RNGItem = 12288 + 14;
+    }
+    else if ( RNGNumber == 2 )
+    {
+        RNGItem = 12288 + 16;
+    }
+    else if ( RNGNumber == 3 )
+    {
+        RNGItem = 12288 + 24;
+    }
+    else if ( RNGNumber == 4 )
+    {
+        RNGItem = 12288 + 664;
+    }
+
+    
+    if ( TotalPoints >= 10 )
+    {
+        ADD_PC_ALL_PARAM( 0, 0, ( TotalPoints / 2 ), ( TotalPoints / 2 ), 0 );
+        GET_ITEM_BUF_RESET();
+        GET_ITEM_BUF_SET( ( RNGItem ), 5 );
+        SET_ITEM_NUM( ( RNGItem ), GET_ITEM_NUM( RNGItem ) + 5 );
+        GET_ITEMS_WINDOW( 0 );
+    }
+    else if ( TotalPoints >= 5 )
+    {
+        ADD_PC_ALL_PARAM( 0, 0, ( TotalPoints / 2 ), ( TotalPoints / 2 ), 0 );
+    }
+    else if ( TotalPoints >= 1 )
+    {
+        ADD_PC_ALL_PARAM( 0, 0, 0, TotalPoints, 0 );
+    }
+    
+}
+
+
+// Procedure Index: 14
+void e760_721_14()
+{
+    
+    int var12;
+    int var13;
+    int var11;
+    int TotalPoints = SUB_DoomPointsTotal();
+    var12 = EVT_GET_ASSET_RESHND( 3 );
+    var13 = EVT_GET_ASSET_RESHND( 4 );
+    MDL_ICON( var12, 26 );
+    
+    if ( TBL_365_VALUE_MD( DPSP.COMPLETEDLEVELS, 0, 0 ) == 0 )
+    {
+        if ( BIT_CHK( 66 ) == 1 )
+        {
+            MSG_WND_DSP();
+            MSG( MSG_FAILED_UP );
+            MSG_WND_CLS();
+        }
+        else 
+        {
+            MSG_WND_DSP();
+            MSG_MIND( MND_FAILED_UP, 0 );
+            MSG_WND_CLS();
+        }
+    }      
+
+    if ( ( TBL_365_VALUE_MD( DPSP.COMPLETEDLEVELS, 0, 0 ) != 0 ) && ( TotalPoints < 1 ) )
+    {
+        if ( BIT_CHK( 66 ) == 1 )
+        {
+            MSG_WND_DSP();
+            MSG( MSG_BABY_EASY_FAILED_UP );
+            MSG_WND_CLS();
+        }
+        else 
+        {
+            MSG_WND_DSP();
+            MSG_MIND( MND_BABY_EASY_FAILED_UP, 0 );
+            MSG_WND_CLS();
+        }
+    }
+
+    VOICE3_PLAY( 41 );
+    MDL_SET_LOOKAT_MOTION( var12, 2, 2, 0 );
+    ADD_PC_ALL_PARAM( 0, 0, 0, 1, 0 );
+}
+
+
+// Procedure Index: 15
+void e760_721_15()
+{
+    int var14;
+    var14 = GET_ITEM_NUM( ( 12288 + 362 ) );
+    GET_ITEM_WINDOW( ( 12288 + 362 ), 1, 0 );
+    var14 = ( var14 + 1 );
+    SET_ITEM_NUM( ( 12288 + 362 ), var14 );
+}
+
+
+// Procedure Index: 16
+void e760_721_16()
+{
+    int var16;
+    var16 = GET_TIME();
+    
+    if ( var16 == 5 )
+    {
+        
+        MSG_WND_DSP();
+        
+        if ( BIT_CHK( 66 ) == 1 )
+        {
+            MSG( MSG_GAME_END_MORU );
+        }
+        else 
+        {
+            MSG( MND_GAME_END_NULL );
+        }
+
+    }
+    else if ( BIT_CHK( 66 ) == 1 )
+    {
+        MSG( MSG_GAME_END_MORU_DAY );
+    }
+    else 
+    {
+        MSG( MND_GAME_END_NULL_DAY );
+    }
+
+    MSG_WND_CLS();
+    
+}
+
+
+// Procedure Index: 17
+void e760_721_17()
+{    
+
+}
+
+
+// Procedure Index: 18
+void e760_721_18()
+{
+    BIT_OFF( 3824 );
+    BIT_OFF( 3825 );
+    BIT_OFF( 3826 );
+    BIT_OFF( 3827 );
+    BIT_OFF( 3828 );
+    BIT_OFF( 3829 );
+    BIT_OFF( 3830 );
+    BIT_OFF( 3831 );
+    BIT_OFF( 3832 );
+    BIT_OFF( 3833 );
+    BIT_OFF( 3834 );
+    BIT_OFF( 3835 );
+    BIT_OFF( 3836 );
+    BIT_OFF( 3837 );
+    BIT_OFF( 3838 );
+    BIT_OFF( 3839 );
+    SET_COUNT( 60, 0 );
+    RESET_PC_PARAM_UP();
+    BIT_OFF( 452 );
+}
+
+
+// Procedure Index: 19
+void e760_721_19()
+{
+    
+    if ( BIT_CHK( 3078 ) == 1 )
+    {
+        FADEOUT( 0, 30 );
+    }
+    else 
+    {
+        FADEOUT( 15, 30 );
+    }
+
+    FADE_SYNC();
+}
+
+
+// Procedure Index: 20
+void SUB_DUMMY()
+{    
+
+}
+
+// Proc 21
+void LaunchDOOM()
+{
+    BIT_OFF( 3839 );
+    EVT_SE_STOP( 0, 1 );
+    int ErrorType = CallDOOM( DOOMWAD.DOOM2 );
+
+    if ( ErrorType != ErrorLevels.No_Error )
+    {
+        SUB_FileFailedToLoad();
+    }
+
+}
+

@@ -1,0 +1,7 @@
+void SUB_FileFailedToLoad()
+{
+    MSG_WND_DSP();
+    MSG( MORGANA_GAME_FAILED_TO_LOAD );
+    MSG_WND_CLS();
+    MSG_SYSTEM( SYS_GAME_FAILED_TO_LOAD );
+}

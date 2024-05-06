@@ -1,0 +1,10 @@
+import("SCRIPTTUTORIAL_DAILY_112.msg");
+
+// Procedure Index: 0
+void tutorial_disp()
+{
+    MSG_WND_DSP();
+    MSG_TUTORIAL( DOOM_2_TUTORIAL_MSG01, 0, 670 );
+    MSG_TUTORIAL( DOOM_2_TUTORIAL_MSG02, 0, 668 );
+    MSG_WND_CLS();
+}

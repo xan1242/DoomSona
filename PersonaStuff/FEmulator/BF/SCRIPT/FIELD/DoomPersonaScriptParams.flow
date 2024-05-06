@@ -1,0 +1,24 @@
+enum DPSP
+{
+    ISGAMERUNNING,
+    CURRBGM,
+    FILEEXISTS,
+    FILESIZE,
+    APPLYDOOMARGS,
+    COMPLETEDLEVELS,
+    COMPLETEDLEVELSBYSKILL,
+    FINISHEDSHAREWARE,
+
+    COUNT
+}
+
+enum DoomSkill
+{
+    BABY,
+    EASY,
+    MEDIUM,
+    HARD,
+    NIGHTMARE,
+
+    COUNT
+}

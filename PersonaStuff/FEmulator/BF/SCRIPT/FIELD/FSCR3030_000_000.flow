@@ -1,0 +1,244 @@
+import( "DoomPersonaScriptParams.flow" ); // Enumerator for the first parameter in the TBL_365_VALUE_MD command
+import( "DOOM_WAD_Params.flow" ); // Enumerator for the different supported WADs
+import( "CheckFileExists.flow" ); // Sanity check to see if the WAD exists in the root directory to begin with.
+import( "FileFailedToLoad.flow" ); // Quick message to tell the player that the WAD doesn't exist.
+import( "FileFailedToLoad_message.msg" ); // Text for the messages in FileFailedToLoad.flow
+import( "SUB_DOOM_MAIN.flow" ); // Main procedure that plays the selected WAD.
+import( "ErrorLevels.flow" ); // Enumerator for different error levels.
+
+void SUB_TVGame_MAIN_hook()
+{
+    
+    if ( BIT_CHK( 4166 ) == 0 )
+    {
+        MSG_WND_DSP();
+        MSG( MSG_MyRoomTable_GameQ );
+        MSG_WND_CLS();
+    }
+
+    sVar3 = 0;
+    DATE_DISP( 0 );
+    BIT_ON( 6205 );
+    _72:
+    
+    if ( 1 )
+    {
+        CALL_BOOK_READ( 0x00040000 );
+        DATE_DISP( 1 );
+        BIT_OFF( 6205 );
+        
+        if ( GET_COUNT( 245 ) == 54 )
+        {
+            SUB_StarF_MAIN();
+            
+            if ( sVar3 == 1 )
+            {
+                goto _73;
+            }
+
+        }
+        else if ( GET_COUNT( 245 ) == 57 )
+        {
+            SUB_PunchO_MAIN();
+            
+            if ( sVar3 == 1 )
+            {
+                goto _73;
+            }
+
+        }
+        else if ( GET_COUNT( 245 ) == 62 )
+        {
+            SUB_AkaTetsu_MAIN();
+            
+            if ( sVar3 == 1 )
+            {
+                goto _73;
+            }
+
+        }
+        else if ( GET_COUNT( 245 ) == 63 )
+        {
+            SUB_Goketsuji_MAIN();
+            
+            if ( sVar3 == 1 )
+            {
+                goto _73;
+            }
+
+        }
+        else if ( GET_COUNT( 245 ) == 0x40 )
+        {
+            SUB_Goemon_MAIN();
+            
+            if ( sVar3 == 1 )
+            {
+                goto _73;
+            }
+
+        }
+        else if ( GET_COUNT( 245 ) == 65 )
+        {
+            SUB_Sarutahiko_MAIN();
+            
+            if ( sVar3 == 1 )
+            {
+                goto _73;
+            }
+
+        }
+        else if ( GET_COUNT( 245 ) == 56 )
+        {
+            SUB_FeatherMAN_MAIN();
+            
+            if ( sVar3 == 1 )
+            {
+                goto _73;
+            }
+
+        }
+		else if ( GET_COUNT( 245 ) == 73 )
+        {
+            
+            if ( Check_DOOMSharewareExists() )
+            {
+                SUB_DOOM_MAIN( DOOMWAD.DOOMShareware );
+            
+                if ( sVar3 == 1 )
+                {
+                    FLD_LOCAL_FLAG_ON( ( 49152 + 49 ) );
+                    FLD_SET_LOCAL_COUNT( ( 49152 + 12 ), 702 );
+                    goto _73;
+                }
+            }
+            else
+            {
+                    SUB_FileFailedToLoad();
+                    goto _73;
+            } 
+
+        }
+        else if ( GET_COUNT( 245 ) == 74 )
+        {
+            
+            if ( Check_DOOMFullExists() )
+            {
+                SUB_DOOM_MAIN( DOOMWAD.DOOMFull );
+            
+                if ( sVar3 == 1 )
+                {
+                    FLD_LOCAL_FLAG_ON( ( 49152 + 49 ) );
+                    FLD_SET_LOCAL_COUNT( ( 49152 + 12 ), 703 );
+                    goto _73;
+                }
+            }
+            else
+            {
+                SUB_FileFailedToLoad();
+                goto _73;
+            }
+            
+            
+        }
+        else if ( GET_COUNT( 245 ) == 75 )
+        {
+            
+            if ( Check_DOOM2Exists() )
+            {
+                SUB_DOOM_MAIN( DOOMWAD.DOOM2 );
+            
+                if ( sVar3 == 1 )
+                {
+                    FLD_LOCAL_FLAG_ON( ( 49152 + 49 ) );
+                    FLD_SET_LOCAL_COUNT( ( 49152 + 12 ), 704 );
+                    goto _73;
+                }
+            }
+            else
+            {
+                SUB_FileFailedToLoad();
+                goto _73;
+            }
+            
+        }
+        else if ( GET_COUNT( 245 ) == 76 )
+        {
+            
+            if ( Check_FreeDOOM1Exists() )
+            {
+                SUB_DOOM_MAIN( DOOMWAD.FREEDOOM1 );
+            
+                if ( sVar3 == 1 )
+                {
+                    FLD_LOCAL_FLAG_ON( ( 49152 + 49 ) );
+                    FLD_SET_LOCAL_COUNT( ( 49152 + 12 ), 705 );
+                    goto _73;
+                }
+            }
+            else
+            {
+                SUB_FileFailedToLoad();
+                goto _73;
+            }
+            
+            
+        }
+        else if ( GET_COUNT( 245 ) == 77 )
+        {
+            
+            if ( Check_FreeDOOM2Exists() )
+            {
+                SUB_DOOM_MAIN( DOOMWAD.FREEDOOM2 );
+            
+                if ( sVar3 == 1 )
+                {
+                    FLD_LOCAL_FLAG_ON( ( 49152 + 49 ) );
+                    FLD_SET_LOCAL_COUNT( ( 49152 + 12 ), 706 );
+                    goto _73;
+                }
+            }
+            else
+            {
+                SUB_FileFailedToLoad();
+                goto _73;
+            }
+            
+            
+        }
+        else if ( GET_COUNT( 245 ) == 78 )
+        {
+            
+            if ( Check_ChexQuestExists() )
+            {
+                SUB_DOOM_MAIN( DOOMWAD.CHEXQUEST1 );
+            
+                if ( sVar3 == 1 )
+                {
+                    FLD_LOCAL_FLAG_ON( ( 49152 + 49 ) );
+                    FLD_SET_LOCAL_COUNT( ( 49152 + 12 ), 707 );
+                    goto _73;
+                }
+            }
+            else
+            {
+                SUB_FileFailedToLoad();
+                goto _73;
+            }
+            
+            
+        }
+
+        else 
+        {
+            DATE_DISP( 1 );
+            BIT_OFF( 6205 );
+            goto _73;
+        }
+
+        goto _72;
+        
+    }
+
+    _73:
+}
+

@@ -99,7 +99,7 @@ IF EXIST "%_FILERELOADEDJSON%" (
     COPY /Y "%_FILERELOADEDJSON%" ".%BuildType% Package\p5rpc.addon.doomsona"
 )
 
-SET _FILERELOADEDPNG="ReloadedModStuff\Preview.png"
+SET _FILERELOADEDPNG="ReloadedModStuff\Doomsona_Thumbnail.jpg"
 IF EXIST "%_FILERELOADEDPNG%" (
     COPY /Y "%_FILERELOADEDPNG%" ".%BuildType% Package\p5rpc.addon.doomsona"
 )

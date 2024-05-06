@@ -1,0 +1,7 @@
+enum ErrorLevels
+{
+    No_Error,
+    FileNotFound,
+    GameNotLoaded,
+    COUNT
+}

@@ -1,0 +1,10 @@
+enum DOOMWAD
+{
+    DOOMShareware,
+    DOOMFull,
+    DOOM2,
+    FREEDOOM1,
+    FREEDOOM2,
+    CHEXQUEST1,
+    DOOMWADCOUNT
+}

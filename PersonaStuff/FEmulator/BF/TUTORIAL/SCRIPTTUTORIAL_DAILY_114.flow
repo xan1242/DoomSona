@@ -1,0 +1,10 @@
+import("SCRIPTTUTORIAL_DAILY_114.msg");
+
+// Procedure Index: 0
+void tutorial_disp()
+{
+    MSG_WND_DSP();
+    MSG_TUTORIAL( FREEDOOM_2_TUTORIAL_MSG01, 0, 672 );
+    MSG_TUTORIAL( FREEDOOM_2_TUTORIAL_MSG02, 0, 668 );
+    MSG_WND_CLS();
+}
