@@ -19,6 +19,11 @@ namespace DOOMSonaInstallerGUI
         public event FinalButtonFlowNotifier btnNotifier;
         private bool bLogFileReady = false;
 
+        private DialogResult ShowDoneDialog()
+        {
+            return MessageBox.Show("DOOMSona v1.0.0 was removed. Press OK to continue.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+        }
+
         public PageThreeControl()
         {
             InitializeComponent();
@@ -204,6 +209,8 @@ namespace DOOMSonaInstallerGUI
             }
 
             InstallerLogic.bInstallCompleted = true;
+
+            ShowDoneDialog();
 
             if (InstallerLogic.IsCmdFlagPresent("--autoProceed"))
             {

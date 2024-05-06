@@ -11,7 +11,7 @@
   "ModR2RManagedDll32": "",
   "ModR2RManagedDll64": "",
   "ModNativeDll32": "",
-  "ModNativeDll64": "Reloaded-DOOMSonaLib.dll",
+  "ModNativeDll64": "DOOMSona.dll",
   "Tags": [],
   "CanUnload": null,
   "HasExports": null,

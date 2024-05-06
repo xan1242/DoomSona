@@ -7,7 +7,6 @@ namespace Installer
 {
     constexpr const char* modVersionFilename = "DOOMSonaVersion.tag";
     constexpr const char* installerIgnoreTag = "DOOMSonaIgnore.tag";
-    constexpr const char* zmenuFilename = "ZMenuP5R.asi";
 
     static void exitApplicationImmediately()
     {
@@ -61,76 +60,25 @@ namespace Installer
 #ifdef _DEBUG
 				printf_s("Cleaning up files from version 1.0.0...\n");
 #endif
-
 				StartUninstaller();
-
-//                 std::filesystem::path pathToRemove = pathGame / "DOOMSona.asi";
-//                 if (std::filesystem::exists(pathToRemove))
-//                 {
-// #ifdef _DEBUG
-//                     printf_s("Removing: %s\n", pathToRemove.string().c_str());
-// #endif
-//                     std::filesystem::remove(pathToRemove);
-//                 }
-// 
-//                 pathToRemove = pathGame / "bass.dll";
-//                 std::filesystem::path pathZMenu = pathGame / zmenuFilename;
-//                 if (std::filesystem::exists(pathToRemove) && !std::filesystem::exists(pathZMenu))
-//                 {
-// #ifdef _DEBUG
-//                     printf_s("Removing: %s\n", pathToRemove.string().c_str());
-// #endif
-//                     std::filesystem::remove(pathToRemove);
-//                 }
-// 
-//                 pathToRemove = pathGame / "bassmidi.dll";
-//                 if (std::filesystem::exists(pathToRemove))
-//                 {
-// #ifdef _DEBUG
-//                     printf_s("Removing: %s\n", pathToRemove.string().c_str());
-// #endif
-//                     std::filesystem::remove(pathToRemove);
-//                 }
-// 
-//                 pathToRemove = pathVerTag;
-//                 if (std::filesystem::exists(pathToRemove))
-//                 {
-// #ifdef _DEBUG
-//                     printf_s("Removing: %s\n", pathToRemove.string().c_str());
-// #endif
-//                     std::filesystem::remove(pathToRemove);
-//                 }
-// 
-//                 pathToRemove = pathIgnoreTag;
-//                 if (std::filesystem::exists(pathToRemove))
-//                 {
-// #ifdef _DEBUG
-//                     printf_s("Removing: %s\n", pathToRemove.string().c_str());
-// #endif
-//                     std::filesystem::remove(pathToRemove);
-//                 }
-// 
-// #ifdef _DEBUG
-//                 printf_s("Clean up complete.\n");
-// #endif
 			}
 		}
 		catch (const std::filesystem::filesystem_error& ex)
 		{
 #ifdef _DEBUG
-			printf_s("ERROR: Can't clean up old file, Filesystem error: %s\n", ex.what());
+			printf_s("ERROR: Can't check file, Filesystem error: %s\n", ex.what());
 #endif
 		}
 		catch (const std::exception& ex)
 		{
 #ifdef _DEBUG
-			printf_s("ERROR: Can't clean up old file: %s\n", ex.what());
+			printf_s("ERROR: Can't check file: %s\n", ex.what());
 #endif
 		}
 		catch (...)
 		{
 #ifdef _DEBUG
-			printf_s("ERROR: Can't clean up old file: %s\n", "Unknown");
+			printf_s("ERROR: Can't check file: %s\n", "Unknown");
 #endif
 		}
 	}
