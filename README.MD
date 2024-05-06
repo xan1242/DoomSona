@@ -12,11 +12,9 @@ This repo contains 5 projects
 
 - DOOMSona - ASI code which contains game and render hooks, scripts and acts as a general bridge to allow the game to be controlled via ingame script
 
-- DOOMSonaInstallerGUI - installer/uninstaller application which guides the user through the initial setup process, automates setting the "Do not inject" flag in Reloaded-II
+- DOOMSonaInstallerGUI - Setup and cleanup utility (previously used for deploying data to the game)
 
 - ReloadedDOOMSonaInstallerLauncher - This is a simple C# DLL which just binds the "Configure Mod" button in Reloaded-II to start the installer
-
-- Reloaded-DOOMSonaLib - This is a Reloaded-II native library designed to auto-start the installer on game startup and to act as a pivot point for DOOMSona.asi to get the path of the mod files precisely
 
 ### Modifications
 

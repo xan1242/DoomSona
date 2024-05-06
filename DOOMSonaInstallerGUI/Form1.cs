@@ -278,6 +278,15 @@ namespace DOOMSonaInstallerGUI
                     break;
             }
 
+            if (currentPageIndex == 0)
+            {
+                btnBack.Enabled = false;
+            }
+            else
+            {
+                btnBack.Enabled = true;
+            }
+
             if (currentPageIndex == pagesList.Count - 1)
             {
                 btnNext.Text = "Fi&nish";

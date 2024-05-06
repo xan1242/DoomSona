@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DOOMSonaInstallerGUI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("DOOMSona Setup")]
+[assembly: AssemblyDescription("A setup application for DOOMSona mod for Persona 5 Royal.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("DOOMSonaInstallerGUI")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyCompany("KingJackSkellington & xan1242")]
+[assembly: AssemblyProduct("DOOMSona Setup")]
+[assembly: AssemblyCopyright("Copyright © KingJackSkellington & xan1242 2024")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("e3f6c557-ec57-4c10-b023-c7b9558f0265")]
+[assembly: Guid("06d065c0-6e90-497c-a2c9-19bbd093a873")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.1.0.0")]
+[assembly: AssemblyFileVersion("1.1.0.0")]
