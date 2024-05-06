@@ -24,12 +24,6 @@ namespace DOOMSonaInstallerGUI
                 "Check if this installer is in the Reloaded-II mod directory and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private static DialogResult ShowMissingFilesError()
-        {
-            return MessageBox.Show("DOOMSona.zip file does not exist in this installer's working directory.\n\n" +
-                "Please check its existence or if it has been removed and try again after making sure that all files are in place.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
         private static DialogResult ShowGameRunningError()
         {
             return MessageBox.Show("An application with the name \"P5R\" is running (assuming this is the game).\n\n" +
@@ -86,12 +80,6 @@ namespace DOOMSonaInstallerGUI
                     if (InstallerLogic.GetModVersion() == null)
                     {
                         ShowNoModVerError();
-                        return;
-                    }
-
-                    if (!File.Exists("DOOMSona.zip"))
-                    {
-                        ShowMissingFilesError();
                         return;
                     }
                 }
